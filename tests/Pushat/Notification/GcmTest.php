@@ -20,26 +20,26 @@ class GcmTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $adapter = $this->getMock('\Jgut\Pushat\Adapter\Gcm', [], [], '', false);
+        $service = $this->getMock('\Jgut\Pushat\Service\Gcm', [], [], '', false);
         $message = $this->getMock('\Jgut\Pushat\Message\Gcm', [], [], '', false);
 
-        $this->notification = new Gcm($adapter, $message);
+        $this->notification = new Gcm($service, $message);
     }
 
     /**
-     * @covers \Jgut\Pushat\Notification\Gcm::setAdapter
+     * @covers \Jgut\Pushat\Notification\Gcm::setService
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testAdapterSet()
+    public function testServiceSet()
     {
-        $adapter = $this->getMock('\Jgut\Pushat\Adapter\Gcm', [], [], '', false);
-        $this->notification->setAdapter($adapter);
-        $this->assertEquals($adapter, $this->notification->getAdapter());
+        $service = $this->getMock('\Jgut\Pushat\Service\Gcm', [], [], '', false);
+        $this->notification->setService($service);
+        $this->assertEquals($service, $this->notification->getService());
 
-        $adapter = $this->getMock('\Jgut\Pushat\Adapter\AbstractAdapter', [], [], '', false);
+        $service = $this->getMock('\Jgut\Pushat\Service\AbstractService', [], [], '', false);
 
-        $this->notification->setAdapter($adapter);
+        $this->notification->setService($service);
     }
 
     /**

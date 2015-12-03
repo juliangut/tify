@@ -18,31 +18,31 @@ use Jgut\Pushat\Notification\AbstractNotification;
  */
 class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
 {
-    protected $adapter;
+    protected $service;
     protected $message;
     protected $notification;
 
     public function setUp()
     {
-        $this->adapter = $this->getMock('\Jgut\Pushat\Adapter\AbstractAdapter', [], [], '', false);
+        $this->service = $this->getMock('\Jgut\Pushat\Service\AbstractService', [], [], '', false);
         $this->message = $this->getMock('\Jgut\Pushat\Message\AbstractMessage', [], [], '', false);
         $this->device = $this->getMock('\Jgut\Pushat\Device\AbstractDevice', [], [], '', false);
 
         $this->notification = $this->getMockForAbstractClass(
             '\Jgut\Pushat\Notification\AbstractNotification',
-            [$this->adapter, $this->message, [$this->device]]
+            [$this->service, $this->message, [$this->device]]
         );
     }
 
     /**
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::getAdapter
+     * @covers \Jgut\Pushat\Notification\AbstractNotification::getService
      * @covers \Jgut\Pushat\Notification\AbstractNotification::getMessage
      * @covers \Jgut\Pushat\Notification\AbstractNotification::getDevices
      * @covers \Jgut\Pushat\Notification\AbstractNotification::getTokens
      */
     public function testDefaults()
     {
-        $this->assertEquals($this->adapter, $this->notification->getAdapter());
+        $this->assertEquals($this->service, $this->notification->getService());
         $this->assertEquals($this->message, $this->notification->getMessage());
         $this->assertCount(0, $this->notification->getDevices());
         $this->assertCount(0, $this->notification->getTokens());

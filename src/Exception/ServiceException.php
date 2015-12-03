@@ -11,6 +11,6 @@ namespace Jgut\Pushat\Exception;
 
 use RuntimeException;
 
-class AdapterException extends RuntimeException
+class ServiceException extends RuntimeException
 {
 }

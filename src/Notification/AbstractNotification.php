@@ -12,7 +12,7 @@ namespace Jgut\Pushat\Notification;
 use DateTime;
 use DateTimeZone;
 use InvalidArgumentException;
-use Jgut\Pushat\Adapter\AbstractAdapter;
+use Jgut\Pushat\Service\AbstractService;
 use Jgut\Pushat\Device\AbstractDevice;
 use Jgut\Pushat\Message\AbstractMessage;
 use Jgut\Pushat\OptionsTrait;
@@ -32,9 +32,9 @@ abstract class AbstractNotification
     protected $defaultOptions = [];
 
     /**
-     * @var \Jgut\Pushat\Adapter\AbstractAdapter
+     * @var \Jgut\Pushat\Service\AbstractService
      */
-    protected $adapter;
+    protected $service;
 
     /**
      * @var \Jgut\Pushat\Message\AbstractMessage
@@ -57,18 +57,18 @@ abstract class AbstractNotification
     protected $pushTime;
 
     /**
-     * @param \Jgut\Pushat\Adapter\AbstractAdapter $adapter
+     * @param \Jgut\Pushat\Service\AbstractService $service
      * @param \Jgut\Pushat\Message\AbstractMessage $message
      * @param \Jgut\Pushat\Device\AbstractDevice[] $devices
      * @param array                                $options
      */
     public function __construct(
-        AbstractAdapter $adapter,
+        AbstractService $service,
         AbstractMessage $message,
         array $devices = [],
         array $options = []
     ) {
-        $this->adapter = $adapter;
+        $this->service = $service;
         $this->message = $message;
 
         foreach ($devices as $device) {
@@ -79,21 +79,21 @@ abstract class AbstractNotification
     }
 
     /**
-     * Get adapter.
+     * Get service.
      *
-     * @return \Jgut\Pushat\Adapter\AbstractAdapter
+     * @return \Jgut\Pushat\Service\AbstractService
      */
-    final public function getAdapter()
+    final public function getService()
     {
-        return $this->adapter;
+        return $this->service;
     }
 
     /**
-     * Set adapter.
+     * Set service.
      *
-     * @param \Jgut\Pusha\Adapter\AbstractAdapter $adapter
+     * @param \Jgut\Pusha\Service\AbstractService $service
      */
-    abstract public function setAdapter(AbstractAdapter $adapter);
+    abstract public function setService(AbstractService $service);
 
     /**
      * Get message.

@@ -7,13 +7,13 @@
  * @license https://github.com/juliangut/pushat/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Adapter;
+namespace Jgut\Pushat\Service;
 
 use DateTime;
 use DateTimeZone;
 use InvalidArgumentException;
 use Jgut\Pushat\Device\Apns as ApnsDevice;
-use Jgut\Pushat\Exception\AdapterException;
+use Jgut\Pushat\Exception\ServiceException;
 use Jgut\Pushat\Exception\NotificationException;
 use Jgut\Pushat\Notification\AbstractNotification;
 use Jgut\Pushat\Notification\Apns as ApnsNotification;
@@ -25,7 +25,7 @@ use ZendService\Apple\Apns\Message\Alert as PushServiceAlert;
 use ZendService\Apple\Apns\Response\Message as PushServiceResponse;
 use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
 
-class Apns extends AbstractAdapter
+class Apns extends AbstractService
 {
     /**
      * @var \ZendService\Apple\Apns\Client\Message
@@ -40,16 +40,16 @@ class Apns extends AbstractAdapter
     /**
      * {@inheritdoc}
      *
-     * @throws \Jgut\Pushat\Exception\AdapterException
+     * @throws \Jgut\Pushat\Exception\ServiceException
      */
-    public function __construct($environment = AbstractAdapter::ENVIRONMENT_PROD, array $parameters = [])
+    public function __construct($environment = AbstractService::ENVIRONMENT_PROD, array $parameters = [])
     {
         parent::__construct($environment, $parameters);
 
         $certificatePath = $this->getParameter('certificate');
 
         if ($certificatePath === null || !file_exists($certificatePath)) {
-            throw new AdapterException(sprintf('Certificate file "%s" does not exist', $certificatePath));
+            throw new ServiceException(sprintf('Certificate file "%s" does not exist', $certificatePath));
         }
     }
 

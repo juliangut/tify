@@ -7,7 +7,7 @@
  * @license https://github.com/juliangut/pushat/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Adapter;
+namespace Jgut\Pushat\Service;
 
 use InvalidArgumentException;
 use ReflectionClass;
@@ -15,7 +15,7 @@ use Jgut\Pushat\ParametersTrait;
 use Jgut\Pushat\Notification\AbstractNotification;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractAdapter
+abstract class AbstractService
 {
     const ENVIRONMENT_DEV  = 'dev';
     const ENVIRONMENT_PROD = 'prod';
@@ -25,7 +25,7 @@ abstract class AbstractAdapter
     /**
      * @var string
      */
-    protected $adapterKey;
+    protected $serviceKey;
 
     /**
      * @var string
@@ -53,7 +53,7 @@ abstract class AbstractAdapter
         $resolver->setRequired($this->getRequiredParameters());
 
         $reflectedClass   = new ReflectionClass($this);
-        $this->adapterKey = lcfirst($reflectedClass->getShortName());
+        $this->serviceKey = lcfirst($reflectedClass->getShortName());
         $this->parameters = $resolver->resolve($parameters);
     }
 
@@ -73,17 +73,17 @@ abstract class AbstractAdapter
      */
     public function __toString()
     {
-        return ucfirst($this->getAdapterKey());
+        return ucfirst($this->getServiceKey());
     }
 
     /**
-     * Get AdapterKey.
+     * Get ServiceKey.
      *
      * @return string
      */
-    public function getAdapterKey()
+    public function getServiceKey()
     {
-        return $this->adapterKey;
+        return $this->serviceKey;
     }
 
     /**

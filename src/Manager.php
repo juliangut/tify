@@ -10,8 +10,8 @@
 namespace Jgut\Pushat;
 
 use DateTime;
-use Jgut\Pushat\Adapter\AbstractAdapter;
-use Jgut\Pushat\Exception\AdapterException;
+use Jgut\Pushat\Service\AbstractService;
+use Jgut\Pushat\Exception\ServiceException;
 use Jgut\Pushat\Notification\AbstractNotification;
 
 class Manager
@@ -28,7 +28,7 @@ class Manager
         $pushedNotifications = [];
 
         foreach ($this->notifications as $notification) {
-            if ($notification->getAdapter()->send($notification)) {
+            if ($notification->getService()->send($notification)) {
                 $notification->setStatus(AbstractNotification::STATUS_PUSHED);
                 $notification->setPushTime(new DateTime);
 
@@ -42,19 +42,19 @@ class Manager
     /**
      * Get feedback from service.
      *
-     * @param \Jgut\Pushat\Adapter\AbstractAdapter $adapter
+     * @param \Jgut\Pushat\Service\AbstractService $service
      *
-     * @throws \Jgut\Pushat\Exception\AdapterException
+     * @throws \Jgut\Pushat\Exception\ServiceException
      *
      * @return array
      */
-    public function feedback(AbstractAdapter $adapter)
+    public function feedback(AbstractService $service)
     {
-        if (method_exists($adapter, 'feedback') === false) {
-            throw new AdapterException(sprintf('%s adapter has no dedicated "getFeedback" method', (string) $adapter));
+        if (method_exists($service, 'feedback') === false) {
+            throw new ServiceException(sprintf('%s service has no dedicated "getFeedback" method', (string) $service));
         }
 
-        return $adapter->feedback();
+        return $service->feedback();
     }
 
     /**

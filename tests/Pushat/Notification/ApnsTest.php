@@ -20,26 +20,26 @@ class ApnsTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $adapter = $this->getMock('\Jgut\Pushat\Adapter\Apns', [], [], '', false);
+        $service = $this->getMock('\Jgut\Pushat\Service\Apns', [], [], '', false);
         $message = $this->getMock('\Jgut\Pushat\Message\Apns', [], [], '', false);
 
-        $this->notification = new Apns($adapter, $message);
+        $this->notification = new Apns($service, $message);
     }
 
     /**
-     * @covers \Jgut\Pushat\Notification\Apns::setAdapter
+     * @covers \Jgut\Pushat\Notification\Apns::setService
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testAdapterSet()
+    public function testServiceSet()
     {
-        $adapter = $this->getMock('\Jgut\Pushat\Adapter\Apns', [], [], '', false);
-        $this->notification->setAdapter($adapter);
-        $this->assertEquals($adapter, $this->notification->getAdapter());
+        $service = $this->getMock('\Jgut\Pushat\Service\Apns', [], [], '', false);
+        $this->notification->setService($service);
+        $this->assertEquals($service, $this->notification->getService());
 
-        $adapter = $this->getMock('\Jgut\Pushat\Adapter\AbstractAdapter', [], [], '', false);
+        $service = $this->getMock('\Jgut\Pushat\Service\AbstractService', [], [], '', false);
 
-        $this->notification->setAdapter($adapter);
+        $this->notification->setService($service);
     }
 
     /**

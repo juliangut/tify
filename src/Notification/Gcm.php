@@ -10,8 +10,8 @@
 namespace Jgut\Pushat\Notification;
 
 use InvalidArgumentException;
-use Jgut\Pushat\Adapter\AbstractAdapter;
-use Jgut\Pushat\Adapter\Gcm as GcmAdapter;
+use Jgut\Pushat\Service\AbstractService;
+use Jgut\Pushat\Service\Gcm as GcmService;
 use Jgut\Pushat\Device\AbstractDevice;
 use Jgut\Pushat\Device\Gcm as GcmDevice;
 use Jgut\Pushat\Message\AbstractMessage;
@@ -31,14 +31,14 @@ class Gcm extends AbstractNotification
     ];
 
     /**
-     * @param \Jgut\Pushat\Adapter\Gcm  $adapter
+     * @param \Jgut\Pushat\Service\Gcm  $service
      * @param \Jgut\Pushat\Message\Gcm  $message
      * @param \Jgut\Pushat\Device\Gcm[] $devices
      * @param array                     $options
      */
-    public function __construct(GcmAdapter $adapter, GcmMessage $message, array $devices = [], array $options = [])
+    public function __construct(GcmService $service, GcmMessage $message, array $devices = [], array $options = [])
     {
-        parent::__construct($adapter, $message, $devices, $options);
+        parent::__construct($service, $message, $devices, $options);
     }
 
     /**
@@ -46,13 +46,13 @@ class Gcm extends AbstractNotification
      *
      * @throws \InvalidArgumentException
      */
-    public function setAdapter(AbstractAdapter $adapter)
+    public function setService(AbstractService $service)
     {
-        if (!$adapter instanceof GcmAdapter) {
-            throw new InvalidArgumentException('Adapter must be an accepted GCM adapter');
+        if (!$service instanceof GcmService) {
+            throw new InvalidArgumentException('Service must be an accepted GCM service');
         }
 
-        $this->adapter = $adapter;
+        $this->service = $service;
 
         return $this;
     }

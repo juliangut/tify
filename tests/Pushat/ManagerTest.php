@@ -46,12 +46,12 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSend()
     {
-        $adapter = $this->getMock('\Jgut\Pushat\Adapter\Gcm', [], [], '', false);
-        $adapter->expects($this->once())->method('send')->will($this->returnValue(true));
+        $service = $this->getMock('\Jgut\Pushat\Service\Gcm', [], [], '', false);
+        $service->expects($this->once())->method('send')->will($this->returnValue(true));
 
         $message = $this->getMock('\Jgut\Pushat\Message\Gcm', [], [], '', false);
 
-        $notification = $this->getMock('\Jgut\Pushat\Notification\Gcm', [], [$adapter, $message, []]);
+        $notification = $this->getMock('\Jgut\Pushat\Notification\Gcm', [], [$service, $message, []]);
 
         $this->manager->addNotification($notification);
 
@@ -61,16 +61,16 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Jgut\Pushat\Manager::feedback
      *
-     * @expectedException \Jgut\Pushat\Exception\AdapterException
+     * @expectedException \Jgut\Pushat\Exception\ServiceException
      */
     public function testFeedback()
     {
-        $adapter = $this->getMock('\Jgut\Pushat\Adapter\Apns', [], [], '', false);
-        $adapter->expects($this->once())->method('feedback')->will($this->returnValue(true));
+        $service = $this->getMock('\Jgut\Pushat\Service\Apns', [], [], '', false);
+        $service->expects($this->once())->method('feedback')->will($this->returnValue(true));
 
-        $this->assertTrue($this->manager->feedback($adapter));
+        $this->assertTrue($this->manager->feedback($service));
 
-        $adapter = $this->getMock('\Jgut\Pushat\Adapter\Gcm', [], [], '', false);
-        $this->manager->feedback($adapter);
+        $service = $this->getMock('\Jgut\Pushat\Service\Gcm', [], [], '', false);
+        $this->manager->feedback($service);
     }
 }

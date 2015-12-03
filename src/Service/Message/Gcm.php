@@ -7,7 +7,7 @@
  * @license https://github.com/juliangut/pushat/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Service;
+namespace Jgut\Pushat\Service\Message;
 
 use Zend\Json\Json;
 use ZendService\Google\Exception\InvalidArgumentException;
@@ -19,7 +19,7 @@ use ZendService\Google\Gcm\Message as ServiceMessage;
  *
  * Implements notification payload parameters.
  */
-class GcmServiceMessage extends ServiceMessage
+class Gcm extends ServiceMessage
 {
     /**
      * @var array

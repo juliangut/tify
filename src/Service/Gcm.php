@@ -7,19 +7,19 @@
  * @license https://github.com/juliangut/pushat/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Adapter;
+namespace Jgut\Pushat\Service;
 
 use InvalidArgumentException;
 use Jgut\Pushat\Exception\NotificationException;
 use Jgut\Pushat\Notification\AbstractNotification;
 use Jgut\Pushat\Notification\Gcm as GcmNotification;
-use Jgut\Pushat\Service\GcmServiceMessage as PushServiceMessage;
+use Jgut\Pushat\Service\Message\Gcm as PushServiceMessage;
 use Zend\Http\Client as HttpClient;
-use Zend\Http\Client\Adapter\Socket;
+use Zend\Http\Client\Service\Socket;
 use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
 use ZendService\Google\Gcm\Client as PushServiceClient;
 
-class Gcm extends AbstractAdapter
+class Gcm extends AbstractService
 {
     /**
      * @var \ZendService\Google\Gcm\Client
@@ -74,7 +74,7 @@ class Gcm extends AbstractAdapter
             $httpClient = new HttpClient(
                 null,
                 [
-                    'adapter' => Socket::class,
+                    'service' => Socket::class,
                     'strictredirects' => true,
                     'sslverifypeer' => false,
                 ]

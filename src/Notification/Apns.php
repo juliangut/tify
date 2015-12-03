@@ -10,8 +10,8 @@
 namespace Jgut\Pushat\Notification;
 
 use InvalidArgumentException;
-use Jgut\Pushat\Adapter\AbstractAdapter;
-use Jgut\Pushat\Adapter\Apns as ApnsAdapter;
+use Jgut\Pushat\Service\AbstractService;
+use Jgut\Pushat\Service\Apns as ApnsService;
 use Jgut\Pushat\Device\AbstractDevice;
 use Jgut\Pushat\Device\Apns as ApnsDevice;
 use Jgut\Pushat\Message\AbstractMessage;
@@ -31,14 +31,14 @@ class Apns extends AbstractNotification
     ];
 
     /**
-     * @param \Jgut\Pushat\Adapter\Apns  $adapter
+     * @param \Jgut\Pushat\Service\Apns  $service
      * @param \Jgut\Pushat\Message\Apns  $message
      * @param \Jgut\Pushat\Device\Apns[] $devices
      * @param array                      $options
      */
-    public function __construct(ApnsAdapter $adapter, ApnsMessage $message, array $devices = [], array $options = [])
+    public function __construct(ApnsService $service, ApnsMessage $message, array $devices = [], array $options = [])
     {
-        parent::__construct($adapter, $message, $devices, $options);
+        parent::__construct($service, $message, $devices, $options);
     }
 
     /**
@@ -46,13 +46,13 @@ class Apns extends AbstractNotification
      *
      * @throws \InvalidArgumentException
      */
-    public function setAdapter(AbstractAdapter $adapter)
+    public function setService(AbstractService $service)
     {
-        if (!$adapter instanceof ApnsAdapter) {
-            throw new InvalidArgumentException('Adapter must be an accepted APNS adapter');
+        if (!$service instanceof ApnsService) {
+            throw new InvalidArgumentException('Service must be an accepted APNS service');
         }
 
-        $this->adapter = $adapter;
+        $this->service = $service;
 
         return $this;
     }
