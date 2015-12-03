@@ -11,7 +11,7 @@ namespace Jgut\Pushat\Service;
 
 use Jgut\Pushat\Notification\AbstractNotification;
 
-interface PushInterface
+interface SendInterface
 {
     /**
      * Send a notification.

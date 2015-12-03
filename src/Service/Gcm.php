@@ -15,7 +15,7 @@ use Jgut\Pushat\Service\Client\GcmBuilder as ClientBuilder;
 use Jgut\Pushat\Service\Message\GcmBuilder as MessageBuilder;
 use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
 
-class Gcm extends AbstractService implements PushInterface
+class Gcm extends AbstractService implements SendInterface
 {
     /**
      * Status codes translation.

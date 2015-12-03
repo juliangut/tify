@@ -24,16 +24,12 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\Service\AbstractService::getServiceKey
-     * @covers \Jgut\Pushat\Service\AbstractService::__toString
      * @covers \Jgut\Pushat\Service\AbstractService::getEnvironment
      * @covers \Jgut\Pushat\Service\AbstractService::isProductionEnvironment
      * @covers \Jgut\Pushat\Service\AbstractService::isDevelopmentEnvironment
      */
     public function testDefaults()
     {
-        $this->assertNotNull($this->service->getServiceKey());
-        $this->assertNotEquals('', (string) $this->service);
         $this->assertEquals(AbstractService::ENVIRONMENT_PROD, $this->service->getEnvironment());
         $this->assertTrue($this->service->isProductionEnvironment());
         $this->assertFalse($this->service->isDevelopmentEnvironment());

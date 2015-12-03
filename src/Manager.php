@@ -16,6 +16,11 @@ use Jgut\Pushat\Service\FeedbackInterface;
 
 class Manager
 {
+    /**
+     * Registered notifications.
+     *
+     * @var array
+     */
     protected $notifications = [];
 
     /**
@@ -50,7 +55,7 @@ class Manager
     public function feedback(AbstractService $service)
     {
         if (!$service instanceof FeedbackInterface) {
-            throw new ServiceException(sprintf('%s is not a feedback enabled service', (string) $service));
+            throw new ServiceException(sprintf('%s is not a feedback enabled service', get_class($service)));
         }
 
         return $service->feedback();

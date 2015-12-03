@@ -17,10 +17,12 @@ class Gcm extends AbstractDevice
     public function setToken($token)
     {
         $token = trim($token);
-        if (empty($token)) {
+        if ($token === '') {
             throw new \InvalidArgumentException('GCM token can not be empty');
         }
 
         $this->token = $token;
+
+        return $this;
     }
 }

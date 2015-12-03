@@ -22,5 +22,7 @@ class Apns extends AbstractDevice
         }
 
         $this->token = $token;
+
+        return $this;
     }
 }

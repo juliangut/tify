@@ -18,7 +18,7 @@ use Jgut\Pushat\Service\Message\ApnsBuilder as MessageBuilder;
 use ZendService\Apple\Apns\Response\Message as PushServiceResponse;
 use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
 
-class Apns extends AbstractService implements PushInterface, FeedbackInterface
+class Apns extends AbstractService implements SendInterface, FeedbackInterface
 {
     /**
      * Status codes translation.

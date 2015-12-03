@@ -8,7 +8,7 @@
 
 # pushat
 
-Unified push notification services abstraction heavily inspired by [NotificationPusher
+Unified push notification services abstraction inspired by [NotificationPusher
 ](https://github.com/Ph3nol/NotificationPusher)
 
 ## Installation

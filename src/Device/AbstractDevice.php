@@ -16,6 +16,8 @@ abstract class AbstractDevice
     use ParametersTrait;
 
     /**
+     * Device token.
+     *
      * @var string
      */
     protected $token;

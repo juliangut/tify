@@ -41,11 +41,8 @@ abstract class AbstractService
     protected $requiredParameters = [];
 
     /**
-     * @var string
-     */
-    protected $serviceKey;
-
-    /**
+     * Service environment.
+     *
      * @var string
      */
     protected $environment;
@@ -63,31 +60,8 @@ abstract class AbstractService
         $resolver->setDefaults($this->defaultParameters);
         $resolver->setRequired($this->requiredParameters);
 
-        $reflectedClass   = new \ReflectionClass($this);
-        $this->serviceKey = lcfirst($reflectedClass->getShortName());
         $this->parameters = $resolver->resolve($parameters);
-
         $this->setEnvironment($environment);
-    }
-
-    /**
-     * __toString.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return ucfirst($this->getServiceKey());
-    }
-
-    /**
-     * Get ServiceKey.
-     *
-     * @return string
-     */
-    public function getServiceKey()
-    {
-        return $this->serviceKey;
     }
 
     /**
