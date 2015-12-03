@@ -55,8 +55,6 @@ trait OptionsTrait
      * Set options.
      *
      * @param array $options
-     *
-     * @return \Jgut\Tify\Model\BaseOptionedModel
      */
     public function setOptions($options)
     {
@@ -74,13 +72,11 @@ trait OptionsTrait
      *
      * @param string $option
      * @param mixed  $value
-     *
-     * @return mixed
      */
     public function setOption($option, $value)
     {
         $this->options[$option] = $value;
 
-        return $value;
+        return $this;
     }
 }

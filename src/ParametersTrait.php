@@ -55,8 +55,6 @@ trait ParametersTrait
      * Set parameters.
      *
      * @param array $parameters
-     *
-     * @return \Jgut\Tify\Model\BaseParameteredModel
      */
     public function setParameters($parameters)
     {
@@ -74,13 +72,11 @@ trait ParametersTrait
      *
      * @param string $parameter
      * @param mixed  $value
-     *
-     * @return mixed
      */
     public function setParameter($parameter, $value)
     {
         $this->parameters[$parameter] = $value;
 
-        return $value;
+        return $this;
     }
 }

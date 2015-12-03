@@ -39,7 +39,7 @@ class Gcm extends ServiceMessage
     /**
      * Set notification payload data.
      *
-     * @param array $data
+     * @param array $payload
      */
     public function setNotificationPayload(array $payload)
     {

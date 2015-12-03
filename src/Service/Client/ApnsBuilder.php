@@ -37,7 +37,7 @@ class ApnsBuilder
      * @param string $passPhrase
      * @param bool   $production
      *
-     * @return \ZendService\Apple\Apns\Client\Message
+     * @return \ZendService\Apple\Apns\Client\Feedback
      */
     public static function buildFeedback($certificate, $passPhrase = '', $production = true)
     {

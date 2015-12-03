@@ -24,11 +24,11 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
     {
         $this->service = $this->getMock('\Jgut\Tify\Service\AbstractService', [], [], '', false);
         $this->message = $this->getMock('\Jgut\Tify\Message\AbstractMessage', [], [], '', false);
-        $this->device = $this->getMock('\Jgut\Tify\Device\AbstractDevice', [], [], '', false);
+        $device = $this->getMock('\Jgut\Tify\Device\AbstractDevice', [], [], '', false);
 
         $this->notification = $this->getMockForAbstractClass(
             '\Jgut\Tify\Notification\AbstractNotification',
-            [$this->service, $this->message, [$this->device]]
+            [$this->service, $this->message, [$device]]
         );
     }
 

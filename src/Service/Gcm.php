@@ -113,12 +113,14 @@ class Gcm extends AbstractService implements SendInterface
     /**
      * Get opened client.
      *
+     * @param string $apiKey
+     *
      * @return \ZendService\Google\Gcm\Client
      */
-    protected function getPushService()
+    protected function getPushService($apiKey)
     {
         if (!isset($this->pushClient)) {
-            $this->pushClient = ClientBuilder::buildPush();
+            $this->pushClient = ClientBuilder::buildPush($apiKey);
         }
 
         return $this->pushClient;

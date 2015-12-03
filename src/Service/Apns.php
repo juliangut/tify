@@ -115,7 +115,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
                 $response = $service->send($message);
 
                 if ($response->getCode() !== static::RESULT_OK) {
-                    $pushedDevice['error'] = $this->statusCodes[$this->response->getCode()];
+                    $pushedDevice['error'] = $this->statusCodes[$response->getCode()];
                 }
             } catch (ServiceRuntimeException $exception) {
                 $pushedDevice['error'] = $exception->getMessage();
@@ -162,7 +162,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
     /**
      * Get opened ServiceClient
      *
-     * @return \ZendService\Apple\Apns\Client\AbstractClient
+     * @return \ZendService\Apple\Apns\Client\Message
      */
     protected function getPushService()
     {
@@ -180,7 +180,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
     /**
      * Get opened ServiceFeedbackClient
      *
-     * @return \ZendService\Apple\Apns\Client\AbstractClient
+     * @return \ZendService\Apple\Apns\Client\Feedback
      */
     protected function getFeedbackService()
     {
