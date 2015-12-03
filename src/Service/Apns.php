@@ -15,27 +15,29 @@ use Jgut\Pushat\Notification\AbstractNotification;
 use Jgut\Pushat\Notification\Apns as ApnsNotification;
 use Jgut\Pushat\Service\Client\ApnsBuilder as ClientBuilder;
 use Jgut\Pushat\Service\Message\ApnsBuilder as MessageBuilder;
-use ZendService\Apple\Apns\Response\Message as PushServiceResponse;
 use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
 
 class Apns extends AbstractService implements SendInterface, FeedbackInterface
 {
+    const RESULT_OK = 0;
+
     /**
      * Status codes translation.
      *
      * @var array
      */
     private $statusCodes = [
-        PushServiceResponse::RESULT_OK => 'OK',
-        PushServiceResponse::RESULT_PROCESSING_ERROR => 'Processing Error',
-        PushServiceResponse::RESULT_MISSING_TOKEN => 'Missing Device Token',
-        PushServiceResponse::RESULT_MISSING_TOPIC => 'Missing Topic',
-        PushServiceResponse::RESULT_MISSING_PAYLOAD => 'Missing Payload',
-        PushServiceResponse::RESULT_INVALID_TOKEN_SIZE => 'Invalid Token Size',
-        PushServiceResponse::RESULT_INVALID_TOPIC_SIZE => 'Invalid Topic Size',
-        PushServiceResponse::RESULT_INVALID_PAYLOAD_SIZE => 'Invalid Payload Size',
-        PushServiceResponse::RESULT_INVALID_TOKEN => 'Invalid Token',
-        PushServiceResponse::RESULT_UNKNOWN_ERROR => 'Unknown Error',
+        0 => 'OK',
+        1 => 'Processing Error',
+        2 => 'Missing Device Token',
+        3 => 'Missing Topic',
+        4 => 'Missing Payload',
+        5 => 'Invalid Token Size',
+        6 => 'Invalid Topic Size',
+        7 => 'Invalid Payload Size',
+        8 => 'Invalid Token',
+        10 => 'Shutdown',
+        255 => 'Unknown Error',
     ];
 
     /**
@@ -112,7 +114,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
             try {
                 $response = $service->send($message);
 
-                if ($response->getCode() !== PushServiceResponse::RESULT_OK) {
+                if ($response->getCode() !== static::RESULT_OK) {
                     $pushedDevice['error'] = $this->statusCodes[$this->response->getCode()];
                 }
             } catch (ServiceRuntimeException $exception) {
