@@ -99,7 +99,9 @@ new \Jgut\Pushat\Device\Gcm('device_token');
 
 Messages compose the final information arriving to devices. GCM and APNS messages hold different information according to each service specification.
 
-Both kind of messages can hold any number of parametes that will compose data sent to the services.
+In order for the message to be shown on the device `title` and/or `body` options should be provided. If they are not present the notification will be handed directly to the application. If this is the case custom parameters should be included to be passed to the app.
+
+Messages can hold any number of custom parametes that will compose additional data sent to the device.
 
 ### APNS
 
@@ -119,8 +121,6 @@ $message->setParameter('param_2', 'value_2');
 Parameters can not be `aps` as it is reserved.
 
 ### GCM
-
-In order for the message to be shown on the notification area title and/or body options should be provided. If they are not present the notification will be handed directly to the application. In this case custom parameters should be included.
 
 ```php
 $message = new \Jgut\Pushat\Message\Gcm;

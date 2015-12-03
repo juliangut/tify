@@ -79,7 +79,7 @@ abstract class AbstractNotification
             $this->addDevice($device);
         }
 
-        $this->options = array_merge($this->defaultOptions, $options);
+        $this->setOptions(array_merge($this->defaultOptions, $options));
     }
 
     /**

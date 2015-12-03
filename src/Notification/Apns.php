@@ -24,7 +24,7 @@ class Apns extends AbstractNotification
     protected $defaultOptions = [
         'expire' => null,
         'badge' => null,
-        'sound' => 'bingbong.aiff',
+        'sound' => null,
         'content_available' => null,
         'category' => null,
     ];

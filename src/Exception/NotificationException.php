@@ -9,8 +9,6 @@
 
 namespace Jgut\Pushat\Exception;
 
-use RuntimeException;
-
-class NotificationException extends RuntimeException
+class NotificationException extends \RuntimeException
 {
 }

@@ -32,8 +32,8 @@ abstract class AbstractMessage
      */
     public function __construct(array $options = [], array $parameters = [])
     {
-        $this->options = array_merge($this->defaultOptions, $options);
-        $this->parameters = $parameters;
+        $this->setOptions(array_merge($this->defaultOptions, $options));
+        $this->setParameters($parameters);
     }
 
     /**

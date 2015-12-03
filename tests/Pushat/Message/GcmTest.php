@@ -39,4 +39,17 @@ class GcmTest extends \PHPUnit_Framework_TestCase
             ['body', null],
         ];
     }
+
+    /**
+     * @covers \Jgut\Pushat\Message\Gcm::setParameter
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testParameters()
+    {
+        $this->message->setParameter('param1', 'value1');
+        $this->assertCount(1, $this->message->getParameters());
+
+        $this->message->setParameter('gcm_param', 'value');
+    }
 }

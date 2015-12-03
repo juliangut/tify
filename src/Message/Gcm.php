@@ -27,4 +27,32 @@ class Gcm extends AbstractMessage
         //'body_loc_key' => null,
         //'body_loc_args' => null,
     ];
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setParameter($parameter, $value)
+    {
+        static $reserved = [
+            'from',
+            'collapse_key',
+            'delay_while_idle',
+            'time_to_live',
+            'restricted_package_name',
+            'dry_run'
+        ];
+        $parameter = trim($parameter);
+
+        if (preg_match('/^(google|gcm)/', $parameter) || in_array($parameter, $reserved)) {
+            throw new \InvalidArgumentException(
+                sprintf('"%s" can not be used as a custom parameter as it is reserved', $parameter)
+            );
+        }
+
+        $this->parameters[$parameter] = $value;
+
+        return $value;
+    }
 }

@@ -60,7 +60,11 @@ trait ParametersTrait
      */
     public function setParameters($parameters)
     {
-        $this->parameters = $parameters;
+        $this->parameters = [];
+
+        foreach ($parameters as $parameter => $value) {
+            $this->setParameter($parameter, $value);
+        }
 
         return $this;
     }

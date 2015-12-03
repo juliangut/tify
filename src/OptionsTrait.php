@@ -60,7 +60,11 @@ trait OptionsTrait
      */
     public function setOptions($options)
     {
-        $this->options = $options;
+        $this->options = [];
+
+        foreach ($options as $option => $value) {
+            $this->setOption($option, $value);
+        }
 
         return $this;
     }

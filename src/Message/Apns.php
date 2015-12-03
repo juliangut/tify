@@ -24,4 +24,22 @@ class Apns extends AbstractMessage
         //'title_loc_args' => null,
         //'action_loc_key' => null,
     ];
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setParameter($parameter, $value)
+    {
+        $parameter = trim($parameter);
+
+        if ($parameter === 'apc') {
+            throw new \InvalidArgumentException('"apc" can not be used as a custom parameter as it is reserved');
+        }
+
+        $this->parameters[$parameter] = $value;
+
+        return $value;
+    }
 }

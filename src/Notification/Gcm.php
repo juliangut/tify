@@ -23,10 +23,10 @@ class Gcm extends AbstractNotification
      */
     protected $defaultOptions = [
         'collapse_key' => null,
-        'delay_while_idle' => false,
-        'time_to_live' => 600,
+        'delay_while_idle' => null,
+        'time_to_live' => null,
         'restricted_package_name' => null,
-        'dry_run' => false,
+        'dry_run' => null,
     ];
 
     /**

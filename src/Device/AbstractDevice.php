@@ -29,7 +29,7 @@ abstract class AbstractDevice
     public function __construct($token, array $parameters = [])
     {
         $this->setToken($token);
-        $this->parameters = $parameters;
+        $this->setParameters($parameters);
     }
 
     /**
