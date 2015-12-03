@@ -1,16 +1,16 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Service\Message;
+namespace Jgut\Tify\Service\Message;
 
-use Jgut\Pushat\Device\Apns as ApnsDevice;
-use Jgut\Pushat\Notification\Apns as ApnsNotification;
+use Jgut\Tify\Device\Apns as ApnsDevice;
+use Jgut\Tify\Notification\Apns as ApnsNotification;
 use ZendService\Apple\Apns\Message;
 use ZendService\Apple\Apns\Message\Alert;
 
@@ -19,8 +19,8 @@ class ApnsBuilder
     /**
      * Get service message from origin.
      *
-     * @param \Jgut\Pushat\Device\Apns       $device
-     * @param \Jgut\Pushat\Notification\Apns $notification
+     * @param \Jgut\Tify\Device\Apns       $device
+     * @param \Jgut\Tify\Notification\Apns $notification
      *
      * @return \ZendService\Apple\Apns\Message
      */

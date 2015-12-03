@@ -1,18 +1,18 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat;
+namespace Jgut\Tify;
 
-use Jgut\Pushat\Service\AbstractService;
-use Jgut\Pushat\Exception\ServiceException;
-use Jgut\Pushat\Notification\AbstractNotification;
-use Jgut\Pushat\Service\FeedbackInterface;
+use Jgut\Tify\Service\AbstractService;
+use Jgut\Tify\Exception\ServiceException;
+use Jgut\Tify\Notification\AbstractNotification;
+use Jgut\Tify\Service\FeedbackInterface;
 
 class Manager
 {
@@ -46,9 +46,9 @@ class Manager
     /**
      * Get feedback from service.
      *
-     * @param \Jgut\Pushat\Service\AbstractService $service
+     * @param \Jgut\Tify\Service\AbstractService $service
      *
-     * @throws \Jgut\Pushat\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\ServiceException
      *
      * @return array
      */
@@ -74,7 +74,7 @@ class Manager
     /**
      * Register notification.
      *
-     * @param \Jgut\Pushat\Notification\AbstractNotification $notification
+     * @param \Jgut\Tify\Notification\AbstractNotification $notification
      */
     public function addNotification(AbstractNotification $notification)
     {

@@ -1,5 +1,5 @@
 {
-  "name": "juliangut/pushat",
+  "name": "juliangut/tify",
   "description": "Push notification services abstraction",
   "keywords": [
     "push",
@@ -8,7 +8,7 @@
     "APNS",
     "abstraction"
   ],
-  "homepage": "http://github.com/juliangut/pushat",
+  "homepage": "http://github.com/juliangut/tify",
   "license": "BSD-3-Clause",
   "authors": [
     {
@@ -18,7 +18,7 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/juliangut/pushat/issues"
+    "issues": "https://github.com/juliangut/tify/issues"
   },
   "require": {
     "php": ">=5.5",
@@ -36,12 +36,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Jgut\\Pushat\\": "src"
+      "Jgut\\Tify\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Jgut\\Pushat\\Tests\\": "tests/Pushat"
+      "Jgut\\Tify\\Tests\\": "tests/Tify"
     }
   }
 }

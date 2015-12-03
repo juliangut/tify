@@ -1,18 +1,18 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Tests\Service;
+namespace Jgut\Tify\Tests\Service;
 
-use Jgut\Pushat\Service\AbstractService;
+use Jgut\Tify\Service\AbstractService;
 
 /**
- * @covers \Jgut\Pushat\Service\AbstractService
+ * @covers \Jgut\Tify\Service\AbstractService
  */
 class AbstractServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,13 +20,13 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->service = $this->getMockForAbstractClass('\Jgut\Pushat\Service\AbstractService');
+        $this->service = $this->getMockForAbstractClass('\Jgut\Tify\Service\AbstractService');
     }
 
     /**
-     * @covers \Jgut\Pushat\Service\AbstractService::getEnvironment
-     * @covers \Jgut\Pushat\Service\AbstractService::isProductionEnvironment
-     * @covers \Jgut\Pushat\Service\AbstractService::isDevelopmentEnvironment
+     * @covers \Jgut\Tify\Service\AbstractService::getEnvironment
+     * @covers \Jgut\Tify\Service\AbstractService::isProductionEnvironment
+     * @covers \Jgut\Tify\Service\AbstractService::isDevelopmentEnvironment
      */
     public function testDefaults()
     {
@@ -36,10 +36,10 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\Service\AbstractService::setEnvironment
-     * @covers \Jgut\Pushat\Service\AbstractService::getEnvironment
-     * @covers \Jgut\Pushat\Service\AbstractService::isProductionEnvironment
-     * @covers \Jgut\Pushat\Service\AbstractService::isDevelopmentEnvironment
+     * @covers \Jgut\Tify\Service\AbstractService::setEnvironment
+     * @covers \Jgut\Tify\Service\AbstractService::getEnvironment
+     * @covers \Jgut\Tify\Service\AbstractService::isProductionEnvironment
+     * @covers \Jgut\Tify\Service\AbstractService::isDevelopmentEnvironment
      *
      * @expectedException \InvalidArgumentException
      */

@@ -1,12 +1,12 @@
-[![Latest Version](https://img.shields.io/packagist/vpre/juliangut/pushat.svg?style=flat-square)](https://packagist.org/packages/juliangut/pushat)
-[![License](https://img.shields.io/github/license/juliangut/pushat.svg?style=flat-square)](https://github.com/juliangut/pushat/blob/master/LICENSE)
+[![Latest Version](https://img.shields.io/packagist/vpre/juliangut/tify.svg?style=flat-square)](https://packagist.org/packages/juliangut/tify)
+[![License](https://img.shields.io/github/license/juliangut/tify.svg?style=flat-square)](https://github.com/juliangut/tify/blob/master/LICENSE)
 
-[![Build status](https://img.shields.io/travis/juliangut/pushat.svg?style=flat-square)](https://travis-ci.org/juliangut/pushat)
+[![Build status](https://img.shields.io/travis/juliangut/tify.svg?style=flat-square)](https://travis-ci.org/juliangut/tify)
 [![Style](https://styleci.io/repos/47275107/shield)](https://styleci.io/repos/47275107)
-[![Code Coverage](https://img.shields.io/coveralls/juliangut/pushat.svg?style=flat-square)](https://coveralls.io/github/juliangut/pushat)
-[![Total Downloads](https://img.shields.io/packagist/dt/juliangut/pushat.svg?style=flat-square)](https://packagist.org/packages/juliangut/pushat)
+[![Code Coverage](https://img.shields.io/coveralls/juliangut/tify.svg?style=flat-square)](https://coveralls.io/github/juliangut/tify)
+[![Total Downloads](https://img.shields.io/packagist/dt/juliangut/tify.svg?style=flat-square)](https://packagist.org/packages/juliangut/tify)
 
-# pushat
+# Tify
 
 Unified push notification services abstraction inspired by [NotificationPusher
 ](https://github.com/Ph3nol/NotificationPusher)
@@ -16,7 +16,7 @@ Unified push notification services abstraction inspired by [NotificationPusher
 Install using Composer:
 
 ```
-composer require juliangut/pushat
+composer require juliangut/tify
 ```
 
 Then require_once the autoload file:
@@ -63,7 +63,7 @@ $gcmNotification = new GcmNotification($gcmService, $gcmMessage, $gcmDevices);
 
 
 //Create APNS service interface
-$apnsService = new ApnsService(AbstractService::ENVIRONMENT_DEV, ['api_key' => '00000']);
+$apnsService = new ApnsService(AbstractService::ENVIRONMENT_DEV, ['certificate' => 'path_to_certificate']);
 
 //Create APNS message
 $apnsMessage = new ApnsMessage($message);
@@ -118,7 +118,7 @@ $message->setParameter('param_1', 'value_1');
 $message->setParameter('param_2', 'value_2');
 ```
 
-Parameters can not be `aps` as it is reserved.
+There can not be a `aps` parameter as it is reserved.
 
 ### GCM
 
@@ -172,9 +172,9 @@ Both services have `send` method to push notifications to its corresponding serv
 
 ## Contributing
 
-Found a bug or have a feature request? [Please open a new issue](https://github.com/juliangut/pushat/issues). Have a look at existing issues before.
+Found a bug or have a feature request? [Please open a new issue](https://github.com/juliangut/tify/issues). Have a look at existing issues before.
 
-See file [CONTRIBUTING.md](https://github.com/juliangut/pushat/blob/master/CONTRIBUTING.md)
+See file [CONTRIBUTING.md](https://github.com/juliangut/tify/blob/master/CONTRIBUTING.md)
 ## License
 
-See file [LICENSE](https://github.com/juliangut/pushat/blob/master/LICENSE) included with the source code for a copy of the license terms.
+See file [LICENSE](https://github.com/juliangut/tify/blob/master/LICENSE) included with the source code for a copy of the license terms.

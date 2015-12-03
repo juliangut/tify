@@ -1,20 +1,20 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Service;
+namespace Jgut\Tify\Service;
 
-use Jgut\Pushat\Exception\ServiceException;
-use Jgut\Pushat\Exception\NotificationException;
-use Jgut\Pushat\Notification\AbstractNotification;
-use Jgut\Pushat\Notification\Apns as ApnsNotification;
-use Jgut\Pushat\Service\Client\ApnsBuilder as ClientBuilder;
-use Jgut\Pushat\Service\Message\ApnsBuilder as MessageBuilder;
+use Jgut\Tify\Exception\ServiceException;
+use Jgut\Tify\Exception\NotificationException;
+use Jgut\Tify\Notification\AbstractNotification;
+use Jgut\Tify\Notification\Apns as ApnsNotification;
+use Jgut\Tify\Service\Client\ApnsBuilder as ClientBuilder;
+use Jgut\Tify\Service\Message\ApnsBuilder as MessageBuilder;
 use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
 
 class Apns extends AbstractService implements SendInterface, FeedbackInterface
@@ -75,7 +75,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Jgut\Pushat\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\ServiceException
      */
     public function __construct(array $parameters = [], $environment = self::ENVIRONMENT_PROD)
     {
@@ -133,7 +133,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Jgut\Pushat\Exception\NotificationException
+     * @throws \Jgut\Tify\Exception\NotificationException
      */
     public function feedback()
     {

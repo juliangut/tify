@@ -1,18 +1,18 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Notification;
+namespace Jgut\Tify\Notification;
 
-use Jgut\Pushat\Service\AbstractService;
-use Jgut\Pushat\Device\AbstractDevice;
-use Jgut\Pushat\Message\AbstractMessage;
-use Jgut\Pushat\OptionsTrait;
+use Jgut\Tify\Service\AbstractService;
+use Jgut\Tify\Device\AbstractDevice;
+use Jgut\Tify\Message\AbstractMessage;
+use Jgut\Tify\OptionsTrait;
 
 abstract class AbstractNotification
 {
@@ -29,17 +29,17 @@ abstract class AbstractNotification
     protected $defaultOptions = [];
 
     /**
-     * @var \Jgut\Pushat\Service\AbstractService
+     * @var \Jgut\Tify\Service\AbstractService
      */
     protected $service;
 
     /**
-     * @var \Jgut\Pushat\Message\AbstractMessage
+     * @var \Jgut\Tify\Message\AbstractMessage
      */
     protected $message;
 
     /**
-     * @var \Jgut\Pushat\Device\AbstractDevice[]
+     * @var \Jgut\Tify\Device\AbstractDevice[]
      */
     protected $devices = [];
 
@@ -61,9 +61,9 @@ abstract class AbstractNotification
     protected $result = [];
 
     /**
-     * @param \Jgut\Pushat\Service\AbstractService $service
-     * @param \Jgut\Pushat\Message\AbstractMessage $message
-     * @param \Jgut\Pushat\Device\AbstractDevice[] $devices
+     * @param \Jgut\Tify\Service\AbstractService $service
+     * @param \Jgut\Tify\Message\AbstractMessage $message
+     * @param \Jgut\Tify\Device\AbstractDevice[] $devices
      * @param array                                $options
      */
     public function __construct(
@@ -85,7 +85,7 @@ abstract class AbstractNotification
     /**
      * Get service.
      *
-     * @return \Jgut\Pushat\Service\AbstractService
+     * @return \Jgut\Tify\Service\AbstractService
      */
     final public function getService()
     {
@@ -102,7 +102,7 @@ abstract class AbstractNotification
     /**
      * Get message.
      *
-     * @return \Jgut\Pushat\Message\AbstractMessage
+     * @return \Jgut\Tify\Message\AbstractMessage
      */
     final public function getMessage()
     {
@@ -112,14 +112,14 @@ abstract class AbstractNotification
     /**
      * Set message.
      *
-     * @param \Jgut\Pushat\Message\AbstractMessage $message
+     * @param \Jgut\Tify\Message\AbstractMessage $message
      */
     abstract public function setMessage(AbstractMessage $message);
 
     /**
      * Retrieve list of devices.
      *
-     * @return \Jgut\Pushat\Device\AbstractDevice[]
+     * @return \Jgut\Tify\Device\AbstractDevice[]
      */
     final public function getDevices()
     {
@@ -129,7 +129,7 @@ abstract class AbstractNotification
     /**
      * Add device.
      *
-     * @param \Jgut\Pushat\Device\AbstractDevice $device
+     * @param \Jgut\Tify\Device\AbstractDevice $device
      */
     abstract public function addDevice(AbstractDevice $device);
 

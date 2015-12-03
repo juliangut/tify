@@ -1,18 +1,18 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Tests\Service\Message;
+namespace Jgut\Tify\Tests\Service\Message;
 
-use Jgut\Pushat\Service\Message\Gcm as Message;
+use Jgut\Tify\Service\Message\Gcm as Message;
 
 /**
- * @covers \Jgut\Pushat\Service\Message\Gcm
+ * @covers \Jgut\Tify\Service\Message\Gcm
  */
 class GcmTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,10 +24,10 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\Service\Message\Gcm::getNotificationPayload
-     * @covers \Jgut\Pushat\Service\Message\Gcm::addNotificationPayload
-     * @covers \Jgut\Pushat\Service\Message\Gcm::setNotificationPayload
-     * @covers \Jgut\Pushat\Service\Message\Gcm::clearNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\Gcm::getNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\Gcm::addNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\Gcm::setNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\Gcm::clearNotificationPayload
      */
     public function testMutatorsAccessors()
     {
@@ -44,7 +44,7 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\Service\Message\Gcm::addNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\Gcm::addNotificationPayload
      *
      * @expectedException \ZendService\Google\Exception\InvalidArgumentException
      */
@@ -54,7 +54,7 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\Service\Message\Gcm::addNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\Gcm::addNotificationPayload
      *
      * @expectedException \ZendService\Google\Exception\RuntimeException
      */
@@ -65,8 +65,8 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\Service\Message\Gcm::toJson
-     * @covers \Jgut\Pushat\Service\Message\Gcm::getPayload
+     * @covers \Jgut\Tify\Service\Message\Gcm::toJson
+     * @covers \Jgut\Tify\Service\Message\Gcm::getPayload
      */
     public function testJsonResult()
     {

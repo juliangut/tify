@@ -1,18 +1,18 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Tests\Notification;
+namespace Jgut\Tify\Tests\Notification;
 
-use Jgut\Pushat\Notification\AbstractNotification;
+use Jgut\Tify\Notification\AbstractNotification;
 
 /**
- * @covers \Jgut\Pushat\Notification\AbstractNotification
+ * @covers \Jgut\Tify\Notification\AbstractNotification
  */
 class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,22 +22,22 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->service = $this->getMock('\Jgut\Pushat\Service\AbstractService', [], [], '', false);
-        $this->message = $this->getMock('\Jgut\Pushat\Message\AbstractMessage', [], [], '', false);
-        $this->device = $this->getMock('\Jgut\Pushat\Device\AbstractDevice', [], [], '', false);
+        $this->service = $this->getMock('\Jgut\Tify\Service\AbstractService', [], [], '', false);
+        $this->message = $this->getMock('\Jgut\Tify\Message\AbstractMessage', [], [], '', false);
+        $this->device = $this->getMock('\Jgut\Tify\Device\AbstractDevice', [], [], '', false);
 
         $this->notification = $this->getMockForAbstractClass(
-            '\Jgut\Pushat\Notification\AbstractNotification',
+            '\Jgut\Tify\Notification\AbstractNotification',
             [$this->service, $this->message, [$this->device]]
         );
     }
 
     /**
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::getService
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::getMessage
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::getDevices
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::getResult
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::getTokens
+     * @covers \Jgut\Tify\Notification\AbstractNotification::getService
+     * @covers \Jgut\Tify\Notification\AbstractNotification::getMessage
+     * @covers \Jgut\Tify\Notification\AbstractNotification::getDevices
+     * @covers \Jgut\Tify\Notification\AbstractNotification::getResult
+     * @covers \Jgut\Tify\Notification\AbstractNotification::getTokens
      */
     public function testDefaults()
     {
@@ -49,11 +49,11 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::getStatus
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::isPushed
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::setPushed
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::setPending
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::getPushTime
+     * @covers \Jgut\Tify\Notification\AbstractNotification::getStatus
+     * @covers \Jgut\Tify\Notification\AbstractNotification::isPushed
+     * @covers \Jgut\Tify\Notification\AbstractNotification::setPushed
+     * @covers \Jgut\Tify\Notification\AbstractNotification::setPending
+     * @covers \Jgut\Tify\Notification\AbstractNotification::getPushTime
      */
     public function testStatus()
     {

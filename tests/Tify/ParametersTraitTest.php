@@ -1,16 +1,16 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Tests;
+namespace Jgut\Tify\Tests;
 
 /**
- * @covers \Jgut\Pushat\ParametersTrait
+ * @covers \Jgut\Tify\ParametersTrait
  */
 class ParametersTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,12 +18,12 @@ class ParametersTraitTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->bag = $this->getMockForTrait('\Jgut\Pushat\ParametersTrait');
+        $this->bag = $this->getMockForTrait('\Jgut\Tify\ParametersTrait');
     }
 
     /**
-     * @covers \Jgut\Pushat\ParametersTrait::getParameter
-     * @covers \Jgut\Pushat\ParametersTrait::getParameters
+     * @covers \Jgut\Tify\ParametersTrait::getParameter
+     * @covers \Jgut\Tify\ParametersTrait::getParameters
      */
     public function testDefaults()
     {
@@ -32,11 +32,11 @@ class ParametersTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\ParametersTrait::hasParameter
-     * @covers \Jgut\Pushat\ParametersTrait::getParameter
-     * @covers \Jgut\Pushat\ParametersTrait::getParameters
-     * @covers \Jgut\Pushat\ParametersTrait::setParameter
-     * @covers \Jgut\Pushat\ParametersTrait::setParameters
+     * @covers \Jgut\Tify\ParametersTrait::hasParameter
+     * @covers \Jgut\Tify\ParametersTrait::getParameter
+     * @covers \Jgut\Tify\ParametersTrait::getParameters
+     * @covers \Jgut\Tify\ParametersTrait::setParameter
+     * @covers \Jgut\Tify\ParametersTrait::setParameters
      */
     public function testAccessorsMutators()
     {

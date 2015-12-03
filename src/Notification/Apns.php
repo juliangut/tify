@@ -1,20 +1,20 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Notification;
+namespace Jgut\Tify\Notification;
 
-use Jgut\Pushat\Service\AbstractService;
-use Jgut\Pushat\Service\Apns as ApnsService;
-use Jgut\Pushat\Device\AbstractDevice;
-use Jgut\Pushat\Device\Apns as ApnsDevice;
-use Jgut\Pushat\Message\AbstractMessage;
-use Jgut\Pushat\Message\Apns as ApnsMessage;
+use Jgut\Tify\Service\AbstractService;
+use Jgut\Tify\Service\Apns as ApnsService;
+use Jgut\Tify\Device\AbstractDevice;
+use Jgut\Tify\Device\Apns as ApnsDevice;
+use Jgut\Tify\Message\AbstractMessage;
+use Jgut\Tify\Message\Apns as ApnsMessage;
 
 class Apns extends AbstractNotification
 {
@@ -30,9 +30,9 @@ class Apns extends AbstractNotification
     ];
 
     /**
-     * @param \Jgut\Pushat\Service\Apns  $service
-     * @param \Jgut\Pushat\Message\Apns  $message
-     * @param \Jgut\Pushat\Device\Apns[] $devices
+     * @param \Jgut\Tify\Service\Apns  $service
+     * @param \Jgut\Tify\Message\Apns  $message
+     * @param \Jgut\Tify\Device\Apns[] $devices
      * @param array                      $options
      */
     public function __construct(ApnsService $service, ApnsMessage $message, array $devices = [], array $options = [])

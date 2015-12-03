@@ -1,16 +1,16 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Service\Message;
+namespace Jgut\Tify\Service\Message;
 
-use Jgut\Pushat\Notification\Gcm as GcmNotification;
-use Jgut\Pushat\Service\Message\Gcm as Message;
+use Jgut\Tify\Notification\Gcm as GcmNotification;
+use Jgut\Tify\Service\Message\Gcm as Message;
 
 class GcmBuilder
 {
@@ -18,9 +18,9 @@ class GcmBuilder
      * Get configured service message.
      *
      * @param array                         $tokens
-     * @param \Jgut\Pushat\Notification\Gcm $notification
+     * @param \Jgut\Tify\Notification\Gcm $notification
      *
-     * @return \Jgut\Pushat\Service\Message\Gcm
+     * @return \Jgut\Tify\Service\Message\Gcm
      */
     public static function build(array $tokens, GcmNotification $notification)
     {

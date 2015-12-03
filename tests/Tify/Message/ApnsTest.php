@@ -1,26 +1,26 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Tests\Message;
+namespace Jgut\Tify\Tests\Message;
 
-use Jgut\Pushat\Message\Gcm;
+use Jgut\Tify\Message\Apns;
 
 /**
- * @covers \Jgut\Pushat\Message\Gcm
+ * @covers \Jgut\Tify\Message\Apns
  */
-class GcmTest extends \PHPUnit_Framework_TestCase
+class ApnsTest extends \PHPUnit_Framework_TestCase
 {
     protected $message;
 
     public function setUp()
     {
-        $this->message = new Gcm();
+        $this->message = new Apns();
     }
 
     /**
@@ -41,7 +41,7 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\Message\Gcm::setParameter
+     * @covers \Jgut\Tify\Message\Apns::setParameter
      *
      * @expectedException \InvalidArgumentException
      */
@@ -50,6 +50,6 @@ class GcmTest extends \PHPUnit_Framework_TestCase
         $this->message->setParameter('param1', 'value1');
         $this->assertCount(1, $this->message->getParameters());
 
-        $this->message->setParameter('gcm_param', 'value');
+        $this->message->setParameter('apc', 'value');
     }
 }

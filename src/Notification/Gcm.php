@@ -1,20 +1,20 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Notification;
+namespace Jgut\Tify\Notification;
 
-use Jgut\Pushat\Service\AbstractService;
-use Jgut\Pushat\Service\Gcm as GcmService;
-use Jgut\Pushat\Device\AbstractDevice;
-use Jgut\Pushat\Device\Gcm as GcmDevice;
-use Jgut\Pushat\Message\AbstractMessage;
-use Jgut\Pushat\Message\Gcm as GcmMessage;
+use Jgut\Tify\Service\AbstractService;
+use Jgut\Tify\Service\Gcm as GcmService;
+use Jgut\Tify\Device\AbstractDevice;
+use Jgut\Tify\Device\Gcm as GcmDevice;
+use Jgut\Tify\Message\AbstractMessage;
+use Jgut\Tify\Message\Gcm as GcmMessage;
 
 class Gcm extends AbstractNotification
 {
@@ -30,9 +30,9 @@ class Gcm extends AbstractNotification
     ];
 
     /**
-     * @param \Jgut\Pushat\Service\Gcm  $service
-     * @param \Jgut\Pushat\Message\Gcm  $message
-     * @param \Jgut\Pushat\Device\Gcm[] $devices
+     * @param \Jgut\Tify\Service\Gcm  $service
+     * @param \Jgut\Tify\Message\Gcm  $message
+     * @param \Jgut\Tify\Device\Gcm[] $devices
      * @param array                     $options
      */
     public function __construct(GcmService $service, GcmMessage $message, array $devices = [], array $options = [])

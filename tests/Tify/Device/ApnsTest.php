@@ -1,18 +1,18 @@
 <?php
 /**
- * Push notification services abstraction (http://github.com/juliangut/pushat)
+ * Push notification services abstraction (http://github.com/juliangut/tify)
  *
- * @link https://github.com/juliangut/pushat for the canonical source repository
+ * @link https://github.com/juliangut/tify for the canonical source repository
  *
- * @license https://github.com/juliangut/pushat/blob/master/LICENSE
+ * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Pushat\Tests\Device;
+namespace Jgut\Tify\Tests\Device;
 
-use Jgut\Pushat\Device\Apns;
+use Jgut\Tify\Device\Apns;
 
 /**
- * @covers \Jgut\Pushat\Device\Apns
+ * @covers \Jgut\Tify\Device\Apns
  */
 class ApnsTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,7 @@ class ApnsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Pushat\Device\Apns::setToken
+     * @covers \Jgut\Tify\Device\Apns::setToken
      *
      * @expectedException \InvalidArgumentException
      */
