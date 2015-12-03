@@ -22,7 +22,7 @@ class ApnsBuilder
      *
      * @param string $certificate
      * @param string $passPhrase
-     * @param bool $production
+     * @param bool   $production
      *
      * @return \ZendService\Apple\Apns\Client\Message
      */
@@ -36,7 +36,7 @@ class ApnsBuilder
      *
      * @param string $certificate
      * @param string $passPhrase
-     * @param bool $production
+     * @param bool   $production
      *
      * @return \ZendService\Apple\Apns\Client\Message
      */

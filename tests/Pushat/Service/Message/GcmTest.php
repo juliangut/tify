@@ -14,7 +14,7 @@ use Jgut\Pushat\Service\Message\Gcm as Message;
 /**
  * @covers \Jgut\Pushat\Service\Message\Gcm
  */
-class Gcm extends \PHPUnit_Framework_TestCase
+class GcmTest extends \PHPUnit_Framework_TestCase
 {
     protected $message;
 
