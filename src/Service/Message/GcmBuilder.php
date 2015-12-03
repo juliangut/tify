@@ -37,7 +37,7 @@ class GcmBuilder
             ->setDryRun($notification->getOption('dry_run'))
             ->setData($message->getParameters());
 
-        if ($message->getOption('title') !== null && $message->getOption('body') !== null) {
+        if ($message->getOption('title') !== null || $message->getOption('body') !== null) {
             $pushMessage->setNotificationPayload($message->getOptions());
         }
 
