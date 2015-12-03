@@ -41,7 +41,7 @@ class Gcm extends AbstractMessage
             'delay_while_idle',
             'time_to_live',
             'restricted_package_name',
-            'dry_run'
+            'dry_run',
         ];
         $parameter = trim($parameter);
 
