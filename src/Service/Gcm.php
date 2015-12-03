@@ -9,7 +9,6 @@
 
 namespace Jgut\Pushat\Service;
 
-use Jgut\Pushat\Exception\NotificationException;
 use Jgut\Pushat\Notification\AbstractNotification;
 use Jgut\Pushat\Notification\Gcm as GcmNotification;
 use Jgut\Pushat\Service\Client\GcmBuilder as ClientBuilder;
