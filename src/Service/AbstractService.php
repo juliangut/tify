@@ -9,7 +9,6 @@
 
 namespace Jgut\Pushat\Service;
 
-use ReflectionClass;
 use Jgut\Pushat\ParametersTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -64,7 +63,7 @@ abstract class AbstractService
         $resolver->setDefaults($this->defaultParameters);
         $resolver->setRequired($this->requiredParameters);
 
-        $reflectedClass   = new ReflectionClass($this);
+        $reflectedClass   = new \ReflectionClass($this);
         $this->serviceKey = lcfirst($reflectedClass->getShortName());
         $this->parameters = $resolver->resolve($parameters);
 

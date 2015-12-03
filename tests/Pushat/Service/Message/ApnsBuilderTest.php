@@ -28,13 +28,13 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
             ['certificate' => dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem']
         );
 
-        $message = new \Jgut\Pushat\Message\Apns();
+        $message = new \Jgut\Pushat\Message\Apns(['title' => 'title']);
 
         $notification = new \Jgut\Pushat\Notification\Apns(
             $service,
             $message,
             [],
-            ['expire' => new \DateTime, 'badge' => 1]
+            ['expire' => 600, 'badge' => 1]
         );
 
         $client = ApnsBuilder::build($device, $notification);

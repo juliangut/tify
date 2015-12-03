@@ -9,7 +9,6 @@
 
 namespace Jgut\Pushat\Service\Client;
 
-use Exception;
 use Jgut\Pushat\Exception\ServiceException;
 use ZendService\Apple\Apns\Client\AbstractClient;
 use ZendService\Apple\Apns\Client\Feedback;
@@ -63,7 +62,7 @@ class ApnsBuilder
                 $certificate,
                 $passPhrase
             );
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             throw new ServiceException($exception->getMessage(), $exception->getCode(), $exception);
         }
 
