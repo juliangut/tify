@@ -9,6 +9,8 @@
 
 namespace Jgut\Pushat\Service\Client;
 
+use Exception;
+use Jgut\Pushat\Exception\ServiceException;
 use ZendService\Apple\Apns\Client\AbstractClient;
 use ZendService\Apple\Apns\Client\Feedback;
 use ZendService\Apple\Apns\Client\Message;
@@ -55,11 +57,15 @@ class ApnsBuilder
      */
     protected static function buildClient(AbstractClient $client, $certificate, $passPhrase = '', $production = true)
     {
-        $client->open(
-            (bool) $production ? AbstractClient::PRODUCTION_URI : AbstractClient::SANDBOX_URI,
-            $certificate,
-            $passPhrase
-        );
+        try {
+            $client->open(
+                (bool) $production ? AbstractClient::PRODUCTION_URI : AbstractClient::SANDBOX_URI,
+                $certificate,
+                $passPhrase
+            );
+        } catch (Exception $exception) {
+            throw new ServiceException($exception->getMessage(), $exception->getCode(), $exception);
+        }
 
         return $client;
     }

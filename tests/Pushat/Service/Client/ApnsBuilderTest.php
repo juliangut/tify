@@ -21,6 +21,9 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Jgut\Pushat\Service\Client\ApnsBuilder::buildPush
      * @covers \Jgut\Pushat\Service\Client\ApnsBuilder::buildClient
+     *
+     * @expectedException \Jgut\Pushat\Exception\ServiceException
+     * @expectedExceptionMessageRegExp /^stream_socket_client\(\): Unable to set local cert chain file/
      */
     public function testPushClient()
     {
@@ -32,6 +35,9 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Jgut\Pushat\Service\Client\ApnsBuilder::buildFeedback
      * @covers \Jgut\Pushat\Service\Client\ApnsBuilder::buildClient
+     *
+     * @expectedException \Jgut\Pushat\Exception\ServiceException
+     * @expectedExceptionMessageRegExp /^stream_socket_client\(\): Unable to set local cert chain file/
      */
     public function testPushFeedback()
     {
