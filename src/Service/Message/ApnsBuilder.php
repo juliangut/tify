@@ -41,11 +41,8 @@ class ApnsBuilder
             ->setSound($notification->getOption('sound'))
             ->setContentAvailable($notification->getOption('content_available'))
             ->setCategory($notification->getOption('category'))
-            ->setCustom($message->getParameters());
-
-        if ((int) $notification->getOption('badge') !== 0) {
-            $pushMessage->setBadge($notification->getOption('badge') + $device->getParameter('badge', 0));
-        }
+            ->setCustom($message->getParameters())
+            ->setBadge($badge);
 
         if ($message->getOption('title') !== null || $message->getOption('body') !== null) {
             $pushMessage->setAlert(new Alert(
