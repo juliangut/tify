@@ -47,7 +47,6 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     public function testSend()
     {
         $service = $this->getMock('\Jgut\Pushat\Service\Gcm', [], [], '', false);
-        $service->expects($this->once())->method('send')->will($this->returnValue(true));
 
         $message = $this->getMock('\Jgut\Pushat\Message\Gcm', [], [], '', false);
 
@@ -55,7 +54,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->manager->addNotification($notification);
 
-        $this->assertCount(1, $this->manager->push());
+        $this->assertCount(0, $this->manager->push());
     }
 
     /**
@@ -66,9 +65,9 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     public function testFeedback()
     {
         $service = $this->getMock('\Jgut\Pushat\Service\Apns', [], [], '', false);
-        $service->expects($this->once())->method('feedback')->will($this->returnValue(true));
+        $service->expects($this->once())->method('feedback')->will($this->returnValue([]));
 
-        $this->assertTrue($this->manager->feedback($service));
+        $this->assertCount(0, $this->manager->feedback($service));
 
         $service = $this->getMock('\Jgut\Pushat\Service\Gcm', [], [], '', false);
         $this->manager->feedback($service);

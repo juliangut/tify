@@ -36,6 +36,7 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
      * @covers \Jgut\Pushat\Notification\AbstractNotification::getService
      * @covers \Jgut\Pushat\Notification\AbstractNotification::getMessage
      * @covers \Jgut\Pushat\Notification\AbstractNotification::getDevices
+     * @covers \Jgut\Pushat\Notification\AbstractNotification::getResult
      * @covers \Jgut\Pushat\Notification\AbstractNotification::getTokens
      */
     public function testDefaults()
@@ -43,40 +44,34 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->service, $this->notification->getService());
         $this->assertEquals($this->message, $this->notification->getMessage());
         $this->assertCount(0, $this->notification->getDevices());
+        $this->assertCount(0, $this->notification->getResult());
         $this->assertCount(0, $this->notification->getTokens());
     }
 
     /**
      * @covers \Jgut\Pushat\Notification\AbstractNotification::getStatus
      * @covers \Jgut\Pushat\Notification\AbstractNotification::isPushed
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::setStatus
-     *
-     * @expectedException \InvalidArgumentException
+     * @covers \Jgut\Pushat\Notification\AbstractNotification::setPushed
+     * @covers \Jgut\Pushat\Notification\AbstractNotification::setPending
+     * @covers \Jgut\Pushat\Notification\AbstractNotification::getPushTime
      */
     public function testStatus()
     {
         $this->assertEquals(AbstractNotification::STATUS_PENDING, $this->notification->getStatus());
         $this->assertFalse($this->notification->isPushed());
-
-        $this->notification->setStatus(AbstractNotification::STATUS_PUSHED);
-        $this->assertEquals(AbstractNotification::STATUS_PUSHED, $this->notification->getStatus());
-        $this->assertTrue($this->notification->isPushed());
-
-        $this->notification->setStatus('my_status');
-    }
-
-    /**
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::getPushTime
-     * @covers \Jgut\Pushat\Notification\AbstractNotification::setPushTime
-     */
-    public function testTime()
-    {
+        $this->assertCount(0, $this->notification->getResult());
         $this->assertNull($this->notification->getPushTime());
 
-        $time = new \DateTime();
-        $time->setTimeZone(new \DateTimeZone('America/New_York'));
+        $this->notification->setPushed(['pushedDevice']);
+        $this->assertEquals(AbstractNotification::STATUS_PUSHED, $this->notification->getStatus());
+        $this->assertTrue($this->notification->isPushed());
+        $this->assertCount(1, $this->notification->getResult());
+        $this->assertInstanceOf('\DateTime', $this->notification->getPushTime());
 
-        $this->notification->setPushTime($time);
-        $this->assertEquals('UTC', $this->notification->getPushTime()->getTimeZone()->getName());
+        $this->notification->setPending();
+        $this->assertEquals(AbstractNotification::STATUS_PENDING, $this->notification->getStatus());
+        $this->assertFalse($this->notification->isPushed());
+        $this->assertCount(0, $this->notification->getResult());
+        $this->assertNull($this->notification->getPushTime());
     }
 }

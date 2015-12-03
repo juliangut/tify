@@ -52,11 +52,6 @@ abstract class AbstractService
     protected $environment;
 
     /**
-     * @var mixed
-     */
-    protected $response;
-
-    /**
      * Constructor.
      *
      * @param array  $parameters
@@ -141,15 +136,5 @@ abstract class AbstractService
     public function isProductionEnvironment()
     {
         return ($this->getEnvironment() === static::ENVIRONMENT_PROD);
-    }
-
-    /**
-     * Return the original response.
-     *
-     * @return mixed
-     */
-    public function getResponse()
-    {
-        return $this->response;
     }
 }

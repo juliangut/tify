@@ -21,6 +21,24 @@ use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
 class Apns extends AbstractService implements PushInterface, FeedbackInterface
 {
     /**
+     * Status codes translation.
+     *
+     * @var array
+     */
+    private $statusCodes = [
+        PushServiceResponse::RESULT_OK => 'OK',
+        PushServiceResponse::RESULT_PROCESSING_ERROR => 'Processing Error',
+        PushServiceResponse::RESULT_MISSING_TOKEN => 'Missing Device Token',
+        PushServiceResponse::RESULT_MISSING_TOPIC => 'Missing Topic',
+        PushServiceResponse::RESULT_MISSING_PAYLOAD => 'Missing Payload',
+        PushServiceResponse::RESULT_INVALID_TOKEN_SIZE => 'Invalid Token Size',
+        PushServiceResponse::RESULT_INVALID_TOPIC_SIZE => 'Invalid Topic Size',
+        PushServiceResponse::RESULT_INVALID_PAYLOAD_SIZE => 'Invalid Payload Size',
+        PushServiceResponse::RESULT_INVALID_TOKEN => 'Invalid Token',
+        PushServiceResponse::RESULT_UNKNOWN_ERROR => 'Unknown Error',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     protected $definedParameters = [
@@ -72,7 +90,6 @@ class Apns extends AbstractService implements PushInterface, FeedbackInterface
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
-     * @throws \Jgut\Pushat\Exception\NotificationException
      */
     public function send(AbstractNotification $notification)
     {
@@ -87,18 +104,25 @@ class Apns extends AbstractService implements PushInterface, FeedbackInterface
         foreach ($notification->getDevices() as $device) {
             $message = MessageBuilder::build($device, $notification);
 
+            $pushedDevice = [
+                'token' => $device->getToken(),
+                'date' => new \DateTime,
+            ];
+
             try {
-                $this->response = $service->send($message);
+                $response = $service->send($message);
+
+                if ($response->getCode() !== PushServiceResponse::RESULT_OK) {
+                    $pushedDevice['error'] = $this->statusCodes[$this->response->getCode()];
+                }
             } catch (ServiceRuntimeException $exception) {
-                throw new NotificationException($exception->getMessage(), $exception->getCode(), $exception);
+                $pushedDevice['error'] = $exception->getMessage();
             }
 
-            if ($this->response->getCode() === PushServiceResponse::RESULT_OK) {
-                $pushedDevices[] = $device;
-            }
+            $pushedDevices[] = $pushedDevice;
         }
 
-        return $pushedDevices;
+        $notification->setPushed($pushedDevices);
     }
 
     /**
@@ -120,7 +144,6 @@ class Apns extends AbstractService implements PushInterface, FeedbackInterface
 
         foreach ($feedbackResponse as $response) {
             $time = new \DateTime(date('c', $response->getTime()));
-            $time->setTimeZone(new \DateTimeZone('UTC'));
 
             $responses[$response->getToken()] = $time;
         }

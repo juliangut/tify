@@ -25,18 +25,17 @@ class Manager
      */
     public function push()
     {
-        $pushedNotifications = [];
+        $results = [];
 
         foreach ($this->notifications as $notification) {
-            if ($notification->getService()->send($notification)) {
-                $notification->setStatus(AbstractNotification::STATUS_PUSHED);
-                $notification->setPushTime(new \DateTime);
+            $notification->setPending();
 
-                $pushedNotifications[] = $notification;
-            }
+            $notification->getService()->send($notification);
+
+            $results = array_merge($results, $notification->getResult());
         }
 
-        return $pushedNotifications;
+        return $results;
     }
 
     /**

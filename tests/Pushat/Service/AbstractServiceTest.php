@@ -29,7 +29,6 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
      * @covers \Jgut\Pushat\Service\AbstractService::getEnvironment
      * @covers \Jgut\Pushat\Service\AbstractService::isProductionEnvironment
      * @covers \Jgut\Pushat\Service\AbstractService::isDevelopmentEnvironment
-     * @covers \Jgut\Pushat\Service\AbstractService::getResponse
      */
     public function testDefaults()
     {
@@ -38,7 +37,6 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(AbstractService::ENVIRONMENT_PROD, $this->service->getEnvironment());
         $this->assertTrue($this->service->isProductionEnvironment());
         $this->assertFalse($this->service->isDevelopmentEnvironment());
-        $this->assertNull($this->service->getResponse());
     }
 
     /**

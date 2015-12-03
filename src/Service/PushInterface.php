@@ -17,8 +17,6 @@ interface PushInterface
      * Send a notification.
      *
      * @param \Jgut\Pushat\Notification\AbstractNotification $notification
-     *
-     * @return array
      */
     public function send(AbstractNotification $notification);
 }

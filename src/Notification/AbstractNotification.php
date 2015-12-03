@@ -54,6 +54,13 @@ abstract class AbstractNotification
     protected $pushTime;
 
     /**
+     * Push results.
+     *
+     * @var array
+     */
+    protected $result = [];
+
+    /**
      * @param \Jgut\Pushat\Service\AbstractService $service
      * @param \Jgut\Pushat\Message\AbstractMessage $message
      * @param \Jgut\Pushat\Device\AbstractDevice[] $devices
@@ -147,39 +154,47 @@ abstract class AbstractNotification
     }
 
     /**
-     * Set notification status.
+     * Set notification pushed.
      *
-     * @param int $status
+     * @param array $result
      */
-    final public function setStatus($status)
+    final public function setPushed(array $result = [])
     {
-        if (!is_int($status) || !in_array($status, [static::STATUS_PENDING, static::STATUS_PUSHED])) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a valid notification status', $status));
-        }
-
-        $this->status = $status;
-
-        return $this;
+        $this->status = static::STATUS_PUSHED;
+        $this->pushTime = new \DateTime;
+        $this->result = $result;
     }
 
+    /**
+     * Set notification pending (not pushed).
+     *
+     * @param array $result
+     */
+    final public function setPending()
+    {
+        $this->status = static::STATUS_PENDING;
+        $this->pushTime = null;
+        $this->result = [];
+    }
+
+    /**
+     * Retrieve push time.
+     *
+     * @return \DateTime
+     */
     final public function getPushTime()
     {
         return $this->pushTime;
     }
 
     /**
-     * Set notification push time.
+     * Retrieve push result.
      *
-     * @param \DateTime $pushTime
+     * @return array
      */
-    final public function setPushTime(\DateTime $pushTime)
+    final public function getResult()
     {
-        $pushTime = clone $pushTime;
-        $pushTime->setTimeZone(new \DateTimeZone('UTC'));
-
-        $this->pushTime = $pushTime;
-
-        return $this;
+        return $this->result;
     }
 
     /**

@@ -19,6 +19,28 @@ use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
 class Gcm extends AbstractService implements PushInterface
 {
     /**
+     * Status codes translation.
+     *
+     * @see https://developers.google.com/cloud-messaging/http-server-ref
+     *
+     * @var array
+     */
+    private $statusCodes = [
+        'MissingRegistration' => 'Missing Registration Token',
+        'InvalidRegistration' => 'Invalid Registration Token',
+        'NotRegistered' => 'Unregistered Device',
+        'InvalidPackageName' => 'Invalid Package Name',
+        'MismatchSenderId' => 'Mismatched Sender',
+        'MessageTooBig' => 'Message Too Big',
+        'InvalidDataKey' => 'Invalid Data Key',
+        'InvalidTtl' => 'Invalid Time to Live',
+        'Unavailable' => 'Timeout',
+        'InternalServerError' => 'Internal Server Error',
+        'DeviceMessageRateExceeded' => 'Device Message Rate Exceeded',
+        'TopicsMessageRateExceeded' => 'Topics Message Rate Exceeded',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     protected $definedParameters = [
@@ -40,7 +62,7 @@ class Gcm extends AbstractService implements PushInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Jgut\Pushat\Exception\NotificationException
+     * @throws \InvalidArgumentException
      */
     public function send(AbstractNotification $notification)
     {
@@ -52,23 +74,41 @@ class Gcm extends AbstractService implements PushInterface
 
         $pushedDevices = [];
 
-        foreach (array_chunk($notification->getDevices()->getTokens(), 100) as $tokensRange) {
+        foreach (array_chunk($notification->getTokens(), 100) as $tokensRange) {
             $message = MessageBuilder::build($tokensRange, $notification);
 
-            try {
-                $this->response = $service->send($message);
-            } catch (ServiceRuntimeException $exception) {
-                throw new NotificationException($exception->getMessage(), $exception->getCode(), $exception);
-            }
+            $time = new \DateTime;
 
-            if ($this->response->getSuccessCount() > 0) {
+            try {
+                $response = $service->send($message);
+                $results = $response->getResults();
+
                 foreach ($tokensRange as $token) {
-                    $pushedDevices[] = $notification->getDevices()->get($token);
+                    $result = isset($results[$token]) ? $results[$token] : [];
+
+                    $pushedDevice = [
+                        'token' => $token,
+                        'date' => $time,
+                    ];
+
+                    if (isset($result['error'])) {
+                        $pushedDevice['error'] = $this->statusCodes[$result['error']];
+                    }
+
+                    $pushedDevices[] = $pushedDevice;
+                }
+            } catch (ServiceRuntimeException $exception) {
+                foreach ($tokensRange as $token) {
+                    $pushedDevices[] = [
+                        'token' => $token,
+                        'date' => $time,
+                        'error' => $exception->getMessage(),
+                    ];
                 }
             }
         }
 
-        return $pushedDevices;
+        $notification->setPushed($pushedDevices);
     }
 
     /**
