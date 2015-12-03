@@ -2,11 +2,9 @@
 [![License](https://img.shields.io/github/license/juliangut/pushat.svg?style=flat-square)](https://github.com/juliangut/pushat/blob/master/LICENSE)
 
 [![Build status](https://img.shields.io/travis/juliangut/pushat.svg?style=flat-square)](https://travis-ci.org/juliangut/pushat)
-[![Style](https://styleci.io/repos/{xxxxx}/shield)](https://styleci.io/repos/{xxxxx})
+[![Style](https://styleci.io/repos/47275107/shield)](https://styleci.io/repos/47275107)
 [![Code Coverage](https://img.shields.io/coveralls/juliangut/pushat.svg?style=flat-square)](https://coveralls.io/github/juliangut/pushat)
 [![Total Downloads](https://img.shields.io/packagist/dt/juliangut/pushat.svg?style=flat-square)](https://packagist.org/packages/juliangut/pushat)
-
-> Remember to assign StyleCI repository id to the badge above
 
 # pushat
 
