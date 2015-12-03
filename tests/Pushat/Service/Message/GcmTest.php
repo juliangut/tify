@@ -66,6 +66,7 @@ class Gcm extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Jgut\Pushat\Service\Message\Gcm::toJson
+     * @covers \Jgut\Pushat\Service\Message\Gcm::getPayload
      */
     public function testJsonResult()
     {

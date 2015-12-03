@@ -107,19 +107,28 @@ class Gcm extends ServiceMessage
         if ($this->timeToLive != 2419200) {
             $json['time_to_live'] = $this->timeToLive;
         }
-        if ($this->restrictedPackageName) {
-            $json['restricted_package_name'] = $this->restrictedPackageName;
-        }
-        if ($this->dryRun) {
-            $json['dry_run'] = $this->dryRun;
-        }
-        if ($this->data) {
-            $json['data'] = $this->data;
-        }
-        if ($this->notificationPayload) {
-            $json['notification'] = $this->notificationPayload;
-        }
+
+        $json = array_merge($json, $this->getPayload());
 
         return Json::encode($json);
+    }
+
+    /**
+     * Retrieve payload.
+     *
+     * @return array
+     */
+    protected function getPayload()
+    {
+        $payload = [];
+
+        if ($this->data) {
+            $payload['data'] = $this->data;
+        }
+        if ($this->notificationPayload) {
+            $payload['notification'] = $this->notificationPayload;
+        }
+
+        return $payload;
     }
 }
