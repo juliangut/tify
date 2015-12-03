@@ -9,8 +9,6 @@
 
 namespace Jgut\Pushat\Device;
 
-use InvalidArgumentException;
-
 class Gcm extends AbstractDevice
 {
     /**
@@ -20,7 +18,7 @@ class Gcm extends AbstractDevice
     {
         $token = trim($token);
         if (empty($token)) {
-            throw new InvalidArgumentException('GCM token can not be empty');
+            throw new \InvalidArgumentException('GCM token can not be empty');
         }
 
         $this->token = $token;

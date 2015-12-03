@@ -9,8 +9,6 @@
 
 namespace Jgut\Pushat\Device;
 
-use InvalidArgumentException;
-
 class Apns extends AbstractDevice
 {
     /**
@@ -20,7 +18,7 @@ class Apns extends AbstractDevice
     {
         $token = trim($token);
         if (!ctype_xdigit($token) || strlen($token) !== 64) {
-            throw new InvalidArgumentException('APNS token must be a 64 hex string');
+            throw new \InvalidArgumentException('APNS token must be a 64 hex string');
         }
 
         $this->token = $token;

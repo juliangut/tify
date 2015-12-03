@@ -9,7 +9,6 @@
 
 namespace Jgut\Pushat;
 
-use DateTime;
 use Jgut\Pushat\Service\AbstractService;
 use Jgut\Pushat\Exception\ServiceException;
 use Jgut\Pushat\Notification\AbstractNotification;
@@ -31,7 +30,7 @@ class Manager
         foreach ($this->notifications as $notification) {
             if ($notification->getService()->send($notification)) {
                 $notification->setStatus(AbstractNotification::STATUS_PUSHED);
-                $notification->setPushTime(new DateTime);
+                $notification->setPushTime(new \DateTime);
 
                 $pushedNotifications[] = $notification;
             }

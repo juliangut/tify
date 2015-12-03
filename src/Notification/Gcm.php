@@ -9,7 +9,6 @@
 
 namespace Jgut\Pushat\Notification;
 
-use InvalidArgumentException;
 use Jgut\Pushat\Service\AbstractService;
 use Jgut\Pushat\Service\Gcm as GcmService;
 use Jgut\Pushat\Device\AbstractDevice;
@@ -49,7 +48,7 @@ class Gcm extends AbstractNotification
     public function setService(AbstractService $service)
     {
         if (!$service instanceof GcmService) {
-            throw new InvalidArgumentException('Service must be an accepted GCM service');
+            throw new \InvalidArgumentException('Service must be an accepted GCM service');
         }
 
         $this->service = $service;
@@ -65,7 +64,7 @@ class Gcm extends AbstractNotification
     public function setMessage(AbstractMessage $message)
     {
         if (!$message instanceof GcmMessage) {
-            throw new InvalidArgumentException('Message must be an accepted GCM message');
+            throw new \InvalidArgumentException('Message must be an accepted GCM message');
         }
 
         $this->message = $message;
@@ -81,7 +80,7 @@ class Gcm extends AbstractNotification
     public function addDevice(AbstractDevice $device)
     {
         if (!$device instanceof GcmDevice) {
-            throw new InvalidArgumentException('Device must be an accepted GCM device');
+            throw new \InvalidArgumentException('Device must be an accepted GCM device');
         }
 
         $this->devices[] = $device;

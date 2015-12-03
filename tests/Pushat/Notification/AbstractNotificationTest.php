@@ -9,8 +9,6 @@
 
 namespace Jgut\Pushat\Tests\Notification;
 
-use DateTime;
-use DateTimeZone;
 use Jgut\Pushat\Notification\AbstractNotification;
 
 /**
@@ -75,8 +73,8 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertNull($this->notification->getPushTime());
 
-        $time = new DateTime();
-        $time->setTimeZone(new DateTimeZone('America/New_York'));
+        $time = new \DateTime();
+        $time->setTimeZone(new \DateTimeZone('America/New_York'));
 
         $this->notification->setPushTime($time);
         $this->assertEquals('UTC', $this->notification->getPushTime()->getTimeZone()->getName());

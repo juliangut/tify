@@ -9,7 +9,6 @@
 
 namespace Jgut\Pushat\Notification;
 
-use InvalidArgumentException;
 use Jgut\Pushat\Service\AbstractService;
 use Jgut\Pushat\Service\Apns as ApnsService;
 use Jgut\Pushat\Device\AbstractDevice;
@@ -49,7 +48,7 @@ class Apns extends AbstractNotification
     public function setService(AbstractService $service)
     {
         if (!$service instanceof ApnsService) {
-            throw new InvalidArgumentException('Service must be an accepted APNS service');
+            throw new \InvalidArgumentException('Service must be an accepted APNS service');
         }
 
         $this->service = $service;
@@ -65,7 +64,7 @@ class Apns extends AbstractNotification
     public function setMessage(AbstractMessage $message)
     {
         if (!$message instanceof ApnsMessage) {
-            throw new InvalidArgumentException('Message must be an accepted APNS message');
+            throw new \InvalidArgumentException('Message must be an accepted APNS message');
         }
 
         $this->message = $message;
@@ -81,7 +80,7 @@ class Apns extends AbstractNotification
     public function addDevice(AbstractDevice $device)
     {
         if (!$device instanceof ApnsDevice) {
-            throw new InvalidArgumentException('Device must be an accepted APNS device');
+            throw new \InvalidArgumentException('Device must be an accepted APNS device');
         }
 
         $this->devices[] = $device;

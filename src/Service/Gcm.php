@@ -9,7 +9,6 @@
 
 namespace Jgut\Pushat\Service;
 
-use InvalidArgumentException;
 use Jgut\Pushat\Exception\NotificationException;
 use Jgut\Pushat\Notification\AbstractNotification;
 use Jgut\Pushat\Notification\Gcm as GcmNotification;
@@ -46,7 +45,7 @@ class Gcm extends AbstractService implements PushInterface
     public function send(AbstractNotification $notification)
     {
         if (!$notification instanceof GcmNotification) {
-            throw new InvalidArgumentException('Notification must be an accepted GCM notification');
+            throw new \InvalidArgumentException('Notification must be an accepted GCM notification');
         }
 
         $service = $this->getPushService($this->getParameter('api_key'));

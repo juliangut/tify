@@ -9,9 +9,6 @@
 
 namespace Jgut\Pushat\Notification;
 
-use DateTime;
-use DateTimeZone;
-use InvalidArgumentException;
 use Jgut\Pushat\Service\AbstractService;
 use Jgut\Pushat\Device\AbstractDevice;
 use Jgut\Pushat\Message\AbstractMessage;
@@ -157,7 +154,7 @@ abstract class AbstractNotification
     final public function setStatus($status)
     {
         if (!is_int($status) || !in_array($status, [static::STATUS_PENDING, static::STATUS_PUSHED])) {
-            throw new InvalidArgumentException(sprintf('"%s" is not a valid notification status', $status));
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid notification status', $status));
         }
 
         $this->status = $status;
@@ -175,10 +172,10 @@ abstract class AbstractNotification
      *
      * @param \DateTime $pushTime
      */
-    final public function setPushTime(DateTime $pushTime)
+    final public function setPushTime(\DateTime $pushTime)
     {
         $pushTime = clone $pushTime;
-        $pushTime->setTimeZone(new DateTimeZone('UTC'));
+        $pushTime->setTimeZone(new \DateTimeZone('UTC'));
 
         $this->pushTime = $pushTime;
 

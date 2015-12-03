@@ -9,7 +9,6 @@
 
 namespace Jgut\Pushat\Service;
 
-use InvalidArgumentException;
 use ReflectionClass;
 use Jgut\Pushat\ParametersTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -116,7 +115,7 @@ abstract class AbstractService
     {
         $environment = strtolower(trim($environment));
         if (!in_array($environment, [static::ENVIRONMENT_DEV, static::ENVIRONMENT_PROD])) {
-            throw new InvalidArgumentException(sprintf('"%s" is not a valid environment', $environment));
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid environment', $environment));
         }
 
         $this->environment = $environment;

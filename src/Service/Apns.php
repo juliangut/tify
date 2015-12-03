@@ -9,9 +9,6 @@
 
 namespace Jgut\Pushat\Service;
 
-use DateTime;
-use DateTimeZone;
-use InvalidArgumentException;
 use Jgut\Pushat\Exception\ServiceException;
 use Jgut\Pushat\Exception\NotificationException;
 use Jgut\Pushat\Notification\AbstractNotification;
@@ -80,7 +77,7 @@ class Apns extends AbstractService implements PushInterface, FeedbackInterface
     public function send(AbstractNotification $notification)
     {
         if (!$notification instanceof ApnsNotification) {
-            throw new InvalidArgumentException('Notification must be an accepted APNS notification');
+            throw new \InvalidArgumentException('Notification must be an accepted APNS notification');
         }
 
         $service = $this->getPushService();
@@ -122,8 +119,8 @@ class Apns extends AbstractService implements PushInterface, FeedbackInterface
         $responses = [];
 
         foreach ($feedbackResponse as $response) {
-            $time = new DateTime(date('c', $response->getTime()));
-            $time->setTimeZone(new DateTimeZone('UTC'));
+            $time = new \DateTime(date('c', $response->getTime()));
+            $time->setTimeZone(new \DateTimeZone('UTC'));
 
             $responses[$response->getToken()] = $time;
         }
