@@ -59,13 +59,11 @@ abstract class AbstractService
     /**
      * Constructor.
      *
-     * @param string $environment
      * @param array  $parameters
+     * @param string $environment
      */
-    public function __construct($environment = self::ENVIRONMENT_PROD, array $parameters = [])
+    public function __construct(array $parameters = [], $environment = self::ENVIRONMENT_PROD)
     {
-        $this->setEnvironment($environment);
-
         $resolver = new OptionsResolver();
         $resolver->setDefined($this->definedParameters);
         $resolver->setDefaults($this->defaultParameters);
@@ -74,6 +72,8 @@ abstract class AbstractService
         $reflectedClass   = new ReflectionClass($this);
         $this->serviceKey = lcfirst($reflectedClass->getShortName());
         $this->parameters = $resolver->resolve($parameters);
+
+        $this->setEnvironment($environment);
     }
 
     /**

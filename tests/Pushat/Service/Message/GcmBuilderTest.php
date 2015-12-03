@@ -22,10 +22,7 @@ class GcmBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testPushClient()
     {
-        $service = new \Jgut\Pushat\Service\Gcm(
-            'prod',
-            ['api_key' => 'my_api_key']
-        );
+        $service = new \Jgut\Pushat\Service\Gcm(['api_key' => 'my_api_key']);
 
         $message = new \Jgut\Pushat\Message\Gcm(['title' => 'title', 'body' => 'body']);
 

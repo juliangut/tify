@@ -25,7 +25,6 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
         $device = new \Jgut\Pushat\Device\Apns('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
 
         $service = new \Jgut\Pushat\Service\Apns(
-            'prod',
             ['certificate' => dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem']
         );
 

@@ -57,9 +57,9 @@ class Apns extends AbstractService implements PushInterface, FeedbackInterface
      *
      * @throws \Jgut\Pushat\Exception\ServiceException
      */
-    public function __construct($environment = AbstractService::ENVIRONMENT_PROD, array $parameters = [])
+    public function __construct(array $parameters = [], $environment = self::ENVIRONMENT_PROD)
     {
-        parent::__construct($environment, $parameters);
+        parent::__construct($parameters, $environment);
 
         $certificatePath = $this->getParameter('certificate');
 
