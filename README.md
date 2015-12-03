@@ -70,8 +70,8 @@ $apnsMessage = new ApnsMessage($message);
 
 //Create a list of APNS devices
 $apnsDevices = [
-    new ApnsDevice('aaaaaaaaaaa'),
-    new ApnsDevice('bbbbbbbbbbb'),
+    new ApnsDevice('ccccccccccc'),
+    new ApnsDevice('ddddddddddd'),
 ];
 
 //Combine all to create a APNS notification
@@ -116,6 +116,8 @@ $message->setParameter('param_1', 'value_1');
 $message->setParameter('param_2', 'value_2');
 ```
 
+Parameters can not be `aps` as it is reserved.
+
 ### GCM
 
 In order for the message to be shown on the notification area title and/or body options should be provided. If they are not present the notification will be handed directly to the application. In this case custom parameters should be included.
@@ -144,7 +146,7 @@ Each notification holds all the information to send a notification using the des
 ```php
 $notification = new \Jgut\Pushat\Service\Apns($apnsService, $apnsMessage, $apnsDevices, $options);
 
-$notification->setOption('expire', new \DateTime);
+$notification->setOption('expire', 600);
 $notification->setOption('badge', 1);
 ```
 
