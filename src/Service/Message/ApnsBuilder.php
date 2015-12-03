@@ -29,8 +29,8 @@ class ApnsBuilder
         $message = $notification->getMessage();
 
         $badge = ((int) $notification->getOption('badge', 0) === 0)
-            ? null :
-            $notification->getOption('badge') + (int) $device->getParameter('badge', 0);
+            ? null
+            : $notification->getOption('badge') + (int) $device->getParameter('badge', 0);
 
         $pushMessage = new Message();
 

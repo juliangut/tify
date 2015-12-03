@@ -9,8 +9,8 @@
 
 namespace Jgut\Tify\Service;
 
-use Jgut\Tify\Exception\ServiceException;
 use Jgut\Tify\Exception\NotificationException;
+use Jgut\Tify\Exception\ServiceException;
 use Jgut\Tify\Notification\AbstractNotification;
 use Jgut\Tify\Notification\Apns as ApnsNotification;
 use Jgut\Tify\Service\Client\ApnsBuilder as ClientBuilder;

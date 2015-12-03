@@ -9,10 +9,10 @@
 
 namespace Jgut\Tify\Notification;
 
-use Jgut\Tify\Service\AbstractService;
 use Jgut\Tify\Device\AbstractDevice;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\OptionsTrait;
+use Jgut\Tify\Service\AbstractService;
 
 abstract class AbstractNotification
 {
@@ -95,7 +95,7 @@ abstract class AbstractNotification
     /**
      * Set service.
      *
-     * @param \Jgut\Pusha\Service\AbstractService $service
+     * @param \Jgut\Tify\Service\AbstractService $service
      */
     abstract public function setService(AbstractService $service);
 
@@ -167,8 +167,6 @@ abstract class AbstractNotification
 
     /**
      * Set notification pending (not pushed).
-     *
-     * @param array $result
      */
     final public function setPending()
     {
