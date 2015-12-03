@@ -123,6 +123,9 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
         }
 
         $notification->setPushed($pushedDevices);
+
+        $service->close();
+        $this->pushClient = null;
     }
 
     /**
@@ -147,6 +150,9 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
 
             $responses[$response->getToken()] = $time;
         }
+
+        $service->close();
+        $this->feedbackClient = null;
 
         return $responses;
     }
