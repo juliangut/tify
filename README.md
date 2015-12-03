@@ -48,7 +48,7 @@ $message = [
 ];
 
 //Create GCM service interface
-$gcmService = new GcmService(AbstractService::ENVIRONMENT_DEV, ['api_key' => '00000']);
+$gcmService = new GcmService(['api_key' => '00000'], AbstractService::ENVIRONMENT_DEV);
 
 //Create GCM message
 $gcmMessage = new GcnMessage($message);
@@ -64,7 +64,7 @@ $gcmNotification = new GcmNotification($gcmService, $gcmMessage, $gcmDevices);
 
 
 //Create APNS service interface
-$apnsService = new ApnsService(AbstractService::ENVIRONMENT_DEV, ['certificate' => 'path_to_certificate']);
+$apnsService = new ApnsService(['certificate' => 'path_to_certificate'], AbstractService::ENVIRONMENT_DEV);
 
 //Create APNS message
 $apnsMessage = new ApnsMessage($message);
