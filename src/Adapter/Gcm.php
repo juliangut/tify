@@ -10,7 +10,7 @@
 namespace Jgut\Pushat\Adapter;
 
 use InvalidArgumentException;
-use Jgut\Pushat\Exception\PushException;
+use Jgut\Pushat\Exception\NotificationException;
 use Jgut\Pushat\Notification\AbstractNotification;
 use Jgut\Pushat\Notification\Gcm as GcmNotification;
 use Jgut\Pushat\Service\GcmServiceMessage as PushServiceMessage;
@@ -29,7 +29,7 @@ class Gcm extends AbstractAdapter
     /**
      * {@inheritdoc}
      *
-     * @throws \Jgut\Pushat\Exception\PushException
+     * @throws \Jgut\Pushat\Exception\NotificationException
      */
     public function send(AbstractNotification $notification)
     {
@@ -76,7 +76,7 @@ class Gcm extends AbstractAdapter
                 [
                     'adapter' => Socket::class,
                     'strictredirects' => true,
-                    'sslverifypeer' => false
+                    'sslverifypeer' => false,
                 ]
             );
 
@@ -140,7 +140,7 @@ class Gcm extends AbstractAdapter
     protected function getRequiredParameters()
     {
         return [
-            'api_key'
+            'api_key',
         ];
     }
 }

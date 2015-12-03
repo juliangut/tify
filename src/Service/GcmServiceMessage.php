@@ -40,7 +40,6 @@ class GcmServiceMessage extends ServiceMessage
      * Set notification payload data.
      *
      * @param array $data
-     * @return Message
      */
     public function setNotificationPayload(array $payload)
     {
@@ -57,12 +56,10 @@ class GcmServiceMessage extends ServiceMessage
      * Add notification payload data.
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      *
-     * @return Message
-     *
-     * @throws Exception\InvalidArgumentException
-     * @throws Exception\RuntimeException
+     * @throws \ZendService\Google\Exception\InvalidArgumentException
+     * @throws \ZendService\Google\Exception\RuntimeException
      */
     public function addNotificationPayload($key, $value)
     {
@@ -81,8 +78,6 @@ class GcmServiceMessage extends ServiceMessage
 
     /**
      * Clear notification payload data.
-     *
-     * @return Message
      */
     public function clearNotificationPayload()
     {

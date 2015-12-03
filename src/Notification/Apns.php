@@ -34,7 +34,7 @@ class Apns extends AbstractNotification
      * @param \Jgut\Pushat\Adapter\Apns  $adapter
      * @param \Jgut\Pushat\Message\Apns  $message
      * @param \Jgut\Pushat\Device\Apns[] $devices
-     * @param array                     $options
+     * @param array                      $options
      */
     public function __construct(ApnsAdapter $adapter, ApnsMessage $message, array $devices = [], array $options = [])
     {

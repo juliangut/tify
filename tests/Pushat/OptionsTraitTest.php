@@ -9,8 +9,6 @@
 
 namespace Jgut\Pushat\Tests;
 
-use Jgut\Pushat\OptionsTrait;
-
 /**
  * @covers \Jgut\Pushat\OptionsTrait
  */

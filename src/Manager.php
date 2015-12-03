@@ -10,7 +10,6 @@
 namespace Jgut\Pushat;
 
 use DateTime;
-use InvalidArgumentException;
 use Jgut\Pushat\Adapter\AbstractAdapter;
 use Jgut\Pushat\Exception\AdapterException;
 use Jgut\Pushat\Notification\AbstractNotification;
@@ -45,9 +44,9 @@ class Manager
      *
      * @param \Jgut\Pushat\Adapter\AbstractAdapter $adapter
      *
-     * @return array
+     * @throws \Jgut\Pushat\Exception\AdapterException
      *
-     * @throws AdapterException When the adapter has no dedicated `getFeedback` method
+     * @return array
      */
     public function feedback(AbstractAdapter $adapter)
     {

@@ -9,12 +9,10 @@
 
 namespace Jgut\Pushat\Tests\Message;
 
-use Jgut\Pushat\Message\AbstractMessage;
-
 /**
  * @covers \Jgut\Pushat\Message\AbstractMessage
  */
-class AbstractDeviceTest extends \PHPUnit_Framework_TestCase
+class AbstractMessageTest extends \PHPUnit_Framework_TestCase
 {
     protected $message;
 

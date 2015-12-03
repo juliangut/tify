@@ -9,8 +9,6 @@
 
 namespace Jgut\Pushat\Tests\Device;
 
-use Jgut\Pushat\Device\AbstractDevice;
-
 /**
  * @covers \Jgut\Pushat\Device\AbstractDevice
  */

@@ -9,8 +9,6 @@
 
 namespace Jgut\Pushat\Tests;
 
-use Jgut\Pushat\ParametersTrait;
-
 /**
  * @covers \Jgut\Pushat\ParametersTrait
  */

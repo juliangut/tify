@@ -12,7 +12,6 @@ namespace Jgut\Pushat\Adapter;
 use InvalidArgumentException;
 use ReflectionClass;
 use Jgut\Pushat\ParametersTrait;
-use Jgut\Pushat\Manager;
 use Jgut\Pushat\Notification\AbstractNotification;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -121,7 +120,7 @@ abstract class AbstractAdapter
      */
     public function isDevelopmentEnvironment()
     {
-        return (static::ENVIRONMENT_DEV === $this->getEnvironment());
+        return ($this->getEnvironment() === static::ENVIRONMENT_DEV);
     }
 
     /**
@@ -131,7 +130,7 @@ abstract class AbstractAdapter
      */
     public function isProductionEnvironment()
     {
-        return (static::ENVIRONMENT_PROD === $this->getEnvironment());
+        return ($this->getEnvironment() === static::ENVIRONMENT_PROD);
     }
 
     /**
