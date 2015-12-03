@@ -24,6 +24,28 @@ use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
 class Apns extends AbstractService implements PushInterface, FeedbackInterface
 {
     /**
+     * {@inheritdoc}
+     */
+    protected $definedParameters = [
+        'certificate',
+        'pass_phrase',
+    ];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $defaultParameters = [
+        'pass_phrase' => null,
+    ];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $requiredParameters = [
+        'certificate',
+    ];
+
+    /**
      * @var \ZendService\Apple\Apns\Client\Message
      */
     protected $pushClient;
@@ -117,7 +139,11 @@ class Apns extends AbstractService implements PushInterface, FeedbackInterface
     protected function getPushService()
     {
         if (!isset($this->pushClient)) {
-            $this->pushClient = ClientBuilder::buildPush($this->isProductionEnvironment());
+            $this->pushClient = ClientBuilder::buildPush(
+                $this->getParameter('certificate'),
+                $this->getParameter('pass_phrase'),
+                $this->isProductionEnvironment()
+            );
         }
 
         return $this->pushClient;
@@ -131,40 +157,13 @@ class Apns extends AbstractService implements PushInterface, FeedbackInterface
     protected function getFeedbackService()
     {
         if (!isset($this->feedbackClient)) {
-            $this->feedbackClient = ClientBuilder::buildFeedback($this->isProductionEnvironment());
+            $this->feedbackClient = ClientBuilder::buildFeedback(
+                $this->getParameter('certificate'),
+                $this->getParameter('pass_phrase'),
+                $this->isProductionEnvironment()
+            );
         }
 
         return $this->feedbackClient;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefinedParameters()
-    {
-        return [
-            'certificate',
-            'pass_phrase',
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultParameters()
-    {
-        return [
-            'pass_phrase' => null,
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getRequiredParameters()
-    {
-        return [
-            'certificate',
-        ];
     }
 }

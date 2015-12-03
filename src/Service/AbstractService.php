@@ -22,6 +22,27 @@ abstract class AbstractService
     use ParametersTrait;
 
     /**
+     * List of defined parameters.
+     *
+     * @var array
+     */
+    protected $definedParameters = [];
+
+    /**
+     * List of default parameters.
+     *
+     * @var array
+     */
+    protected $defaultParameters = [];
+
+    /**
+     * List of required parameters.
+     *
+     * @var array
+     */
+    protected $requiredParameters = [];
+
+    /**
      * @var string
      */
     protected $serviceKey;
@@ -47,9 +68,9 @@ abstract class AbstractService
         $this->setEnvironment($environment);
 
         $resolver = new OptionsResolver();
-        $resolver->setDefined($this->getDefinedParameters());
-        $resolver->setDefaults($this->getDefaultParameters());
-        $resolver->setRequired($this->getRequiredParameters());
+        $resolver->setDefined($this->definedParameters);
+        $resolver->setDefaults($this->defaultParameters);
+        $resolver->setRequired($this->requiredParameters);
 
         $reflectedClass   = new ReflectionClass($this);
         $this->serviceKey = lcfirst($reflectedClass->getShortName());
@@ -132,25 +153,4 @@ abstract class AbstractService
     {
         return $this->response;
     }
-
-    /**
-     * Get defined parameters.
-     *
-     * @return array
-     */
-    abstract protected function getDefinedParameters();
-
-    /**
-     * Get default parameters.
-     *
-     * @return array
-     */
-    abstract protected function getDefaultParameters();
-
-    /**
-     * Get required parameters.
-     *
-     * @return array
-     */
-    abstract protected function getRequiredParameters();
 }

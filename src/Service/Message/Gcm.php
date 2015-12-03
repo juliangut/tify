@@ -63,12 +63,14 @@ class Gcm extends ServiceMessage
      */
     public function addNotificationPayload($key, $value)
     {
-        if (!is_string($key) || empty($key)) {
+        $key = trim($key);
+
+        if ($key === '') {
             throw new InvalidArgumentException('$key must be a non-empty string');
         }
 
-        if (array_key_exists($key, $this->data)) {
-            throw new RuntimeException('$key conflicts with current set data');
+        if (array_key_exists($key, $this->notificationPayload)) {
+            throw new RuntimeException('$key conflicts with current set notification payload data');
         }
 
         $this->notificationPayload[$key] = $value;

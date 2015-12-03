@@ -20,6 +20,20 @@ use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
 class Gcm extends AbstractService implements PushInterface
 {
     /**
+     * {@inheritdoc}
+     */
+    protected $definedParameters = [
+        'api_key',
+    ];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $requiredParameters = [
+        'api_key',
+    ];
+
+    /**
      * @var \ZendService\Google\Gcm\Client
      */
     protected $pushClient;
@@ -35,7 +49,7 @@ class Gcm extends AbstractService implements PushInterface
             throw new InvalidArgumentException('Notification must be an accepted GCM notification');
         }
 
-        $service = $this->getPushService();
+        $service = $this->getPushService($this->getParameter('api_key'));
 
         $pushedDevices = [];
 
@@ -70,33 +84,5 @@ class Gcm extends AbstractService implements PushInterface
         }
 
         return $this->pushClient;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefinedParameters()
-    {
-        return [
-            'api_key',
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultParameters()
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getRequiredParameters()
-    {
-        return [
-            'api_key',
-        ];
     }
 }

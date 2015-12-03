@@ -30,11 +30,11 @@ class GcmBuilder
 
         $pushMessage
             ->setRegistrationIds($tokens)
-            ->setCollapseKey($notification->getParameter('collapse_key'))
-            ->setDelayWhileIdle($notification->getParameter('delay_while_idle'))
-            ->setTimeToLive($notification->getParameter('time_to_live'))
-            ->setRestrictedPackageName($notification->getParameter('restricted_package_name'))
-            ->setDryRun($notification->getParameter('dry_run'))
+            ->setCollapseKey($notification->getOption('collapse_key'))
+            ->setDelayWhileIdle($notification->getOption('delay_while_idle'))
+            ->setTimeToLive($notification->getOption('time_to_live'))
+            ->setRestrictedPackageName($notification->getOption('restricted_package_name'))
+            ->setDryRun($notification->getOption('dry_run'))
             ->setData($message->getParameters());
 
         if ($message->getOption('title') !== null && $message->getOption('body') !== null) {

@@ -18,12 +18,14 @@ class GcmBuilder
     /**
      * Get opened push service client.
      *
+     * @param string $apiKey
+     *
      * @return \ZendService\Google\Gcm\Client
      */
-    public static function buildPush()
+    public static function buildPush($apiKey)
     {
         $client = new Client;
-        $client->setApiKey($this->getParameter('api_key'));
+        $client->setApiKey($apiKey);
 
         $httpClient = new HttpClient(
             null,

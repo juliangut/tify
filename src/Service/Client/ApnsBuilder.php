@@ -18,41 +18,47 @@ class ApnsBuilder
     /**
      * Get opened push service client.
      *
+     * @param string $certificate
+     * @param string $passPhrase
      * @param bool $production
      *
      * @return \ZendService\Apple\Apns\Client\Message
      */
-    public static function buildPush($production = true)
+    public static function buildPush($certificate, $passPhrase = '', $production = true)
     {
-        return static::buildClient(new Message, $production);
+        return static::buildClient(new Message, $certificate, $passPhrase, $production);
     }
 
     /**
      * Get opened feedback service client.
      *
+     * @param string $certificate
+     * @param string $passPhrase
      * @param bool $production
      *
      * @return \ZendService\Apple\Apns\Client\Message
      */
-    public static function buildFeedback($production = true)
+    public static function buildFeedback($certificate, $passPhrase = '', $production = true)
     {
-        return static::buildClient(new Feedback, $production);
+        return static::buildClient(new Feedback, $certificate, $passPhrase, $production);
     }
 
     /**
      * Get opened client.
      *
      * @param \ZendService\Apple\Apns\Client\AbstractClient $client
+     * @param string                                        $certificate
+     * @param string                                        $passPhrase
      * @param bool                                          $production
      *
      * @return \ZendService\Apple\Apns\Client\AbstractClient
      */
-    protected static function buildClient(AbstractClient $client, $production = true)
+    protected static function buildClient(AbstractClient $client, $certificate, $passPhrase = '', $production = true)
     {
         $client->open(
             (bool) $production ? AbstractClient::PRODUCTION_URI : AbstractClient::SANDBOX_URI,
-            $this->getParameter('certificate'),
-            $this->getParameter('pass_phrase')
+            $certificate,
+            $passPhrase
         );
 
         return $client;
