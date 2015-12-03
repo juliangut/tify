@@ -27,8 +27,8 @@ abstract class AbstractMessage
     /**
      * Constructor.
      *
-     * @param array $options    Options
-     * @param array $parameters Parameters
+     * @param array $options
+     * @param array $parameters
      */
     public function __construct(array $options = [], array $parameters = [])
     {
@@ -39,7 +39,7 @@ abstract class AbstractMessage
     /**
      * Shortcut to set message title.
      *
-     * @param string $title Message title
+     * @param string $title
      */
     public function setTitle($title)
     {
@@ -51,7 +51,7 @@ abstract class AbstractMessage
     /**
      * Shortcut to set message body.
      *
-     * @param string $body Message body
+     * @param string $body
      */
     public function setBody($body)
     {

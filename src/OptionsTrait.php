@@ -29,7 +29,7 @@ trait OptionsTrait
     /**
      * Has option.
      *
-     * @param string $option Option
+     * @param string $option
      *
      * @return bool
      */
@@ -41,8 +41,8 @@ trait OptionsTrait
     /**
      * Get option.
      *
-     * @param string $option  Option
-     * @param mixed  $default Default
+     * @param string $option
+     * @param mixed  $default
      *
      * @return mixed
      */
@@ -54,7 +54,7 @@ trait OptionsTrait
     /**
      * Set options.
      *
-     * @param array $options Options
+     * @param array $options
      *
      * @return \Jgut\Pushat\Model\BaseOptionedModel
      */
@@ -68,8 +68,8 @@ trait OptionsTrait
     /**
      * Set option.
      *
-     * @param string $option Key
-     * @param mixed  $value  Value
+     * @param string $option
+     * @param mixed  $value
      *
      * @return mixed
      */

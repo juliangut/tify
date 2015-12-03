@@ -12,30 +12,26 @@ namespace Jgut\Pushat\Service;
 use DateTime;
 use DateTimeZone;
 use InvalidArgumentException;
-use Jgut\Pushat\Device\Apns as ApnsDevice;
 use Jgut\Pushat\Exception\ServiceException;
 use Jgut\Pushat\Exception\NotificationException;
 use Jgut\Pushat\Notification\AbstractNotification;
 use Jgut\Pushat\Notification\Apns as ApnsNotification;
-use ZendService\Apple\Apns\Client\AbstractClient as AbstractServiceClient;
-use ZendService\Apple\Apns\Client\Feedback as FeedbackServiceClient;
-use ZendService\Apple\Apns\Client\Message as PushServiceClient;
-use ZendService\Apple\Apns\Message as PushServiceMessage;
-use ZendService\Apple\Apns\Message\Alert as PushServiceAlert;
+use Jgut\Pushat\Service\Client\ApnsBuilder as ClientBuilder;
+use Jgut\Pushat\Service\Message\ApnsBuilder as MessageBuilder;
 use ZendService\Apple\Apns\Response\Message as PushServiceResponse;
 use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
 
-class Apns extends AbstractService
+class Apns extends AbstractService implements PushInterface, FeedbackInterface
 {
     /**
      * @var \ZendService\Apple\Apns\Client\Message
      */
-    protected $pushServiceClient;
+    protected $pushClient;
 
     /**
      * @var \ZendService\Apple\Apns\Client\Feedback
      */
-    protected $fbServiceClient;
+    protected $feedbackClient;
 
     /**
      * {@inheritdoc}
@@ -56,7 +52,8 @@ class Apns extends AbstractService
     /**
      * {@inheritdoc}
      *
-     * @throws \Jgut\Pushat\Exception\PushException
+     * @throws \InvalidArgumentException
+     * @throws \Jgut\Pushat\Exception\NotificationException
      */
     public function send(AbstractNotification $notification)
     {
@@ -69,7 +66,7 @@ class Apns extends AbstractService
         $pushedDevices = [];
 
         foreach ($notification->getDevices() as $device) {
-            $message = $this->getServiceMessage($device, $notification);
+            $message = MessageBuilder::build($device, $notification);
 
             try {
                 $this->response = $service->send($message);
@@ -86,9 +83,9 @@ class Apns extends AbstractService
     }
 
     /**
-     * Feedback.
+     * {@inheritdoc}
      *
-     * @return array
+     * @throws \Jgut\Pushat\Exception\NotificationException
      */
     public function feedback()
     {
@@ -119,11 +116,11 @@ class Apns extends AbstractService
      */
     protected function getPushService()
     {
-        if (!isset($this->pushServiceClient)) {
-            $this->pushServiceClient = $this->getServiceClient(new PushServiceClient);
+        if (!isset($this->pushClient)) {
+            $this->pushClient = ClientBuilder::buildPush($this->isProductionEnvironment());
         }
 
-        return $this->pushServiceClient;
+        return $this->pushClient;
     }
 
     /**
@@ -133,78 +130,11 @@ class Apns extends AbstractService
      */
     protected function getFeedbackService()
     {
-        if (!isset($this->fbServiceClient)) {
-            $this->fbServiceClient = $this->getServiceClient(new FeedbackServiceClient);
+        if (!isset($this->feedbackClient)) {
+            $this->feedbackClient = ClientBuilder::buildFeedback($this->isProductionEnvironment());
         }
 
-        return $this->fbServiceClient;
-    }
-
-    /**
-     * Get opened client.
-     *
-     * @param \ZendService\Apple\Apns\Client\AbstractClient $client
-     *
-     * @return \ZendService\Apple\Apns\Client\AbstractClient
-     */
-    protected function getServiceClient(AbstractServiceClient $client)
-    {
-        $uri = $this->isProductionEnvironment()
-            ? AbstractServiceClient::PRODUCTION_URI
-            : AbstractServiceClient::SANDBOX_URI;
-
-        $client->open(
-            $uri,
-            $this->getParameter('certificate'),
-            $this->getParameter('pass_phrase')
-        );
-
-        return $client;
-    }
-
-    /**
-     * Get service message from origin.
-     *
-     * @param \Jgut\Pushat\Device\Apns       $device
-     * @param \Jgut\Pushat\Notification\Apns $notification
-     *
-     * @return \ZendService\Apple\Apns\Message
-     */
-    protected function getServiceMessage(ApnsDevice $device, ApnsNotification $notification)
-    {
-        $message = $notification->getMessage();
-
-        $alert = new PushServiceAlert(
-            $message->getOption('body'),
-            $message->getOption('action_loc_key'),
-            $message->getOption('loc_key'),
-            $message->getOption('loc_args'),
-            $message->getOption('launch_image'),
-            $message->getOption('title'),
-            $message->getOption('title_loc_key'),
-            $message->getOption('title_loc_args')
-        );
-
-        $pushMessage = new PushServiceMessage();
-
-        $pushMessage
-            ->setId(sha1($device->getToken() . $message->getOption('body')))
-            ->setToken($device->getToken())
-            ->setAlert($alert)
-            ->setSound($notification->getOption('sound'))
-            ->setContentAvailable($notification->getOption('content_available'))
-            ->setCategory($notification->getOption('category'))
-            ->setCustom($message->getParameters());
-
-        if ($notification->getOption('expire') !== null) {
-            $pushMessage->setExpire($notification->getOption('expire'));
-        }
-
-        if ((int) $notification->getOption('badge') !== 0) {
-            $pushMessage->setBadge($notification->getOption('badge') + $device->getParameter('badge', 0));
-        }
-
-        return $pushMessage;
+        return $this->feedbackClient;
     }
 
     /**

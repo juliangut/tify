@@ -13,6 +13,7 @@ use DateTime;
 use Jgut\Pushat\Service\AbstractService;
 use Jgut\Pushat\Exception\ServiceException;
 use Jgut\Pushat\Notification\AbstractNotification;
+use Jgut\Pushat\Service\FeedbackInterface;
 
 class Manager
 {
@@ -50,8 +51,8 @@ class Manager
      */
     public function feedback(AbstractService $service)
     {
-        if (method_exists($service, 'feedback') === false) {
-            throw new ServiceException(sprintf('%s service has no dedicated "getFeedback" method', (string) $service));
+        if (!$service instanceof FeedbackInterface) {
+            throw new ServiceException(sprintf('%s is not a feedback enabled service', (string) $service));
         }
 
         return $service->feedback();

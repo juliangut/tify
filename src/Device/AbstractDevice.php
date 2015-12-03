@@ -23,8 +23,8 @@ abstract class AbstractDevice
     /**
      * Constructor.
      *
-     * @param string $token      Token
-     * @param array  $parameters Parameters
+     * @param string $token
+     * @param array  $parameters
      */
     public function __construct($token, array $parameters = [])
     {

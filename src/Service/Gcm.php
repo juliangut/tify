@@ -13,18 +13,16 @@ use InvalidArgumentException;
 use Jgut\Pushat\Exception\NotificationException;
 use Jgut\Pushat\Notification\AbstractNotification;
 use Jgut\Pushat\Notification\Gcm as GcmNotification;
-use Jgut\Pushat\Service\Message\Gcm as PushServiceMessage;
-use Zend\Http\Client as HttpClient;
-use Zend\Http\Client\Service\Socket;
+use Jgut\Pushat\Service\Client\GcmBuilder as ClientBuilder;
+use Jgut\Pushat\Service\Message\GcmBuilder as MessageBuilder;
 use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
-use ZendService\Google\Gcm\Client as PushServiceClient;
 
-class Gcm extends AbstractService
+class Gcm extends AbstractService implements PushInterface
 {
     /**
      * @var \ZendService\Google\Gcm\Client
      */
-    protected $pushServiceClient;
+    protected $pushClient;
 
     /**
      * {@inheritdoc}
@@ -42,7 +40,7 @@ class Gcm extends AbstractService
         $pushedDevices = [];
 
         foreach (array_chunk($notification->getDevices()->getTokens(), 100) as $tokensRange) {
-            $message = $this->getServiceMessage($tokensRange, $notification);
+            $message = MessageBuilder::build($tokensRange, $notification);
 
             try {
                 $this->response = $service->send($message);
@@ -67,53 +65,11 @@ class Gcm extends AbstractService
      */
     protected function getPushService()
     {
-        if (!isset($this->pushServiceClient)) {
-            $this->pushServiceClient = new PushServiceClient;
-            $this->pushServiceClient->setApiKey($this->getParameter('api_key'));
-
-            $httpClient = new HttpClient(
-                null,
-                [
-                    'service' => Socket::class,
-                    'strictredirects' => true,
-                    'sslverifypeer' => false,
-                ]
-            );
-
-            $this->pushServiceClient->setHttpClient($httpClient);
+        if (!isset($this->pushClient)) {
+            $this->pushClient = ClientBuilder::buildPush();
         }
 
-        return $this->pushServiceClient;
-    }
-
-    /**
-     * Get configured service message.
-     *
-     * @param array                         $tokens
-     * @param \Jgut\Pushat\Notification\Gcm $notification
-     *
-     * @return \ZendService\Google\Gcm\Message
-     */
-    protected function getServiceMessage(array $tokens, GmcNotification $notification)
-    {
-        $message = $notification->getMessage();
-
-        $pushMessage = new PushServiceMessage();
-
-        $pushMessage
-            ->setRegistrationIds($tokens)
-            ->setCollapseKey($notification->getParameter('collapse_key'))
-            ->setDelayWhileIdle($notification->getParameter('delay_while_idle'))
-            ->setTimeToLive($notification->getParameter('time_to_live'))
-            ->setRestrictedPackageName($notification->getParameter('restricted_package_name'))
-            ->setDryRun($notification->getParameter('dry_run'))
-            ->setData($message->getParameters());
-
-        if ($message->getOption('title') !== null && $message->getOption('body') !== null) {
-            $pushMessage->setNotificationPayload($message->getOptions());
-        }
-
-        return $pushMessage;
+        return $this->pushClient;
     }
 
     /**

@@ -12,7 +12,6 @@ namespace Jgut\Pushat\Service;
 use InvalidArgumentException;
 use ReflectionClass;
 use Jgut\Pushat\ParametersTrait;
-use Jgut\Pushat\Notification\AbstractNotification;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractService
@@ -56,15 +55,6 @@ abstract class AbstractService
         $this->serviceKey = lcfirst($reflectedClass->getShortName());
         $this->parameters = $resolver->resolve($parameters);
     }
-
-    /**
-     * Send a notification.
-     *
-     * @param \Jgut\Pushat\Notification\AbstractNotification $notification
-     *
-     * @return array
-     */
-    abstract public function send(AbstractNotification $notification);
 
     /**
      * __toString.

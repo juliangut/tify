@@ -19,7 +19,7 @@ trait ParametersTrait
     /**
      * Has parameter.
      *
-     * @param string $parameter Key
+     * @param string $parameter
      *
      * @return bool
      */
@@ -31,8 +31,8 @@ trait ParametersTrait
     /**
      * Get parameter.
      *
-     * @param string $parameter Key
-     * @param mixed  $default   Default
+     * @param string $parameter
+     * @param mixed  $default
      *
      * @return mixed
      */
@@ -54,7 +54,7 @@ trait ParametersTrait
     /**
      * Set parameters.
      *
-     * @param array $parameters Parameters
+     * @param array $parameters
      *
      * @return \Jgut\Pushat\Model\BaseParameteredModel
      */
@@ -68,8 +68,8 @@ trait ParametersTrait
     /**
      * Set parameter.
      *
-     * @param string $parameter Key
-     * @param mixed  $value     Value
+     * @param string $parameter
+     * @param mixed  $value
      *
      * @return mixed
      */
