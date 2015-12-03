@@ -33,7 +33,7 @@ class Apns extends AbstractNotification
      * @param \Jgut\Tify\Service\Apns  $service
      * @param \Jgut\Tify\Message\Apns  $message
      * @param \Jgut\Tify\Device\Apns[] $devices
-     * @param array                      $options
+     * @param array                    $options
      */
     public function __construct(ApnsService $service, ApnsMessage $message, array $devices = [], array $options = [])
     {

@@ -64,7 +64,7 @@ abstract class AbstractNotification
      * @param \Jgut\Tify\Service\AbstractService $service
      * @param \Jgut\Tify\Message\AbstractMessage $message
      * @param \Jgut\Tify\Device\AbstractDevice[] $devices
-     * @param array                                $options
+     * @param array                              $options
      */
     public function __construct(
         AbstractService $service,

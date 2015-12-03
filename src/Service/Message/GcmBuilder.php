@@ -17,7 +17,7 @@ class GcmBuilder
     /**
      * Get configured service message.
      *
-     * @param array                         $tokens
+     * @param array                       $tokens
      * @param \Jgut\Tify\Notification\Gcm $notification
      *
      * @return \Jgut\Tify\Service\Message\Gcm

@@ -33,7 +33,7 @@ class Gcm extends AbstractNotification
      * @param \Jgut\Tify\Service\Gcm  $service
      * @param \Jgut\Tify\Message\Gcm  $message
      * @param \Jgut\Tify\Device\Gcm[] $devices
-     * @param array                     $options
+     * @param array                   $options
      */
     public function __construct(GcmService $service, GcmMessage $message, array $devices = [], array $options = [])
     {
