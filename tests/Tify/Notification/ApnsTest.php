@@ -59,18 +59,18 @@ class ApnsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\Apns::addDevice
+     * @covers \Jgut\Tify\Notification\Apns::addRecipient
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testDeviceAdd()
+    public function testRecipientAdd()
     {
-        $device = $this->getMock('\Jgut\Tify\Device\Apns', [], [], '', false);
-        $this->notification->addDevice($device);
-        $this->assertCount(1, $this->notification->getDevices());
+        $recipient = $this->getMock('\Jgut\Tify\Recipient\Apns', [], [], '', false);
+        $this->notification->addRecipient($recipient);
+        $this->assertCount(1, $this->notification->getRecipients());
 
-        $device = $this->getMock('\Jgut\Tify\Device\AbstractDevice', [], [], '', false);
+        $recipient = $this->getMock('\Jgut\Tify\Recipient\AbstractRecipient', [], [], '', false);
 
-        $this->notification->addDevice($device);
+        $this->notification->addRecipient($recipient);
     }
 }

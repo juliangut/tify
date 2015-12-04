@@ -7,28 +7,28 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Device;
+namespace Jgut\Tify\Tests\Recipient;
 
 /**
- * @covers \Jgut\Tify\Device\AbstractDevice
+ * @covers \Jgut\Tify\Recipient\AbstractRecipient
  */
-class AbstractDeviceTest extends \PHPUnit_Framework_TestCase
+class AbstractRecipientTest extends \PHPUnit_Framework_TestCase
 {
-    protected $device;
+    protected $recipient;
 
     public function setUp()
     {
-        $this->device = $this->getMockForAbstractClass(
-            '\Jgut\Tify\Device\AbstractDevice',
+        $this->recipient = $this->getMockForAbstractClass(
+            '\Jgut\Tify\Recipient\AbstractRecipient',
             ['9a4ecb987ef59c88b12035278b86f26d44883593']
         );
     }
 
     /**
-     * @covers \Jgut\Tify\Device\AbstractDevice::getToken
+     * @covers \Jgut\Tify\Recipient\AbstractRecipient::getToken
      */
     public function testDefaults()
     {
-        $this->assertNull($this->device->getToken());
+        $this->assertNull($this->recipient->getToken());
     }
 }

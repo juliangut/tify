@@ -7,29 +7,29 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Device;
+namespace Jgut\Tify\Tests\Recipient;
 
-use Jgut\Tify\Device\Apns;
+use Jgut\Tify\Recipient\Apns;
 
 /**
- * @covers \Jgut\Tify\Device\Apns
+ * @covers \Jgut\Tify\Recipient\Apns
  */
 class ApnsTest extends \PHPUnit_Framework_TestCase
 {
-    protected $device;
+    protected $recipient;
 
     public function setUp()
     {
-        $this->device = new Apns('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
+        $this->recipient = new Apns('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
     }
 
     /**
-     * @covers \Jgut\Tify\Device\Apns::setToken
+     * @covers \Jgut\Tify\Recipient\Apns::setToken
      *
      * @expectedException \InvalidArgumentException
      */
     public function testBadToken()
     {
-        $this->device->setToken('non_hex_short_token');
+        $this->recipient->setToken('non_hex_short_token');
     }
 }

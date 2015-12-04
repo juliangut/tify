@@ -7,16 +7,16 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Device;
+namespace Jgut\Tify\Recipient;
 
 use Jgut\Tify\ParametersTrait;
 
-abstract class AbstractDevice
+abstract class AbstractRecipient
 {
     use ParametersTrait;
 
     /**
-     * Device token.
+     * Recipient token.
      *
      * @var string
      */

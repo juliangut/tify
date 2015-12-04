@@ -27,7 +27,7 @@ class Gcm extends AbstractService implements SendInterface
     private $statusCodes = [
         'MissingRegistration' => 'Missing Registration Token',
         'InvalidRegistration' => 'Invalid Registration Token',
-        'NotRegistered' => 'Unregistered Device',
+        'NotRegistered' => 'Unregistered Recipient',
         'InvalidPackageName' => 'Invalid Package Name',
         'MismatchSenderId' => 'Mismatched Sender',
         'MessageTooBig' => 'Message Too Big',
@@ -35,7 +35,7 @@ class Gcm extends AbstractService implements SendInterface
         'InvalidTtl' => 'Invalid Time to Live',
         'Unavailable' => 'Timeout',
         'InternalServerError' => 'Internal Server Error',
-        'DeviceMessageRateExceeded' => 'Device Message Rate Exceeded',
+        'RecipientMessageRateExceeded' => 'Recipient Message Rate Exceeded',
         'TopicsMessageRateExceeded' => 'Topics Message Rate Exceeded',
     ];
 
@@ -71,7 +71,7 @@ class Gcm extends AbstractService implements SendInterface
 
         $service = $this->getPushService($this->getParameter('api_key'));
 
-        $pushedDevices = [];
+        $pushedRecipients = [];
 
         foreach (array_chunk($notification->getTokens(), 100) as $tokensRange) {
             $message = MessageBuilder::build($tokensRange, $notification);
@@ -85,20 +85,20 @@ class Gcm extends AbstractService implements SendInterface
                 foreach ($tokensRange as $token) {
                     $result = isset($results[$token]) ? $results[$token] : [];
 
-                    $pushedDevice = [
+                    $pushedRecipient = [
                         'token' => $token,
                         'date' => $time,
                     ];
 
                     if (isset($result['error'])) {
-                        $pushedDevice['error'] = $this->statusCodes[$result['error']];
+                        $pushedRecipient['error'] = $this->statusCodes[$result['error']];
                     }
 
-                    $pushedDevices[] = $pushedDevice;
+                    $pushedRecipients[] = $pushedRecipient;
                 }
             } catch (ServiceRuntimeException $exception) {
                 foreach ($tokensRange as $token) {
-                    $pushedDevices[] = [
+                    $pushedRecipients[] = [
                         'token' => $token,
                         'date' => $time,
                         'error' => $exception->getMessage(),
@@ -107,7 +107,7 @@ class Gcm extends AbstractService implements SendInterface
             }
         }
 
-        $notification->setPushed($pushedDevices);
+        $notification->setPushed($pushedRecipients);
     }
 
     /**

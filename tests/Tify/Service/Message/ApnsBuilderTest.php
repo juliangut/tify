@@ -22,7 +22,7 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testPushClient()
     {
-        $device = new \Jgut\Tify\Device\Apns('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
+        $recipient = new \Jgut\Tify\Recipient\Apns('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
 
         $service = new \Jgut\Tify\Service\Apns(
             ['certificate' => dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem']
@@ -37,7 +37,7 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
             ['expire' => 600, 'badge' => 1]
         );
 
-        $client = ApnsBuilder::build($device, $notification);
+        $client = ApnsBuilder::build($recipient, $notification);
         $this->assertInstanceOf(Message::class, $client);
     }
 }

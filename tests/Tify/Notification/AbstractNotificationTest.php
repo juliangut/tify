@@ -24,18 +24,18 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
     {
         $this->service = $this->getMock('\Jgut\Tify\Service\AbstractService', [], [], '', false);
         $this->message = $this->getMock('\Jgut\Tify\Message\AbstractMessage', [], [], '', false);
-        $device = $this->getMock('\Jgut\Tify\Device\AbstractDevice', [], [], '', false);
+        $recipient = $this->getMock('\Jgut\Tify\Recipient\AbstractRecipient', [], [], '', false);
 
         $this->notification = $this->getMockForAbstractClass(
             '\Jgut\Tify\Notification\AbstractNotification',
-            [$this->service, $this->message, [$device]]
+            [$this->service, $this->message, [$recipient]]
         );
     }
 
     /**
      * @covers \Jgut\Tify\Notification\AbstractNotification::getService
      * @covers \Jgut\Tify\Notification\AbstractNotification::getMessage
-     * @covers \Jgut\Tify\Notification\AbstractNotification::getDevices
+     * @covers \Jgut\Tify\Notification\AbstractNotification::getRecipients
      * @covers \Jgut\Tify\Notification\AbstractNotification::getResult
      * @covers \Jgut\Tify\Notification\AbstractNotification::getTokens
      */
@@ -43,7 +43,7 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($this->service, $this->notification->getService());
         $this->assertEquals($this->message, $this->notification->getMessage());
-        $this->assertCount(0, $this->notification->getDevices());
+        $this->assertCount(0, $this->notification->getRecipients());
         $this->assertCount(0, $this->notification->getResult());
         $this->assertCount(0, $this->notification->getTokens());
     }
@@ -62,7 +62,7 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $this->notification->getResult());
         $this->assertNull($this->notification->getPushTime());
 
-        $this->notification->setPushed(['pushedDevice']);
+        $this->notification->setPushed(['pushedRecipient']);
         $this->assertEquals(AbstractNotification::STATUS_PUSHED, $this->notification->getStatus());
         $this->assertTrue($this->notification->isPushed());
         $this->assertCount(1, $this->notification->getResult());

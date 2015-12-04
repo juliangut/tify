@@ -7,9 +7,9 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Device;
+namespace Jgut\Tify\Recipient;
 
-class Gcm extends AbstractDevice
+class Apns extends AbstractRecipient
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class Gcm extends AbstractDevice
     public function setToken($token)
     {
         $token = trim($token);
-        if ($token === '') {
-            throw new \InvalidArgumentException('GCM token can not be empty');
+        if (!ctype_xdigit($token) || strlen($token) !== 64) {
+            throw new \InvalidArgumentException('APNS token must be a 64 hex string');
         }
 
         $this->token = $token;

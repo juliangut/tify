@@ -11,8 +11,8 @@ namespace Jgut\Tify\Notification;
 
 use Jgut\Tify\Service\AbstractService;
 use Jgut\Tify\Service\Apns as ApnsService;
-use Jgut\Tify\Device\AbstractDevice;
-use Jgut\Tify\Device\Apns as ApnsDevice;
+use Jgut\Tify\Recipient\AbstractRecipient;
+use Jgut\Tify\Recipient\Apns as ApnsRecipient;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\Message\Apns as ApnsMessage;
 
@@ -30,14 +30,14 @@ class Apns extends AbstractNotification
     ];
 
     /**
-     * @param \Jgut\Tify\Service\Apns  $service
-     * @param \Jgut\Tify\Message\Apns  $message
-     * @param \Jgut\Tify\Device\Apns[] $devices
-     * @param array                    $options
+     * @param \Jgut\Tify\Service\Apns     $service
+     * @param \Jgut\Tify\Message\Apns     $message
+     * @param \Jgut\Tify\Recipient\Apns[] $recipients
+     * @param array                       $options
      */
-    public function __construct(ApnsService $service, ApnsMessage $message, array $devices = [], array $options = [])
+    public function __construct(ApnsService $service, ApnsMessage $message, array $recipients = [], array $options = [])
     {
-        parent::__construct($service, $message, $devices, $options);
+        parent::__construct($service, $message, $recipients, $options);
     }
 
     /**
@@ -77,13 +77,13 @@ class Apns extends AbstractNotification
      *
      * @throws \InvalidArgumentException
      */
-    public function addDevice(AbstractDevice $device)
+    public function addRecipient(AbstractRecipient $recipient)
     {
-        if (!$device instanceof ApnsDevice) {
-            throw new \InvalidArgumentException('Device must be an accepted APNS device');
+        if (!$recipient instanceof ApnsRecipient) {
+            throw new \InvalidArgumentException('Recipient must be an accepted APNS recipient');
         }
 
-        $this->devices[] = $device;
+        $this->recipients[] = $recipient;
 
         return $this;
     }

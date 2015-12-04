@@ -7,29 +7,29 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Device;
+namespace Jgut\Tify\Tests\Recipient;
 
-use Jgut\Tify\Device\Gcm;
+use Jgut\Tify\Recipient\Gcm;
 
 /**
- * @covers \Jgut\Tify\Device\Gcm
+ * @covers \Jgut\Tify\Recipient\Gcm
  */
 class GcmTest extends \PHPUnit_Framework_TestCase
 {
-    protected $device;
+    protected $recipient;
 
     public function setUp()
     {
-        $this->device = new Gcm('f59c88b12035278b86f26d448835939a');
+        $this->recipient = new Gcm('f59c88b12035278b86f26d448835939a');
     }
 
     /**
-     * @covers \Jgut\Tify\Device\Gcm::setToken
+     * @covers \Jgut\Tify\Recipient\Gcm::setToken
      *
      * @expectedException \InvalidArgumentException
      */
     public function testBadToken()
     {
-        $this->device->setToken('    ');
+        $this->recipient->setToken('    ');
     }
 }

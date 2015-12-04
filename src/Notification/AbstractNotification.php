@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Notification;
 
-use Jgut\Tify\Device\AbstractDevice;
+use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\OptionsTrait;
 use Jgut\Tify\Service\AbstractService;
@@ -39,9 +39,9 @@ abstract class AbstractNotification
     protected $message;
 
     /**
-     * @var \Jgut\Tify\Device\AbstractDevice[]
+     * @var \Jgut\Tify\Recipient\AbstractRecipient[]
      */
-    protected $devices = [];
+    protected $recipients = [];
 
     /**
      * @var int
@@ -61,22 +61,22 @@ abstract class AbstractNotification
     protected $result = [];
 
     /**
-     * @param \Jgut\Tify\Service\AbstractService $service
-     * @param \Jgut\Tify\Message\AbstractMessage $message
-     * @param \Jgut\Tify\Device\AbstractDevice[] $devices
-     * @param array                              $options
+     * @param \Jgut\Tify\Service\AbstractService       $service
+     * @param \Jgut\Tify\Message\AbstractMessage       $message
+     * @param \Jgut\Tify\Recipient\AbstractRecipient[] $recipients
+     * @param array                                    $options
      */
     public function __construct(
         AbstractService $service,
         AbstractMessage $message,
-        array $devices = [],
+        array $recipients = [],
         array $options = []
     ) {
         $this->service = $service;
         $this->message = $message;
 
-        foreach ($devices as $device) {
-            $this->addDevice($device);
+        foreach ($recipients as $recipient) {
+            $this->addRecipient($recipient);
         }
 
         $this->setOptions(array_merge($this->defaultOptions, $options));
@@ -117,21 +117,21 @@ abstract class AbstractNotification
     abstract public function setMessage(AbstractMessage $message);
 
     /**
-     * Retrieve list of devices.
+     * Retrieve list of recipients.
      *
-     * @return \Jgut\Tify\Device\AbstractDevice[]
+     * @return \Jgut\Tify\Recipient\AbstractRecipient[]
      */
-    final public function getDevices()
+    final public function getRecipients()
     {
-        return $this->devices;
+        return $this->recipients;
     }
 
     /**
-     * Add device.
+     * Add recipient.
      *
-     * @param \Jgut\Tify\Device\AbstractDevice $device
+     * @param \Jgut\Tify\Recipient\AbstractRecipient $recipient
      */
-    abstract public function addDevice(AbstractDevice $device);
+    abstract public function addRecipient(AbstractRecipient $recipient);
 
     /**
      * Retrieve notification status.
@@ -196,7 +196,7 @@ abstract class AbstractNotification
     }
 
     /**
-     * Retrieve devices tokens list.
+     * Retrieve recipients tokens list.
      *
      * @return array
      */
@@ -204,8 +204,8 @@ abstract class AbstractNotification
     {
         $tokens = [];
 
-        foreach ($this->devices as $device) {
-            $tokens[] = $device->getToken();
+        foreach ($this->recipients as $recipient) {
+            $tokens[] = $recipient->getToken();
         }
 
         return array_unique(array_filter($tokens));

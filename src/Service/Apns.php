@@ -29,7 +29,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
     private $statusCodes = [
         0 => 'OK',
         1 => 'Processing Error',
-        2 => 'Missing Device Token',
+        2 => 'Missing Recipient Token',
         3 => 'Missing Topic',
         4 => 'Missing Payload',
         5 => 'Invalid Token Size',
@@ -101,13 +101,13 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
 
         $service = $this->getPushService();
 
-        $pushedDevices = [];
+        $pushedRecipients = [];
 
-        foreach ($notification->getDevices() as $device) {
-            $message = MessageBuilder::build($device, $notification);
+        foreach ($notification->getRecipients() as $recipient) {
+            $message = MessageBuilder::build($recipient, $notification);
 
-            $pushedDevice = [
-                'token' => $device->getToken(),
+            $pushedRecipient = [
+                'token' => $recipient->getToken(),
                 'date' => new \DateTime,
             ];
 
@@ -115,16 +115,16 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
                 $response = $service->send($message);
 
                 if ($response->getCode() !== static::RESULT_OK) {
-                    $pushedDevice['error'] = $this->statusCodes[$response->getCode()];
+                    $pushedRecipient['error'] = $this->statusCodes[$response->getCode()];
                 }
             } catch (ServiceRuntimeException $exception) {
-                $pushedDevice['error'] = $exception->getMessage();
+                $pushedRecipient['error'] = $exception->getMessage();
             }
 
-            $pushedDevices[] = $pushedDevice;
+            $pushedRecipients[] = $pushedRecipient;
         }
 
-        $notification->setPushed($pushedDevices);
+        $notification->setPushed($pushedRecipients);
 
         $service->close();
         $this->pushClient = null;

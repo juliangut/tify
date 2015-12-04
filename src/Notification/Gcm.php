@@ -11,8 +11,8 @@ namespace Jgut\Tify\Notification;
 
 use Jgut\Tify\Service\AbstractService;
 use Jgut\Tify\Service\Gcm as GcmService;
-use Jgut\Tify\Device\AbstractDevice;
-use Jgut\Tify\Device\Gcm as GcmDevice;
+use Jgut\Tify\Recipient\AbstractRecipient;
+use Jgut\Tify\Recipient\Gcm as GcmRecipient;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\Message\Gcm as GcmMessage;
 
@@ -30,14 +30,14 @@ class Gcm extends AbstractNotification
     ];
 
     /**
-     * @param \Jgut\Tify\Service\Gcm  $service
-     * @param \Jgut\Tify\Message\Gcm  $message
-     * @param \Jgut\Tify\Device\Gcm[] $devices
-     * @param array                   $options
+     * @param \Jgut\Tify\Service\Gcm     $service
+     * @param \Jgut\Tify\Message\Gcm     $message
+     * @param \Jgut\Tify\Recipient\Gcm[] $recipients
+     * @param array                      $options
      */
-    public function __construct(GcmService $service, GcmMessage $message, array $devices = [], array $options = [])
+    public function __construct(GcmService $service, GcmMessage $message, array $recipients = [], array $options = [])
     {
-        parent::__construct($service, $message, $devices, $options);
+        parent::__construct($service, $message, $recipients, $options);
     }
 
     /**
@@ -77,13 +77,13 @@ class Gcm extends AbstractNotification
      *
      * @throws \InvalidArgumentException
      */
-    public function addDevice(AbstractDevice $device)
+    public function addRecipient(AbstractRecipient $recipient)
     {
-        if (!$device instanceof GcmDevice) {
-            throw new \InvalidArgumentException('Device must be an accepted GCM device');
+        if (!$recipient instanceof GcmRecipient) {
+            throw new \InvalidArgumentException('Recipient must be an accepted GCM recipient');
         }
 
-        $this->devices[] = $device;
+        $this->recipients[] = $recipient;
 
         return $this;
     }

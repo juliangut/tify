@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Service\Message;
 
-use Jgut\Tify\Device\Apns as ApnsDevice;
+use Jgut\Tify\Recipient\Apns as ApnsRecipient;
 use Jgut\Tify\Notification\Apns as ApnsNotification;
 use ZendService\Apple\Apns\Message;
 use ZendService\Apple\Apns\Message\Alert;
@@ -19,24 +19,24 @@ class ApnsBuilder
     /**
      * Get service message from origin.
      *
-     * @param \Jgut\Tify\Device\Apns       $device
+     * @param \Jgut\Tify\Recipient\Apns    $recipient
      * @param \Jgut\Tify\Notification\Apns $notification
      *
      * @return \ZendService\Apple\Apns\Message
      */
-    public static function build(ApnsDevice $device, ApnsNotification $notification)
+    public static function build(ApnsRecipient $recipient, ApnsNotification $notification)
     {
         $message = $notification->getMessage();
 
         $badge = ((int) $notification->getOption('badge', 0) === 0)
             ? null
-            : $notification->getOption('badge') + (int) $device->getParameter('badge', 0);
+            : $notification->getOption('badge') + (int) $recipient->getParameter('badge', 0);
 
         $pushMessage = new Message();
 
         $pushMessage
-            ->setId(sha1($device->getToken() . $message->getOption('body')))
-            ->setToken($device->getToken())
+            ->setId(sha1($recipient->getToken() . $message->getOption('body')))
+            ->setToken($recipient->getToken())
             ->setExpire($notification->getOption('expire'))
             ->setSound($notification->getOption('sound'))
             ->setContentAvailable($notification->getOption('content_available'))
