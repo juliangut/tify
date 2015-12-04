@@ -4,30 +4,30 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8f68e9b8d3541f79e8218ec488c0ec36",
-    "content-hash": "63381439d693b82bca22492a517effe3",
+    "hash": "d30884a6f82d33e9b4bbe4b9866d4e7a",
+    "content-hash": "bd344633679669f0a06e302bee761fbe",
     "packages": [
         {
             "name": "symfony/options-resolver",
-            "version": "v3.0.0",
+            "version": "v2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "8e68c053a39e26559357cc742f01a7182ce40785"
+                "reference": "e7f62cf7d9e48238299cfa5d0556aee8cff1e075"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/8e68c053a39e26559357cc742f01a7182ce40785",
-                "reference": "8e68c053a39e26559357cc742f01a7182ce40785",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/e7f62cf7d9e48238299cfa5d0556aee8cff1e075",
+                "reference": "e7f62cf7d9e48238299cfa5d0556aee8cff1e075",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": ">=5.3.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "2.8-dev"
                 }
             },
             "autoload": {
@@ -59,7 +59,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2015-11-18 13:48:51"
+            "time": "2015-11-18 13:45:00"
         },
         {
             "name": "zendframework/zend-escaper",
