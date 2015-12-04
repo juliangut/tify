@@ -77,9 +77,9 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
      *
      * @throws \Jgut\Tify\Exception\ServiceException
      */
-    public function __construct(array $parameters = [], $environment = self::ENVIRONMENT_PROD)
+    public function __construct(array $parameters = [], $sandbox = false)
     {
-        parent::__construct($parameters, $environment);
+        parent::__construct($parameters, $sandbox);
 
         $certificatePath = $this->getParameter('certificate');
 
@@ -170,7 +170,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
             $this->pushClient = ClientBuilder::buildPush(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
-                $this->isProductionEnvironment()
+                $this->isSandbox()
             );
         }
 
@@ -188,7 +188,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
             $this->feedbackClient = ClientBuilder::buildFeedback(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
-                $this->isProductionEnvironment()
+                $this->isSandbox()
             );
         }
 

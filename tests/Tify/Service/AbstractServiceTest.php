@@ -24,32 +24,23 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Service\AbstractService::getEnvironment
-     * @covers \Jgut\Tify\Service\AbstractService::isProductionEnvironment
-     * @covers \Jgut\Tify\Service\AbstractService::isDevelopmentEnvironment
+     * @covers \Jgut\Tify\Service\AbstractService::isSandbox
      */
     public function testDefaults()
     {
-        $this->assertEquals(AbstractService::ENVIRONMENT_PROD, $this->service->getEnvironment());
-        $this->assertTrue($this->service->isProductionEnvironment());
-        $this->assertFalse($this->service->isDevelopmentEnvironment());
+        $this->assertFalse($this->service->isSandbox());
     }
 
     /**
-     * @covers \Jgut\Tify\Service\AbstractService::setEnvironment
-     * @covers \Jgut\Tify\Service\AbstractService::getEnvironment
-     * @covers \Jgut\Tify\Service\AbstractService::isProductionEnvironment
-     * @covers \Jgut\Tify\Service\AbstractService::isDevelopmentEnvironment
-     *
-     * @expectedException \InvalidArgumentException
+     * @covers \Jgut\Tify\Service\AbstractService::setSandbox
+     * @covers \Jgut\Tify\Service\AbstractService::isSandbox
      */
     public function testAccessorsMutators()
     {
-        $this->service->setEnvironment(AbstractService::ENVIRONMENT_DEV);
-        $this->assertEquals(AbstractService::ENVIRONMENT_DEV, $this->service->getEnvironment());
-        $this->assertFalse($this->service->isProductionEnvironment());
-        $this->assertTrue($this->service->isDevelopmentEnvironment());
+        $this->service->setSandbox(true);
+        $this->assertTrue($this->service->isSandbox());
 
-        $this->service->setEnvironment('my_environment');
+        $this->service->setSandbox(false);
+        $this->assertFalse($this->service->isSandbox());
     }
 }

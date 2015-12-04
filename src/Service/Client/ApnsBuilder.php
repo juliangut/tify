@@ -21,13 +21,13 @@ class ApnsBuilder
      *
      * @param string $certificate
      * @param string $passPhrase
-     * @param bool   $production
+     * @param bool   $sandbox
      *
      * @return \ZendService\Apple\Apns\Client\Message
      */
-    public static function buildPush($certificate, $passPhrase = '', $production = true)
+    public static function buildPush($certificate, $passPhrase = '', $sandbox = false)
     {
-        return static::buildClient(new Message, $certificate, $passPhrase, $production);
+        return static::buildClient(new Message, $certificate, $passPhrase, $sandbox);
     }
 
     /**
@@ -35,13 +35,13 @@ class ApnsBuilder
      *
      * @param string $certificate
      * @param string $passPhrase
-     * @param bool   $production
+     * @param bool   $sandbox
      *
      * @return \ZendService\Apple\Apns\Client\Feedback
      */
-    public static function buildFeedback($certificate, $passPhrase = '', $production = true)
+    public static function buildFeedback($certificate, $passPhrase = '', $sandbox = false)
     {
-        return static::buildClient(new Feedback, $certificate, $passPhrase, $production);
+        return static::buildClient(new Feedback, $certificate, $passPhrase, $sandbox);
     }
 
     /**
@@ -50,15 +50,15 @@ class ApnsBuilder
      * @param \ZendService\Apple\Apns\Client\AbstractClient $client
      * @param string                                        $certificate
      * @param string                                        $passPhrase
-     * @param bool                                          $production
+     * @param bool                                          $sandbox
      *
      * @return \ZendService\Apple\Apns\Client\AbstractClient
      */
-    protected static function buildClient(AbstractClient $client, $certificate, $passPhrase = '', $production = true)
+    protected static function buildClient(AbstractClient $client, $certificate, $passPhrase = '', $sandbox = false)
     {
         try {
             $client->open(
-                (bool) $production ? AbstractClient::PRODUCTION_URI : AbstractClient::SANDBOX_URI,
+                (bool) $sandbox ? AbstractClient::SANDBOX_URI : AbstractClient::PRODUCTION_URI,
                 $certificate,
                 $passPhrase
             );

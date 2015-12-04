@@ -14,9 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractService
 {
-    const ENVIRONMENT_DEV  = 'dev';
-    const ENVIRONMENT_PROD = 'prod';
-
     use ParametersTrait;
 
     /**
@@ -41,19 +38,19 @@ abstract class AbstractService
     protected $requiredParameters = [];
 
     /**
-     * Service environment.
+     * Sandbox environment.
      *
-     * @var string
+     * @var bool
      */
-    protected $environment;
+    protected $sandbox;
 
     /**
      * Constructor.
      *
-     * @param array  $parameters
-     * @param string $environment
+     * @param array $parameters
+     * @param bool  $sandbox
      */
-    public function __construct(array $parameters = [], $environment = self::ENVIRONMENT_PROD)
+    public function __construct(array $parameters = [], $sandbox = false)
     {
         $resolver = new OptionsResolver();
         $resolver->setDefined($this->definedParameters);
@@ -61,53 +58,28 @@ abstract class AbstractService
         $resolver->setRequired($this->requiredParameters);
 
         $this->parameters = $resolver->resolve($parameters);
-        $this->setEnvironment($environment);
+        $this->setSandbox($sandbox);
     }
 
     /**
-     * Get Environment.
+     * Retrieve if sandbox.
      *
-     * @return string
+     * @return bool
      */
-    public function getEnvironment()
+    public function isSandbox()
     {
-        return $this->environment;
+        return $this->sandbox;
     }
 
     /**
-     * Set Environment.
+     * Set Sandbox.
      *
-     * @param string $environment
+     * @param bool $sandbox
      */
-    public function setEnvironment($environment)
+    public function setSandbox($sandbox)
     {
-        $environment = strtolower(trim($environment));
-        if (!in_array($environment, [static::ENVIRONMENT_DEV, static::ENVIRONMENT_PROD])) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a valid environment', $environment));
-        }
-
-        $this->environment = $environment;
+        $this->sandbox = (bool) $sandbox;
 
         return $this;
-    }
-
-    /**
-     * isDevelopmentEnvironment.
-     *
-     * @return bool
-     */
-    public function isDevelopmentEnvironment()
-    {
-        return ($this->getEnvironment() === static::ENVIRONMENT_DEV);
-    }
-
-    /**
-     * isProductionEnvironment.
-     *
-     * @return bool
-     */
-    public function isProductionEnvironment()
-    {
-        return ($this->getEnvironment() === static::ENVIRONMENT_PROD);
     }
 }
