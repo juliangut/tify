@@ -101,30 +101,29 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
 
         $service = $this->getPushService();
 
-        $pushedRecipients = [];
+        $results = [];
 
         foreach ($notification->getRecipients() as $recipient) {
             $message = MessageBuilder::build($recipient, $notification);
 
-            $pushedRecipient = [
-                'token' => $recipient->getToken(),
-                'date' => new \DateTime,
-            ];
+            $result = new Result($recipient->getToken(), new \DateTime);
 
             try {
                 $response = $service->send($message);
 
                 if ($response->getCode() !== static::RESULT_OK) {
-                    $pushedRecipient['error'] = $this->statusCodes[$response->getCode()];
+                    $result->setStatus(Result::STATUS_ERROR);
+                    $result->setStatusMessage($this->statusCodes[$response->getCode()]);
                 }
             } catch (ServiceRuntimeException $exception) {
-                $pushedRecipient['error'] = $exception->getMessage();
+                $result->setStatus(Result::STATUS_ERROR);
+                $result->setStatusMessage($exception->getMessage());
             }
 
-            $pushedRecipients[] = $pushedRecipient;
+            $results[] = $result;
         }
 
-        $notification->setSent($pushedRecipients);
+        $notification->setSent($results);
 
         $service->close();
         $this->pushClient = null;

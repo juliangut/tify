@@ -26,7 +26,7 @@ class Manager
     /**
      * Push notifications.
      *
-     * @return array
+     * @return \Jgut\Tify\Result
      */
     public function push()
     {
@@ -37,7 +37,7 @@ class Manager
 
             $notification->getService()->send($notification);
 
-            $results = array_merge($results, $notification->getResult());
+            $results = array_merge($results, $notification->getResults());
         }
 
         return $results;

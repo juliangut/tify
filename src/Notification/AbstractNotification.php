@@ -49,11 +49,6 @@ abstract class AbstractNotification
     protected $status = self::STATUS_PENDING;
 
     /**
-     * @var \DateTime
-     */
-    protected $pushTime;
-
-    /**
      * Notification resultss.
      *
      * @var array
@@ -161,7 +156,6 @@ abstract class AbstractNotification
     final public function setSent(array $results = [])
     {
         $this->status = static::STATUS_SENT;
-        $this->pushTime = new \DateTime;
         $this->results = $results;
     }
 
@@ -171,24 +165,13 @@ abstract class AbstractNotification
     final public function setPending()
     {
         $this->status = static::STATUS_PENDING;
-        $this->pushTime = null;
         $this->results = [];
-    }
-
-    /**
-     * Retrieve sent time.
-     *
-     * @return \DateTime
-     */
-    final public function getPushTime()
-    {
-        return $this->pushTime;
     }
 
     /**
      * Retrieve results.
      *
-     * @return array
+     * @return \Jgut\Tify\Result[]
      */
     final public function getResults()
     {

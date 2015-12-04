@@ -36,7 +36,7 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
      * @covers \Jgut\Tify\Notification\AbstractNotification::getService
      * @covers \Jgut\Tify\Notification\AbstractNotification::getMessage
      * @covers \Jgut\Tify\Notification\AbstractNotification::getRecipients
-     * @covers \Jgut\Tify\Notification\AbstractNotification::getResult
+     * @covers \Jgut\Tify\Notification\AbstractNotification::getResults
      * @covers \Jgut\Tify\Notification\AbstractNotification::getTokens
      */
     public function testDefaults()
@@ -44,7 +44,7 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->service, $this->notification->getService());
         $this->assertEquals($this->message, $this->notification->getMessage());
         $this->assertCount(0, $this->notification->getRecipients());
-        $this->assertCount(0, $this->notification->getResult());
+        $this->assertCount(0, $this->notification->getResults());
         $this->assertCount(0, $this->notification->getTokens());
     }
 
@@ -53,25 +53,21 @@ class AbstractNotificationTest extends \PHPUnit_Framework_TestCase
      * @covers \Jgut\Tify\Notification\AbstractNotification::isSent
      * @covers \Jgut\Tify\Notification\AbstractNotification::setSent
      * @covers \Jgut\Tify\Notification\AbstractNotification::setPending
-     * @covers \Jgut\Tify\Notification\AbstractNotification::getPushTime
      */
     public function testStatus()
     {
         $this->assertEquals(AbstractNotification::STATUS_PENDING, $this->notification->getStatus());
         $this->assertFalse($this->notification->isSent());
-        $this->assertCount(0, $this->notification->getResult());
-        $this->assertNull($this->notification->getPushTime());
+        $this->assertCount(0, $this->notification->getResults());
 
         $this->notification->setSent(['pushedRecipient']);
         $this->assertEquals(AbstractNotification::STATUS_SENT, $this->notification->getStatus());
         $this->assertTrue($this->notification->isSent());
-        $this->assertCount(1, $this->notification->getResult());
-        $this->assertInstanceOf('\DateTime', $this->notification->getPushTime());
+        $this->assertCount(1, $this->notification->getResults());
 
         $this->notification->setPending();
         $this->assertEquals(AbstractNotification::STATUS_PENDING, $this->notification->getStatus());
         $this->assertFalse($this->notification->isSent());
-        $this->assertCount(0, $this->notification->getResult());
-        $this->assertNull($this->notification->getPushTime());
+        $this->assertCount(0, $this->notification->getResults());
     }
 }

@@ -11,6 +11,7 @@ namespace Jgut\Tify\Service;
 
 use Jgut\Tify\Notification\AbstractNotification;
 use Jgut\Tify\Notification\Gcm as GcmNotification;
+use Jgut\Tify\Result;
 use Jgut\Tify\Service\Client\GcmBuilder as ClientBuilder;
 use Jgut\Tify\Service\Message\GcmBuilder as MessageBuilder;
 use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
@@ -37,6 +38,7 @@ class Gcm extends AbstractService implements SendInterface
         'InternalServerError' => 'Internal Server Error',
         'RecipientMessageRateExceeded' => 'Recipient Message Rate Exceeded',
         'TopicsMessageRateExceeded' => 'Topics Message Rate Exceeded',
+        'UnknownError' => 'Unknown Error',
     ];
 
     /**
@@ -71,7 +73,7 @@ class Gcm extends AbstractService implements SendInterface
 
         $service = $this->getPushService($this->getParameter('api_key'));
 
-        $pushedRecipients = [];
+        $results = [];
 
         foreach (array_chunk($notification->getTokens(), 100) as $tokensRange) {
             $message = MessageBuilder::build($tokensRange, $notification);
@@ -79,35 +81,37 @@ class Gcm extends AbstractService implements SendInterface
             $time = new \DateTime;
 
             try {
-                $response = $service->send($message);
-                $results = $response->getResults();
+                $response = $service->send($message)->getResults();
 
                 foreach ($tokensRange as $token) {
-                    $result = isset($results[$token]) ? $results[$token] : [];
-
-                    $pushedRecipient = [
-                        'token' => $token,
-                        'date' => $time,
-                    ];
-
-                    if (isset($result['error'])) {
-                        $pushedRecipient['error'] = $this->statusCodes[$result['error']];
+                    if (isset($response[$token]) && !isset($response[$token]['error'])) {
+                        $result = new Result($token, $time);
+                    } elseif (isset($response[$token])) {
+                        $result = new Result(
+                            $token,
+                            $time,
+                            Result::STATUS_ERROR,
+                            $this->statusCodes[$response[$token]['error']]
+                        );
+                    } else {
+                        $result = new Result(
+                            $token,
+                            $time,
+                            Result::STATUS_ERROR,
+                            $this->statusCodes['UnknownError']
+                        );
                     }
 
-                    $pushedRecipients[] = $pushedRecipient;
+                    $results[] = $result;
                 }
             } catch (ServiceRuntimeException $exception) {
                 foreach ($tokensRange as $token) {
-                    $pushedRecipients[] = [
-                        'token' => $token,
-                        'date' => $time,
-                        'error' => $exception->getMessage(),
-                    ];
+                    $results[] = new Result($token, $time, Result::STATUS_ERROR, $exception->getMessage());
                 }
             }
         }
 
-        $notification->setSent($pushedRecipients);
+        $notification->setSent($results);
     }
 
     /**
