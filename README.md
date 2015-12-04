@@ -89,7 +89,7 @@ Except for the `Manager` component all the rest of the parts are service depende
 
 ## Recipient
 
-Recipients have one mandatory parameter `token`. APNS recipients can additionally hold ap optional parameter `badge` that will be used on notification send.
+Recipients have one mandatory parameter `token`. APNS recipients can additionally hold an optional parameter `badge` that will be used on notification send.
 
 ```php
 new \Jgut\Tify\Recipient\Apns('recipient_token');
