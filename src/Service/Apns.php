@@ -124,7 +124,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
             $pushedRecipients[] = $pushedRecipient;
         }
 
-        $notification->setPushed($pushedRecipients);
+        $notification->setSent($pushedRecipients);
 
         $service->close();
         $this->pushClient = null;

@@ -107,7 +107,7 @@ class Gcm extends AbstractService implements SendInterface
             }
         }
 
-        $notification->setPushed($pushedRecipients);
+        $notification->setSent($pushedRecipients);
     }
 
     /**

@@ -17,7 +17,7 @@ use Jgut\Tify\Service\AbstractService;
 abstract class AbstractNotification
 {
     const STATUS_PENDING = 0;
-    const STATUS_PUSHED = 1;
+    const STATUS_SENT = 1;
 
     use OptionsTrait;
 
@@ -54,11 +54,11 @@ abstract class AbstractNotification
     protected $pushTime;
 
     /**
-     * Push results.
+     * Notification resultss.
      *
      * @var array
      */
-    protected $result = [];
+    protected $results = [];
 
     /**
      * @param \Jgut\Tify\Service\AbstractService       $service
@@ -148,35 +148,35 @@ abstract class AbstractNotification
      *
      * @return bool
      */
-    final public function isPushed()
+    final public function isSent()
     {
-        return $this->status === static::STATUS_PUSHED;
+        return $this->status === static::STATUS_SENT;
     }
 
     /**
-     * Set notification pushed.
+     * Set notification as sent.
      *
-     * @param array $result
+     * @param array $results
      */
-    final public function setPushed(array $result = [])
+    final public function setSent(array $results = [])
     {
-        $this->status = static::STATUS_PUSHED;
+        $this->status = static::STATUS_SENT;
         $this->pushTime = new \DateTime;
-        $this->result = $result;
+        $this->results = $results;
     }
 
     /**
-     * Set notification pending (not pushed).
+     * Set notification pending (not sent).
      */
     final public function setPending()
     {
         $this->status = static::STATUS_PENDING;
         $this->pushTime = null;
-        $this->result = [];
+        $this->results = [];
     }
 
     /**
-     * Retrieve push time.
+     * Retrieve sent time.
      *
      * @return \DateTime
      */
@@ -186,13 +186,13 @@ abstract class AbstractNotification
     }
 
     /**
-     * Retrieve push result.
+     * Retrieve results.
      *
      * @return array
      */
-    final public function getResult()
+    final public function getResults()
     {
-        return $this->result;
+        return $this->results;
     }
 
     /**
