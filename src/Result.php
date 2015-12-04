@@ -43,10 +43,10 @@ class Result
     protected $statusMessage;
 
     /**
-     * @param string    $token
-     * @param \DateTime $date
-     * @param bool      $status
-     * @param string    $statusMessage
+     * @param string         $token
+     * @param \DateTime|null $date
+     * @param int            $status
+     * @param string         $statusMessage
      */
     public function __construct($token, \DateTime $date = null, $status = self::STATUS_SUCCESS, $statusMessage = '')
     {
@@ -164,7 +164,7 @@ class Result
     /**
      * Check successfull status message.
      *
-     * @return string
+     * @param string $statusMessage
      */
     public function setStatusMessage($statusMessage)
     {

@@ -26,7 +26,7 @@ class Manager
     /**
      * Push notifications.
      *
-     * @return \Jgut\Tify\Result
+     * @return \Jgut\Tify\Result[]
      */
     public function push()
     {
