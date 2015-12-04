@@ -136,7 +136,7 @@ $message->setParameter('param_1', 'value_1');
 $message->setParameter('param_2', 'value_2');
 ```
 
-Parameters should not be a reserved word ("from" or any word starting with "google" or "gcm") or any GCM notification option. See [here](https://developers.google.com/cloud-messaging/http-server-ref#table2) for information on message options (notification payload)
+Parameters should not be a reserved word (`from` or any word starting with `google` or `gcm`) or any GCM notification option. See [here](https://developers.google.com/cloud-messaging/http-server-ref#table2) for information on message options (notification payload)
 
 ## Notification
 
