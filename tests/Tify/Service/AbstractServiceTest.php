@@ -9,8 +9,6 @@
 
 namespace Jgut\Tify\Tests\Service;
 
-use Jgut\Tify\Service\AbstractService;
-
 /**
  * @covers \Jgut\Tify\Service\AbstractService
  */
