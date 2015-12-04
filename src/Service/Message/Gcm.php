@@ -95,7 +95,7 @@ class Gcm extends ServiceMessage
     {
         $json = [];
 
-        if ($this->registrationIds) {
+        if (count($this->registrationIds)) {
             $json['registration_ids'] = $this->registrationIds;
         }
         if ($this->collapseKey) {
@@ -122,10 +122,10 @@ class Gcm extends ServiceMessage
     {
         $payload = [];
 
-        if ($this->data) {
+        if (count($this->data)) {
             $payload['data'] = $this->data;
         }
-        if ($this->notificationPayload) {
+        if (count($this->notificationPayload)) {
             $payload['notification'] = $this->notificationPayload;
         }
 
