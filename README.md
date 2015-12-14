@@ -59,7 +59,7 @@ $gcmRecipients = [
     new GcmRecipient('bbbbbbbbbbb'),
 ];
 
-//Combine all to create a GCM notification
+//Combine previous to create a GCM notification
 $gcmNotification = new GcmNotification($gcmService, $gcmMessage, $gcmRecipients);
 
 
@@ -75,7 +75,7 @@ $apnsRecipients = [
     new ApnsRecipient('ddddddddddd'),
 ];
 
-//Combine all to create a APNS notification
+//Combine previous to create a APNS notification
 $apnsNotification = new ApnsNotification($apnsService, $apnsMessage, $apnsRecipients);
 
 $manager = new Manager;
@@ -89,22 +89,22 @@ Except for the `Manager` component all the rest of the parts are service depende
 
 ## Recipient
 
-Recipients have one mandatory parameter `token`. APNS recipients can additionally hold an optional parameter `badge` that will be used on notification send.
+Recipients have one mandatory parameter `token`.
 
 ```php
 new \Jgut\Tify\Recipient\Apns('recipient_token');
 new \Jgut\Tify\Recipient\Gcm('recipient_token');
 ```
 
-APNS recipients can store an additional `badge` parameter that will be used in conjunction with message `badge` parameter if provided.
+APNS recipients can store an additional `badge` parameter that will be used in junction with message `badge` parameter if provided.
 
 ## Message
 
 Messages compose the final information arriving to recipients. GCM and APNS messages hold different information according to each service specification.
 
-In order for the message to be shown on the recipient `title` and/or `body` options should be provided. If they are not present the notification will be handed directly to the application. If this is the case custom parameters should be included to be passed to the app.
+In order for the message payload to be created `title` and/or `body` options should be provided. If they are not present custom message parameters should be included to be passed to the app.
 
-Messages can hold any number of custom parametes that will compose additional data sent to the destination apps.
+Messages can hold any number of custom parametes that will compose additional data sent to the destination clients.
 
 ### APNS
 
@@ -149,7 +149,7 @@ Each notification holds all the information to send a notification using the des
 ### APNS
 
 ```php
-$notification = new \Jgut\Tify\Service\Apns($apnsService, $apnsMessage, $apnsRecipients, $options);
+$notification = new \Jgut\Tify\Notification\Apns($apnsService, $apnsMessage, $apnsRecipients, $options);
 
 $notification->setOption('expire', 600);
 $notification->setOption('badge', 1);
@@ -160,7 +160,7 @@ $notification->setOption('badge', 1);
 ### GCM
 
 ```php
-$notification = new \Jgut\Tify\Service\Gcm($apnsService, $apnsMessage, $apnsRecipients, $options);
+$notification = new \Jgut\Tify\Notification\Gcm($apnsService, $apnsMessage, $apnsRecipients, $options);
 
 $notification->setOption('time_to_live', 600);
 $notification->setOption('dry_run', false);
@@ -172,14 +172,23 @@ $notification->setOption('dry_run', false);
 
 It is the piece that actually sends the messages. Services can be shared between notifications so normally you won't need to create more than one service for GCM and another for APNS and reuse them in all the notifications.
 
+For APNS service `certificate` option is mandatory, denoting the path to the service certificate. In GCM `api_key` is the mandatory option denoting Google API key.
+
 ```php
 $apnsService = new \Jgut\Tify\Service\Apns(['certificate' => 'path_to_certificate.pem']);
 $gcmService = new \Jgut\Tify\Service\Gcm(['api_key' => 'google_api_key']);
 ```
 
-Both services have `send` method to push notifications to its corresponding service.
+## Manager
 
-Additionally APNS service has `feedback` method to request from Apple's feedback service.
+Holds the list of notifications and exposes two methods:
+
+* `push` performs notifications send to devices.
+* `feedback` uses APNS feedback service.
+
+## Result
+
+`push` service returns a list of Result objects in order to match return data from APNS and GCM services and have one common interface. This objects are composed of device token, date, status and status message.
 
 ## Contributing
 
