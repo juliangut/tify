@@ -37,12 +37,15 @@ class ApnsBuilder
         $pushMessage
             ->setId(sha1($recipient->getToken() . $message->getOption('body')))
             ->setToken($recipient->getToken())
-            ->setExpire($notification->getOption('expire'))
             ->setSound($notification->getOption('sound'))
             ->setContentAvailable($notification->getOption('content_available'))
             ->setCategory($notification->getOption('category'))
             ->setCustom($message->getParameters())
             ->setBadge($badge);
+
+        if (!is_null($notification->getOption('expire'))) {
+            $pushMessage->setExpire($notification->getOption('expire'));
+        }
 
         if ($message->getOption('title') !== null || $message->getOption('body') !== null) {
             $pushMessage->setAlert(new Alert(

@@ -13,6 +13,7 @@ use Jgut\Tify\Exception\NotificationException;
 use Jgut\Tify\Exception\ServiceException;
 use Jgut\Tify\Notification\AbstractNotification;
 use Jgut\Tify\Notification\Apns as ApnsNotification;
+use Jgut\Tify\Result;
 use Jgut\Tify\Service\Client\ApnsBuilder as ClientBuilder;
 use Jgut\Tify\Service\Message\ApnsBuilder as MessageBuilder;
 use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
