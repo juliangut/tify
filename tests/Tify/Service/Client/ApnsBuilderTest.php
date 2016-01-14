@@ -23,7 +23,7 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
      * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildClient
      *
      * @expectedException \Jgut\Tify\Exception\ServiceException
-     * @expectedExceptionMessageRegExp /^stream_socket_client\(\): Unable to set local cert chain file/
+     * @expectedExceptionMessageRegExp /Unable to set local cert chain file/
      */
     public function testPushClient()
     {
@@ -37,7 +37,7 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
      * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildClient
      *
      * @expectedException \Jgut\Tify\Exception\ServiceException
-     * @expectedExceptionMessageRegExp /^stream_socket_client\(\): Unable to set local cert chain file/
+     * @expectedExceptionMessageRegExp /Unable to set local cert chain file/
      */
     public function testPushFeedback()
     {

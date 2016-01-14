@@ -483,16 +483,16 @@
         },
         {
             "name": "zendframework/zendservice-apple-apns",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/ZendService_Apple_Apns.git",
-                "reference": "f4aa8255d2838709caaeef7e12f8874eb5750b38"
+                "reference": "ee2c44ee833206c1eb95b2fb7be1e2335e7570eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendService_Apple_Apns/zipball/f4aa8255d2838709caaeef7e12f8874eb5750b38",
-                "reference": "f4aa8255d2838709caaeef7e12f8874eb5750b38",
+                "url": "https://api.github.com/repos/zendframework/ZendService_Apple_Apns/zipball/ee2c44ee833206c1eb95b2fb7be1e2335e7570eb",
+                "reference": "ee2c44ee833206c1eb95b2fb7be1e2335e7570eb",
                 "shasum": ""
             },
             "require": {
@@ -522,7 +522,7 @@
                 "push",
                 "zf2"
             ],
-            "time": "2015-10-14 03:03:00"
+            "time": "2015-12-09 22:55:07"
         },
         {
             "name": "zendframework/zendservice-google-gcm",
