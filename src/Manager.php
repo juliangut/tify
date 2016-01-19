@@ -82,4 +82,14 @@ class Manager
 
         return $this;
     }
+
+    /**
+     * Clear list of notifications.
+     */
+    public function clearNotifications()
+    {
+        $this->notifications = [];
+
+        return $this;
+    }
 }

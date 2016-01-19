@@ -39,6 +39,9 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             false
         ));
         $this->assertCount(1, $this->manager->getNotifications());
+
+        $this->manager->clearNotifications();
+        $this->assertCount(0, $this->manager->getNotifications());
     }
 
     /**
