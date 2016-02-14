@@ -188,9 +188,6 @@ abstract class AbstractNotification
      */
     final public function getTokens()
     {
-        foreach ($this->recipients as $recipient) {
-            var_dump($recipient->getToken());
-            yield $recipient->getToken();
-        }
+        return array_keys($this->recipients);
     }
 }
