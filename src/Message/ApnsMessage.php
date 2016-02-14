@@ -26,6 +26,6 @@ class ApnsMessage extends AbstractMessage
 
         $this->parameters[$parameter] = $value;
 
-        return $value;
+        return $this;
     }
 }
