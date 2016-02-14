@@ -31,7 +31,7 @@ abstract class AbstractRecipient
     public function __construct($token, array $parameters = [])
     {
         $this->setToken($token);
-        $this->setParameters($parameters);
+        $this->parameters = $parameters;
     }
 
     /**

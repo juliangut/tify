@@ -13,6 +13,8 @@ class Apns extends AbstractRecipient
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws \InvalidArgumentException
      */
     public function setToken($token)
     {

@@ -13,6 +13,8 @@ class Gcm extends AbstractRecipient
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws \InvalidArgumentException
      */
     public function setToken($token)
     {
