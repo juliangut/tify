@@ -4,9 +4,52 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d30884a6f82d33e9b4bbe4b9866d4e7a",
-    "content-hash": "bd344633679669f0a06e302bee761fbe",
+    "hash": "2ff15f26aaf57d8f3d5e9173d29ba4a4",
+    "content-hash": "184b8ed45a87f5e961eff66b1aabe2e9",
     "packages": [
+        {
+            "name": "jildertmiedema/windows-phone-push",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jildertmiedema/windows-phone-push.git",
+                "reference": "4f6df89e713725697e3d483f265cd44b17edf73a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jildertmiedema/windows-phone-push/zipball/4f6df89e713725697e3d483f265cd44b17edf73a",
+                "reference": "4f6df89e713725697e3d483f265cd44b17edf73a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JildertMiedema\\WindowsPhone\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jildert Miedema",
+                    "email": "jildertmiedema@gmail.com"
+                }
+            ],
+            "description": "Windows Phone Push",
+            "keywords": [
+                "Windows Phone Push",
+                "phone",
+                "push",
+                "windows"
+            ],
+            "time": "2014-08-07 09:19:23"
+        },
         {
             "name": "symfony/options-resolver",
             "version": "v2.8.2",
