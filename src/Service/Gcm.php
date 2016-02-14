@@ -42,20 +42,6 @@ class Gcm extends AbstractService implements SendInterface
     ];
 
     /**
-     * {@inheritdoc}
-     */
-    protected $definedParameters = [
-        'api_key',
-    ];
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $requiredParameters = [
-        'api_key',
-    ];
-
-    /**
      * @var \ZendService\Google\Gcm\Client
      */
     protected $pushClient;
@@ -128,5 +114,29 @@ class Gcm extends AbstractService implements SendInterface
         }
 
         return $this->pushClient;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefinedParameters()
+    {
+        return ['api_key'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultParameters()
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getRequiredParameters()
+    {
+        return ['api_key'];
     }
 }

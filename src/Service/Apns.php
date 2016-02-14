@@ -42,28 +42,6 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
     ];
 
     /**
-     * {@inheritdoc}
-     */
-    protected $definedParameters = [
-        'certificate',
-        'pass_phrase',
-    ];
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $defaultParameters = [
-        'pass_phrase' => null,
-    ];
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $requiredParameters = [
-        'certificate',
-    ];
-
-    /**
      * @var \ZendService\Apple\Apns\Client\Message
      */
     protected $pushClient;
@@ -171,7 +149,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
             $this->pushClient = ClientBuilder::buildPush(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
-                $this->isSandbox()
+                $this->sandbox
             );
         }
 
@@ -189,10 +167,36 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
             $this->feedbackClient = ClientBuilder::buildFeedback(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
-                $this->isSandbox()
+                $this->sandbox
             );
         }
 
         return $this->feedbackClient;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefinedParameters()
+    {
+        return ['certificate', 'pass_phrase'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultParameters()
+    {
+        return [
+            'pass_phrase' => null,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getRequiredParameters()
+    {
+        return ['certificate'];
     }
 }

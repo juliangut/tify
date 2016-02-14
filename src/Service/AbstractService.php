@@ -17,27 +17,6 @@ abstract class AbstractService
     use ParametersTrait;
 
     /**
-     * List of defined parameters.
-     *
-     * @var array
-     */
-    protected $definedParameters = [];
-
-    /**
-     * List of default parameters.
-     *
-     * @var array
-     */
-    protected $defaultParameters = [];
-
-    /**
-     * List of required parameters.
-     *
-     * @var array
-     */
-    protected $requiredParameters = [];
-
-    /**
      * Sandbox environment.
      *
      * @var bool
@@ -53,13 +32,34 @@ abstract class AbstractService
     public function __construct(array $parameters = [], $sandbox = false)
     {
         $resolver = new OptionsResolver();
-        $resolver->setDefined($this->definedParameters);
-        $resolver->setDefaults($this->defaultParameters);
-        $resolver->setRequired($this->requiredParameters);
+        $resolver->setDefined($this->getDefinedParameters());
+        $resolver->setDefaults($this->getDefaultParameters());
+        $resolver->setRequired($this->getRequiredParameters());
 
         $this->parameters = $resolver->resolve($parameters);
-        $this->setSandbox($sandbox);
+        $this->sandbox = (bool) $sandbox;
     }
+
+    /**
+     * Get the list of defined parameters.
+     *
+     * @return array
+     */
+    abstract protected function getDefinedParameters();
+
+    /**
+     * Get the list of default parameters.
+     *
+     * @return array
+     */
+    abstract protected function getDefaultParameters();
+
+    /**
+     * Get the list of required parameters.
+     *
+     * @return array
+     */
+    abstract protected function getRequiredParameters();
 
     /**
      * Retrieve if sandbox.
@@ -68,7 +68,7 @@ abstract class AbstractService
      */
     public function isSandbox()
     {
-        return $this->sandbox;
+        return (bool) $this->sandbox;
     }
 
     /**
