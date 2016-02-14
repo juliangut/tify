@@ -40,6 +40,9 @@ class Gcm extends ServiceMessage
      * Set notification payload data.
      *
      * @param array $payload
+     *
+     * @throws \ZendService\Google\Exception\InvalidArgumentException
+     * @throws \ZendService\Google\Exception\RuntimeException
      */
     public function setNotificationPayload(array $payload)
     {
@@ -104,7 +107,7 @@ class Gcm extends ServiceMessage
         if ($this->delayWhileIdle) {
             $json['delay_while_idle'] = $this->delayWhileIdle;
         }
-        if ($this->timeToLive != 2419200) {
+        if ($this->timeToLive !== 2419200) {
             $json['time_to_live'] = $this->timeToLive;
         }
 
