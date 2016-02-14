@@ -16,17 +16,10 @@ use Jgut\Tify\Service\AbstractService;
 
 abstract class AbstractNotification
 {
-    const STATUS_PENDING = 0;
-    const STATUS_SENT = 1;
-
     use OptionsTrait;
 
-    /**
-     * Default notification options.
-     *
-     * @var array
-     */
-    protected $defaultOptions = [];
+    const STATUS_PENDING = 0;
+    const STATUS_SENT = 1;
 
     /**
      * @var \Jgut\Tify\Service\AbstractService
@@ -74,7 +67,17 @@ abstract class AbstractNotification
             $this->addRecipient($recipient);
         }
 
-        $this->setOptions(array_merge($this->defaultOptions, $options));
+        $this->setOptions(array_merge($this->getDefaultOptions(), $options));
+    }
+
+    /**
+     * Get default notification options.
+     *
+     * @return array
+     */
+    protected function getDefaultOptions()
+    {
+        return [];
     }
 
     /**
@@ -118,7 +121,7 @@ abstract class AbstractNotification
      */
     final public function getRecipients()
     {
-        return $this->recipients;
+        return array_values($this->recipients);
     }
 
     /**
@@ -185,12 +188,9 @@ abstract class AbstractNotification
      */
     final public function getTokens()
     {
-        $tokens = [];
-
         foreach ($this->recipients as $recipient) {
-            $tokens[] = $recipient->getToken();
+            var_dump($recipient->getToken());
+            yield $recipient->getToken();
         }
-
-        return array_unique(array_filter($tokens));
     }
 }

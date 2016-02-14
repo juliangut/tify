@@ -19,17 +19,6 @@ use Jgut\Tify\Message\Apns as ApnsMessage;
 class Apns extends AbstractNotification
 {
     /**
-     * {@inheritdoc}
-     */
-    protected $defaultOptions = [
-        'expire' => null,
-        'badge' => null,
-        'sound' => null,
-        'content_available' => null,
-        'category' => null,
-    ];
-
-    /**
      * @param \Jgut\Tify\Service\Apns     $service
      * @param \Jgut\Tify\Message\Apns     $message
      * @param \Jgut\Tify\Recipient\Apns[] $recipients
@@ -38,6 +27,20 @@ class Apns extends AbstractNotification
     public function __construct(ApnsService $service, ApnsMessage $message, array $recipients = [], array $options = [])
     {
         parent::__construct($service, $message, $recipients, $options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultOptions()
+    {
+        return [
+            'expire' => null,
+            'badge' => null,
+            'sound' => null,
+            'content_available' => null,
+            'category' => null,
+        ];
     }
 
     /**
@@ -83,7 +86,7 @@ class Apns extends AbstractNotification
             throw new \InvalidArgumentException('Recipient must be an accepted APNS recipient');
         }
 
-        $this->recipients[] = $recipient;
+        $this->recipients[$recipient->getToken()] = $recipient;
 
         return $this;
     }

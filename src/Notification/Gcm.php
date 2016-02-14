@@ -19,17 +19,6 @@ use Jgut\Tify\Message\Gcm as GcmMessage;
 class Gcm extends AbstractNotification
 {
     /**
-     * {@inheritdoc}
-     */
-    protected $defaultOptions = [
-        'collapse_key' => null,
-        'delay_while_idle' => null,
-        'time_to_live' => 2419200,
-        'restricted_package_name' => null,
-        'dry_run' => null,
-    ];
-
-    /**
      * @param \Jgut\Tify\Service\Gcm     $service
      * @param \Jgut\Tify\Message\Gcm     $message
      * @param \Jgut\Tify\Recipient\Gcm[] $recipients
@@ -38,6 +27,20 @@ class Gcm extends AbstractNotification
     public function __construct(GcmService $service, GcmMessage $message, array $recipients = [], array $options = [])
     {
         parent::__construct($service, $message, $recipients, $options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultOptions()
+    {
+        return [
+            'collapse_key' => null,
+            'delay_while_idle' => null,
+            'time_to_live' => 2419200,
+            'restricted_package_name' => null,
+            'dry_run' => null,
+        ];
     }
 
     /**
@@ -83,7 +86,7 @@ class Gcm extends AbstractNotification
             throw new \InvalidArgumentException('Recipient must be an accepted GCM recipient');
         }
 
-        $this->recipients[] = $recipient;
+        $this->recipients[$recipient->getToken()] = $recipient;
 
         return $this;
     }
