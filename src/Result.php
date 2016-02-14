@@ -52,11 +52,7 @@ class Result
     {
         $this->token = $token;
 
-        if ($date !== null) {
-            $date = new \DateTime;
-        }
-        $this->setDate($date);
-
+        $this->setDate($date !== null ? $date : new \DateTime);
         $this->setStatus($status);
         $this->setStatusMessage($statusMessage);
     }
