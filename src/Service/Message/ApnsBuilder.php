@@ -19,7 +19,7 @@ class ApnsBuilder
     /**
      * Get service message from origin.
      *
-     * @param \Jgut\Tify\Recipient\ApnsRecipient    $recipient
+     * @param \Jgut\Tify\Recipient\ApnsRecipient       $recipient
      * @param \Jgut\Tify\Notification\ApnsNotification $notification
      *
      * @return \ZendService\Apple\Apns\Message

@@ -19,10 +19,10 @@ use Jgut\Tify\Message\GcmMessage as GcmMessage;
 class GcmNotification extends AbstractNotification
 {
     /**
-     * @param \Jgut\Tify\Service\GcmService     $service
-     * @param \Jgut\Tify\Message\GcmMessage     $message
+     * @param \Jgut\Tify\Service\GcmService       $service
+     * @param \Jgut\Tify\Message\GcmMessage       $message
      * @param \Jgut\Tify\Recipient\GcmRecipient[] $recipients
-     * @param array                      $options
+     * @param array                               $options
      */
     public function __construct(GcmService $service, GcmMessage $message, array $recipients = [], array $options = [])
     {
