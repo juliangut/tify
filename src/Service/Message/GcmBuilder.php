@@ -10,7 +10,7 @@
 namespace Jgut\Tify\Service\Message;
 
 use Jgut\Tify\Notification\Gcm as GcmNotification;
-use Jgut\Tify\Service\Message\Gcm as Message;
+use Jgut\Tify\Service\Message\Gcm as ServiceMessage;
 
 class GcmBuilder
 {
@@ -26,7 +26,7 @@ class GcmBuilder
     {
         $message = $notification->getMessage();
 
-        $pushMessage = new Message();
+        $pushMessage = new ServiceMessage();
 
         $pushMessage
             ->setRegistrationIds($tokens)

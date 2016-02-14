@@ -11,8 +11,8 @@ namespace Jgut\Tify\Service\Message;
 
 use Jgut\Tify\Recipient\Apns as ApnsRecipient;
 use Jgut\Tify\Notification\Apns as ApnsNotification;
-use ZendService\Apple\Apns\Message;
-use ZendService\Apple\Apns\Message\Alert;
+use ZendService\Apple\Apns\Message as ServiceMessage;
+use ZendService\Apple\Apns\Message\Alert as ServiceMessageAlert;
 
 class ApnsBuilder
 {
@@ -32,7 +32,7 @@ class ApnsBuilder
             ? null
             : $notification->getOption('badge') + (int) $recipient->getParameter('badge', 0);
 
-        $pushMessage = new Message();
+        $pushMessage = new ServiceMessage();
 
         $pushMessage
             ->setId(sha1($recipient->getToken() . $message->getOption('body')))
@@ -48,7 +48,7 @@ class ApnsBuilder
         }
 
         if ($message->getOption('title') !== null || $message->getOption('body') !== null) {
-            $pushMessage->setAlert(new Alert(
+            $pushMessage->setAlert(new ServiceMessageAlert(
                 $message->getOption('body'),
                 $message->getOption('action_loc_key'),
                 $message->getOption('loc_key'),
