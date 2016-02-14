@@ -184,7 +184,7 @@ abstract class AbstractNotification
     /**
      * Retrieve recipients tokens list.
      *
-     * @return array
+     * @return string[]
      */
     final public function getTokens()
     {
