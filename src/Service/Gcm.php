@@ -25,7 +25,7 @@ class Gcm extends AbstractService implements SendInterface
      *
      * @var array
      */
-    private $statusCodes = [
+    private static $statusCodes = [
         'MissingRegistration' => 'Missing Registration Token',
         'InvalidRegistration' => 'Invalid Registration Token',
         'NotRegistered' => 'Unregistered Recipient',
@@ -91,14 +91,14 @@ class Gcm extends AbstractService implements SendInterface
                             $token,
                             $time,
                             Result::STATUS_ERROR,
-                            $this->statusCodes[$response[$token]['error']]
+                            self::$statusCodes[$response[$token]['error']]
                         );
                     } else {
                         $result = new Result(
                             $token,
                             $time,
                             Result::STATUS_ERROR,
-                            $this->statusCodes['UnknownError']
+                            self::$statusCodes['UnknownError']
                         );
                     }
 

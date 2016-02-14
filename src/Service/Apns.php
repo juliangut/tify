@@ -27,7 +27,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
      *
      * @var array
      */
-    private $statusCodes = [
+    private static $statusCodes = [
         0 => 'OK',
         1 => 'Processing Error',
         2 => 'Missing Recipient Token',
@@ -104,6 +104,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
 
         $results = [];
 
+        /* @var \Jgut\Tify\Recipient\Apns $recipient */
         foreach ($notification->getRecipients() as $recipient) {
             $message = MessageBuilder::build($recipient, $notification);
 
@@ -114,7 +115,7 @@ class Apns extends AbstractService implements SendInterface, FeedbackInterface
 
                 if ($response->getCode() !== static::RESULT_OK) {
                     $result->setStatus(Result::STATUS_ERROR);
-                    $result->setStatusMessage($this->statusCodes[$response->getCode()]);
+                    $result->setStatusMessage(self::$statusCodes[$response->getCode()]);
                 }
             } catch (ServiceRuntimeException $exception) {
                 $result->setStatus(Result::STATUS_ERROR);
