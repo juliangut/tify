@@ -10,7 +10,7 @@
 namespace Jgut\Tify\Service;
 
 use Jgut\Tify\Notification\AbstractNotification;
-use Jgut\Tify\Notification\GcmNotification as GcmNotification;
+use Jgut\Tify\Notification\GcmNotification;
 use Jgut\Tify\Result;
 use Jgut\Tify\Service\Client\GcmBuilder as ClientBuilder;
 use Jgut\Tify\Service\Message\GcmBuilder as MessageBuilder;

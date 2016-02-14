@@ -29,6 +29,7 @@ abstract class AbstractMessage
         // GCM
         //'icon' => null,
         //'sound' => 'default',
+        //'badge' => 'null',
         //'tag' => null,
         //'color' => null,
         //'click_action' => null,
