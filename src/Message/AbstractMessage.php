@@ -22,7 +22,29 @@ abstract class AbstractMessage
      *
      * @var array
      */
-    protected $defaultOptions = [];
+    protected $defaultOptions = [
+        'title' => null,
+        'body' => null,
+
+        // GCM
+        //'icon' => null,
+        //'sound' => 'default',
+        //'tag' => null,
+        //'color' => null,
+        //'click_action' => null,
+        //'title_loc_key' => null,
+        //'title_loc_args' => null,
+        //'body_loc_key' => null,
+        //'body_loc_args' => null,
+
+        // APNS
+        //'loc_key' => null,
+        //'loc_args' => null,
+        //'launch_image' => null,
+        //'title_loc_key' => null,
+        //'title_loc_args' => null,
+        //'action_loc_key' => null,
+    ];
 
     /**
      * Constructor.
@@ -37,7 +59,7 @@ abstract class AbstractMessage
     }
 
     /**
-     * Shortcut to set message title.
+     * Convenience method to set message title.
      *
      * @param string $title
      */
@@ -49,7 +71,7 @@ abstract class AbstractMessage
     }
 
     /**
-     * Shortcut to set message body.
+     * Convenience method to set message body.
      *
      * @param string $body
      */
