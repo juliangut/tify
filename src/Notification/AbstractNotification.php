@@ -186,7 +186,7 @@ abstract class AbstractNotification
      *
      * @return string[]
      */
-    final public function getTokens()
+    public function getTokens()
     {
         return array_keys($this->recipients);
     }

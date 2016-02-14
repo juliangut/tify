@@ -127,14 +127,6 @@ class GcmService extends AbstractService implements SendInterface
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultParameters()
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getRequiredParameters()
     {
         return ['api_key'];

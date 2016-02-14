@@ -9,39 +9,6 @@
 
 namespace Jgut\Tify\Message;
 
-class GcmMessage extends AbstractMessage
+class WpMessage extends AbstractMessage
 {
-    /**
-     * List of Google service's reserved parameters.
-     *
-     * @var array
-     */
-    protected static $reservedParameters = [
-        'from',
-        'collapse_key',
-        'delay_while_idle',
-        'time_to_live',
-        'restricted_package_name',
-        'dry_run',
-    ];
-
-    /**
-     * {@inheritdoc}
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function setParameter($parameter, $value)
-    {
-        $parameter = trim($parameter);
-
-        if (preg_match('/^(google|gcm)/', $parameter) || in_array($parameter, self::$reservedParameters)) {
-            throw new \InvalidArgumentException(
-                sprintf('"%s" can not be used as a custom parameter as it is reserved', $parameter)
-            );
-        }
-
-        $this->parameters[$parameter] = $value;
-
-        return $value;
-    }
 }

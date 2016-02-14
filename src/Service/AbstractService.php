@@ -45,21 +45,30 @@ abstract class AbstractService
      *
      * @return array
      */
-    abstract protected function getDefinedParameters();
+    protected function getDefinedParameters()
+    {
+        return [];
+    }
 
     /**
      * Get the list of default parameters.
      *
      * @return array
      */
-    abstract protected function getDefaultParameters();
+    protected function getDefaultParameters()
+    {
+        return [];
+    }
 
     /**
      * Get the list of required parameters.
      *
      * @return array
      */
-    abstract protected function getRequiredParameters();
+    protected function getRequiredParameters()
+    {
+        return [];
+    }
 
     /**
      * Retrieve if sandbox.

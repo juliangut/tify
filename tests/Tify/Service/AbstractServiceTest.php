@@ -18,13 +18,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->service = $this->getMockForAbstractClass(
-            '\Jgut\Tify\Service\AbstractService',
-            [],
-            '',
-            false,
-            false
-        );
+        $this->service = $this->getMockForAbstractClass('\Jgut\Tify\Service\AbstractService');
     }
 
     /**
