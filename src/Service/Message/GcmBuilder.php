@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Service\Message;
 
-use Jgut\Tify\Notification\Gcm as GcmNotification;
+use Jgut\Tify\Notification\GcmNotification as GcmNotification;
 use Jgut\Tify\Service\Message\Gcm as ServiceMessage;
 
 class GcmBuilder
@@ -18,7 +18,7 @@ class GcmBuilder
      * Get configured service message.
      *
      * @param array                       $tokens
-     * @param \Jgut\Tify\Notification\Gcm $notification
+     * @param \Jgut\Tify\Notification\GcmNotification $notification
      *
      * @return \Jgut\Tify\Service\Message\Gcm
      */

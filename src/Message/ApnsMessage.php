@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Message;
 
-class Apns extends AbstractMessage
+class ApnsMessage extends AbstractMessage
 {
     /**
      * {@inheritdoc}

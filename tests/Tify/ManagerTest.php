@@ -49,11 +49,11 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSend()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\Gcm', [], [], '', false);
+        $service = $this->getMock('\Jgut\Tify\Service\GcmService', [], [], '', false);
 
-        $message = $this->getMock('\Jgut\Tify\Message\Gcm', [], [], '', false);
+        $message = $this->getMock('\Jgut\Tify\Message\GcmMessage', [], [], '', false);
 
-        $notification = $this->getMock('\Jgut\Tify\Notification\Gcm', [], [$service, $message, []]);
+        $notification = $this->getMock('\Jgut\Tify\Notification\GcmNotification', [], [$service, $message, []]);
 
         $this->manager->addNotification($notification);
 
@@ -67,12 +67,12 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testFeedback()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\Apns', [], [], '', false);
+        $service = $this->getMock('\Jgut\Tify\Service\ApnsService', [], [], '', false);
         $service->expects($this->once())->method('feedback')->will($this->returnValue([]));
 
         $this->assertCount(0, $this->manager->feedback($service));
 
-        $service = $this->getMock('\Jgut\Tify\Service\Gcm', [], [], '', false);
+        $service = $this->getMock('\Jgut\Tify\Service\GcmService', [], [], '', false);
         $this->manager->feedback($service);
     }
 }

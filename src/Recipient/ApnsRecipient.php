@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Recipient;
 
-class Apns extends AbstractRecipient
+class ApnsRecipient extends AbstractRecipient
 {
     /**
      * {@inheritdoc}

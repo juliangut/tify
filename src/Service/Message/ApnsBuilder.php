@@ -9,8 +9,8 @@
 
 namespace Jgut\Tify\Service\Message;
 
-use Jgut\Tify\Recipient\Apns as ApnsRecipient;
-use Jgut\Tify\Notification\Apns as ApnsNotification;
+use Jgut\Tify\Recipient\ApnsRecipient as ApnsRecipient;
+use Jgut\Tify\Notification\ApnsNotification as ApnsNotification;
 use ZendService\Apple\Apns\Message as ServiceMessage;
 use ZendService\Apple\Apns\Message\Alert as ServiceMessageAlert;
 
@@ -19,8 +19,8 @@ class ApnsBuilder
     /**
      * Get service message from origin.
      *
-     * @param \Jgut\Tify\Recipient\Apns    $recipient
-     * @param \Jgut\Tify\Notification\Apns $notification
+     * @param \Jgut\Tify\Recipient\ApnsRecipient    $recipient
+     * @param \Jgut\Tify\Notification\ApnsNotification $notification
      *
      * @return \ZendService\Apple\Apns\Message
      */

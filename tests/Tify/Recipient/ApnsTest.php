@@ -9,10 +9,10 @@
 
 namespace Jgut\Tify\Tests\Recipient;
 
-use Jgut\Tify\Recipient\Apns;
+use Jgut\Tify\Recipient\ApnsRecipient;
 
 /**
- * @covers \Jgut\Tify\Recipient\Apns
+ * @covers \Jgut\Tify\Recipient\ApnsRecipient
  */
 class ApnsTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,11 +20,11 @@ class ApnsTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->recipient = new Apns('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
+        $this->recipient = new ApnsRecipient('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
     }
 
     /**
-     * @covers \Jgut\Tify\Recipient\Apns::setToken
+     * @covers \Jgut\Tify\Recipient\ApnsRecipient::setToken
      *
      * @expectedException \InvalidArgumentException
      */

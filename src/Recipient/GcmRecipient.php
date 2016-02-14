@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Recipient;
 
-class Gcm extends AbstractRecipient
+class GcmRecipient extends AbstractRecipient
 {
     /**
      * {@inheritdoc}

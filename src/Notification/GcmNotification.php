@@ -10,18 +10,18 @@
 namespace Jgut\Tify\Notification;
 
 use Jgut\Tify\Service\AbstractService;
-use Jgut\Tify\Service\Gcm as GcmService;
+use Jgut\Tify\Service\GcmService as GcmService;
 use Jgut\Tify\Recipient\AbstractRecipient;
-use Jgut\Tify\Recipient\Gcm as GcmRecipient;
+use Jgut\Tify\Recipient\GcmRecipient as GcmRecipient;
 use Jgut\Tify\Message\AbstractMessage;
-use Jgut\Tify\Message\Gcm as GcmMessage;
+use Jgut\Tify\Message\GcmMessage as GcmMessage;
 
-class Gcm extends AbstractNotification
+class GcmNotification extends AbstractNotification
 {
     /**
-     * @param \Jgut\Tify\Service\Gcm     $service
-     * @param \Jgut\Tify\Message\Gcm     $message
-     * @param \Jgut\Tify\Recipient\Gcm[] $recipients
+     * @param \Jgut\Tify\Service\GcmService     $service
+     * @param \Jgut\Tify\Message\GcmMessage     $message
+     * @param \Jgut\Tify\Recipient\GcmRecipient[] $recipients
      * @param array                      $options
      */
     public function __construct(GcmService $service, GcmMessage $message, array $recipients = [], array $options = [])

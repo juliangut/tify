@@ -9,10 +9,10 @@
 
 namespace Jgut\Tify\Tests\Recipient;
 
-use Jgut\Tify\Recipient\Gcm;
+use Jgut\Tify\Recipient\GcmRecipient;
 
 /**
- * @covers \Jgut\Tify\Recipient\Gcm
+ * @covers \Jgut\Tify\Recipient\GcmRecipient
  */
 class GcmTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,11 +20,11 @@ class GcmTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->recipient = new Gcm('f59c88b12035278b86f26d448835939a');
+        $this->recipient = new GcmRecipient('f59c88b12035278b86f26d448835939a');
     }
 
     /**
-     * @covers \Jgut\Tify\Recipient\Gcm::setToken
+     * @covers \Jgut\Tify\Recipient\GcmRecipient::setToken
      *
      * @expectedException \InvalidArgumentException
      */

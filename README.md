@@ -31,16 +31,16 @@ require_once './vendor/autoload.php';
 Basic usage creating a message and sending it through GCM and APNS services.
 
 ```php
-use Jgut\Tify\Recipient\Apns as ApnsRecipient;
-use Jgut\Tify\Recipient\Gcm as GcmRecipient;
+use Jgut\Tify\Recipient\ApnsRecipient;
+use Jgut\Tify\Recipient\GcmRecipient;
 use Jgut\Tify\Manager;
-use Jgut\Tify\Message\Apns as ApnsMessage;
-use Jgut\Tify\Message\Gcm as GcmMessage;
-use Jgut\Tify\Notification\Apns as ApnsNotification;
-use Jgut\Tify\Notification\Gcm as GcmNotification;
+use Jgut\Tify\Message\ApnsMessage;
+use Jgut\Tify\Message\GcmMessage;
+use Jgut\Tify\Notification\ApnsNotification;
+use Jgut\Tify\Notification\GcmNotification;
 use Jgut\Tify\Service\AbstractService;
-use Jgut\Tify\Service\Apns as ApnsService;
-use Jgut\Tify\Service\Gcm as GcmService;
+use Jgut\Tify\Service\ApnsService;
+use Jgut\Tify\Service\GcmService;
 
 $message = [
     'title' => 'title',
@@ -92,8 +92,8 @@ Except for the `Manager` component all the rest of the parts are service depende
 Recipients have one mandatory parameter `token`.
 
 ```php
-new \Jgut\Tify\Recipient\Apns('recipient_token');
-new \Jgut\Tify\Recipient\Gcm('recipient_token');
+new \Jgut\Tify\Recipient\ApnsRecipient('recipient_token');
+new \Jgut\Tify\Recipient\GcmRecipient('recipient_token');
 ```
 
 APNS recipients can store an additional `badge` parameter that will be used in junction with message `badge` parameter if provided.
@@ -109,7 +109,7 @@ Messages can hold any number of custom parametes that will compose additional da
 ### APNS
 
 ```php
-$message = new \Jgut\Tify\Message\Apns(['title' => 'title', 'body' => 'body']);
+$message = new \Jgut\Tify\Message\ApnsMessage(['title' => 'title', 'body' => 'body']);
 
 $message->setOption('loc_key', 'LOCK_KEY');
 $message->setOption('launch_image', 'image.jpg');
@@ -126,7 +126,7 @@ $message->setParameter('param_2', 'value_2');
 ### GCM
 
 ```php
-$message = new \Jgut\Tify\Message\Gcm;
+$message = new \Jgut\Tify\Message\GcmMessage;
 $message->setTitle('title');
 $message->setBody('body');
 
@@ -149,7 +149,7 @@ Each notification holds all the information to send a notification using the des
 ### APNS
 
 ```php
-$notification = new \Jgut\Tify\Notification\Apns($apnsService, $apnsMessage, $apnsRecipients, $options);
+$notification = new \Jgut\Tify\Notification\ApnsNotification($apnsService, $apnsMessage, $apnsRecipients, $options);
 
 $notification->setOption('expire', 600);
 $notification->setOption('badge', 1);
@@ -160,7 +160,7 @@ $notification->setOption('badge', 1);
 ### GCM
 
 ```php
-$notification = new \Jgut\Tify\Notification\Gcm($apnsService, $apnsMessage, $apnsRecipients, $options);
+$notification = new \Jgut\Tify\Notification\GcmNotification($apnsService, $apnsMessage, $apnsRecipients, $options);
 
 $notification->setOption('time_to_live', 600);
 $notification->setOption('dry_run', false);
@@ -175,8 +175,8 @@ It is the piece that actually sends the messages. Services can be shared between
 For APNS service `certificate` option is mandatory, denoting the path to the service certificate. In GCM `api_key` is the mandatory option denoting Google API key.
 
 ```php
-$apnsService = new \Jgut\Tify\Service\Apns(['certificate' => 'path_to_certificate.pem']);
-$gcmService = new \Jgut\Tify\Service\Gcm(['api_key' => 'google_api_key']);
+$apnsService = new \Jgut\Tify\Service\ApnsService(['certificate' => 'path_to_certificate.pem']);
+$gcmService = new \Jgut\Tify\Service\GcmService(['api_key' => 'google_api_key']);
 ```
 
 ## Manager

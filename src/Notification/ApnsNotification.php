@@ -10,18 +10,18 @@
 namespace Jgut\Tify\Notification;
 
 use Jgut\Tify\Service\AbstractService;
-use Jgut\Tify\Service\Apns as ApnsService;
+use Jgut\Tify\Service\ApnsService;
 use Jgut\Tify\Recipient\AbstractRecipient;
-use Jgut\Tify\Recipient\Apns as ApnsRecipient;
+use Jgut\Tify\Recipient\ApnsRecipient;
 use Jgut\Tify\Message\AbstractMessage;
-use Jgut\Tify\Message\Apns as ApnsMessage;
+use Jgut\Tify\Message\ApnsMessage;
 
-class Apns extends AbstractNotification
+class ApnsNotification extends AbstractNotification
 {
     /**
-     * @param \Jgut\Tify\Service\Apns     $service
-     * @param \Jgut\Tify\Message\Apns     $message
-     * @param \Jgut\Tify\Recipient\Apns[] $recipients
+     * @param \Jgut\Tify\Service\ApnsService     $service
+     * @param \Jgut\Tify\Message\ApnsMessage     $message
+     * @param \Jgut\Tify\Recipient\ApnsRecipient[] $recipients
      * @param array                       $options
      */
     public function __construct(ApnsService $service, ApnsMessage $message, array $recipients = [], array $options = [])

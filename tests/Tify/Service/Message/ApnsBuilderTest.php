@@ -22,15 +22,15 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testPushClient()
     {
-        $recipient = new \Jgut\Tify\Recipient\Apns('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
+        $recipient = new \Jgut\Tify\Recipient\ApnsRecipient('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
 
-        $service = new \Jgut\Tify\Service\Apns(
+        $service = new \Jgut\Tify\Service\ApnsService(
             ['certificate' => dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem']
         );
 
-        $message = new \Jgut\Tify\Message\Apns(['title' => 'title']);
+        $message = new \Jgut\Tify\Message\ApnsMessage(['title' => 'title']);
 
-        $notification = new \Jgut\Tify\Notification\Apns(
+        $notification = new \Jgut\Tify\Notification\ApnsNotification(
             $service,
             $message,
             [],

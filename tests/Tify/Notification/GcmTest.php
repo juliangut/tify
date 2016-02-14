@@ -9,10 +9,10 @@
 
 namespace Jgut\Tify\Tests\Notification;
 
-use Jgut\Tify\Notification\Gcm;
+use Jgut\Tify\Notification\GcmNotification;
 
 /**
- * @covers \Jgut\Tify\Notification\Gcm
+ * @covers \Jgut\Tify\Notification\GcmNotification
  */
 class GcmTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,20 +20,20 @@ class GcmTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\Gcm', [], [], '', false);
-        $message = $this->getMock('\Jgut\Tify\Message\Gcm', [], [], '', false);
+        $service = $this->getMock('\Jgut\Tify\Service\GcmService', [], [], '', false);
+        $message = $this->getMock('\Jgut\Tify\Message\GcmMessage', [], [], '', false);
 
-        $this->notification = new Gcm($service, $message);
+        $this->notification = new GcmNotification($service, $message);
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\Gcm::setService
+     * @covers \Jgut\Tify\Notification\GcmNotification::setService
      *
      * @expectedException \InvalidArgumentException
      */
     public function testServiceSet()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\Gcm', [], [], '', false);
+        $service = $this->getMock('\Jgut\Tify\Service\GcmService', [], [], '', false);
         $this->notification->setService($service);
         $this->assertEquals($service, $this->notification->getService());
 
@@ -43,13 +43,13 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\Gcm::setMessage
+     * @covers \Jgut\Tify\Notification\GcmNotification::setMessage
      *
      * @expectedException \InvalidArgumentException
      */
     public function testMessageSet()
     {
-        $message = $this->getMock('\Jgut\Tify\Message\Gcm', [], [], '', false);
+        $message = $this->getMock('\Jgut\Tify\Message\GcmMessage', [], [], '', false);
         $this->notification->setMessage($message);
         $this->assertEquals($message, $this->notification->getMessage());
 
@@ -59,13 +59,13 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\Gcm::addRecipient
+     * @covers \Jgut\Tify\Notification\GcmNotification::addRecipient
      *
      * @expectedException \InvalidArgumentException
      */
     public function testRecipientAdd()
     {
-        $recipient = $this->getMock('\Jgut\Tify\Recipient\Gcm', [], [], '', false);
+        $recipient = $this->getMock('\Jgut\Tify\Recipient\GcmRecipient', [], [], '', false);
         $this->notification->addRecipient($recipient);
         $this->assertCount(1, $this->notification->getRecipients());
 

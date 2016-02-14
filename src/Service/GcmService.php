@@ -10,13 +10,13 @@
 namespace Jgut\Tify\Service;
 
 use Jgut\Tify\Notification\AbstractNotification;
-use Jgut\Tify\Notification\Gcm as GcmNotification;
+use Jgut\Tify\Notification\GcmNotification as GcmNotification;
 use Jgut\Tify\Result;
 use Jgut\Tify\Service\Client\GcmBuilder as ClientBuilder;
 use Jgut\Tify\Service\Message\GcmBuilder as MessageBuilder;
 use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
 
-class Gcm extends AbstractService implements SendInterface
+class GcmService extends AbstractService implements SendInterface
 {
     /**
      * Status codes translation.

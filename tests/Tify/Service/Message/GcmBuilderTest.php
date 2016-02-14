@@ -22,11 +22,11 @@ class GcmBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testPushClient()
     {
-        $service = new \Jgut\Tify\Service\Gcm(['api_key' => 'my_api_key']);
+        $service = new \Jgut\Tify\Service\GcmService(['api_key' => 'my_api_key']);
 
-        $message = new \Jgut\Tify\Message\Gcm(['title' => 'title', 'body' => 'body']);
+        $message = new \Jgut\Tify\Message\GcmMessage(['title' => 'title', 'body' => 'body']);
 
-        $notification = new \Jgut\Tify\Notification\Gcm($service, $message);
+        $notification = new \Jgut\Tify\Notification\GcmNotification($service, $message);
 
         $client = GcmBuilder::build(['my_token'], $notification);
         $this->assertInstanceOf(Gcm::class, $client);

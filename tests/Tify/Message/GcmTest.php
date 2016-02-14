@@ -9,10 +9,10 @@
 
 namespace Jgut\Tify\Tests\Message;
 
-use Jgut\Tify\Message\Gcm;
+use Jgut\Tify\Message\GcmMessage;
 
 /**
- * @covers \Jgut\Tify\Message\Gcm
+ * @covers \Jgut\Tify\Message\GcmMessage
  */
 class GcmTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class GcmTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->message = new Gcm();
+        $this->message = new GcmMessage();
     }
 
     /**
@@ -41,7 +41,7 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Message\Gcm::setParameter
+     * @covers \Jgut\Tify\Message\GcmMessage::setParameter
      *
      * @expectedException \InvalidArgumentException
      */

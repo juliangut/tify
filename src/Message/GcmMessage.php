@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Message;
 
-class Gcm extends AbstractMessage
+class GcmMessage extends AbstractMessage
 {
     /**
      * List of Google service's reserved parameters.

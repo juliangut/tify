@@ -11,8 +11,8 @@ namespace Jgut\Tify\Service\Client;
 
 use Jgut\Tify\Exception\ServiceException;
 use ZendService\Apple\Apns\Client\AbstractClient;
-use ZendService\Apple\Apns\Client\Feedback;
-use ZendService\Apple\Apns\Client\Message;
+use ZendService\Apple\Apns\Client\Feedback as FeedbackClient;
+use ZendService\Apple\Apns\Client\Message as MessageClient;
 
 class ApnsBuilder
 {
@@ -27,7 +27,7 @@ class ApnsBuilder
      */
     public static function buildPush($certificate, $passPhrase = '', $sandbox = false)
     {
-        return static::buildClient(new Message, $certificate, $passPhrase, $sandbox);
+        return static::buildClient(new MessageClient, $certificate, $passPhrase, $sandbox);
     }
 
     /**
@@ -41,7 +41,7 @@ class ApnsBuilder
      */
     public static function buildFeedback($certificate, $passPhrase = '', $sandbox = false)
     {
-        return static::buildClient(new Feedback, $certificate, $passPhrase, $sandbox);
+        return static::buildClient(new FeedbackClient, $certificate, $passPhrase, $sandbox);
     }
 
     /**
@@ -53,6 +53,8 @@ class ApnsBuilder
      * @param bool                                          $sandbox
      *
      * @return \ZendService\Apple\Apns\Client\AbstractClient
+     *
+     * @codeCoverageIgnore
      */
     protected static function buildClient(AbstractClient $client, $certificate, $passPhrase = '', $sandbox = false)
     {

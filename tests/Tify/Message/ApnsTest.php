@@ -9,10 +9,10 @@
 
 namespace Jgut\Tify\Tests\Message;
 
-use Jgut\Tify\Message\Apns;
+use Jgut\Tify\Message\ApnsMessage;
 
 /**
- * @covers \Jgut\Tify\Message\Apns
+ * @covers \Jgut\Tify\Message\ApnsMessage
  */
 class ApnsTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class ApnsTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->message = new Apns();
+        $this->message = new ApnsMessage();
     }
 
     /**
@@ -41,7 +41,7 @@ class ApnsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Message\Apns::setParameter
+     * @covers \Jgut\Tify\Message\ApnsMessage::setParameter
      *
      * @expectedException \InvalidArgumentException
      */
