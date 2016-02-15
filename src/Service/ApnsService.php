@@ -14,8 +14,8 @@ use Jgut\Tify\Exception\ServiceException;
 use Jgut\Tify\Notification\AbstractNotification;
 use Jgut\Tify\Notification\ApnsNotification;
 use Jgut\Tify\Result;
-use Jgut\Tify\Service\Client\ApnsBuilder as ClientBuilder;
-use Jgut\Tify\Service\Message\ApnsBuilder as MessageBuilder;
+use Jgut\Tify\Service\Client\ApnsClientBuilder;
+use Jgut\Tify\Service\Message\ApnsMessageBuilder;
 use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
 
 class ApnsService extends AbstractService implements SendInterface, FeedbackInterface
@@ -84,7 +84,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
 
         /* @var \Jgut\Tify\Recipient\ApnsRecipient $recipient */
         foreach ($notification->getRecipients() as $recipient) {
-            $message = MessageBuilder::build($recipient, $notification);
+            $message = ApnsMessageBuilder::build($recipient, $notification);
 
             $result = new Result($recipient->getToken(), new \DateTime);
 
@@ -146,7 +146,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
     protected function getPushService()
     {
         if (!isset($this->pushClient)) {
-            $this->pushClient = ClientBuilder::buildPush(
+            $this->pushClient = ApnsClientBuilder::buildPush(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
                 $this->sandbox
@@ -164,7 +164,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
     protected function getFeedbackService()
     {
         if (!isset($this->feedbackClient)) {
-            $this->feedbackClient = ClientBuilder::buildFeedback(
+            $this->feedbackClient = ApnsClientBuilder::buildFeedback(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
                 $this->sandbox

@@ -12,7 +12,7 @@ namespace Jgut\Tify\Service\Message;
 use Jgut\Tify\Notification\GcmNotification;
 use Jgut\Tify\Service\Message\Gcm as ServiceMessage;
 
-class GcmBuilder
+class GcmMessageBuilder
 {
     /**
      * Get configured service message.

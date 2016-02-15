@@ -9,16 +9,16 @@
 
 namespace Jgut\Tify\Tests\Service\Message;
 
-use Jgut\Tify\Service\Message\ApnsBuilder;
+use Jgut\Tify\Service\Message\ApnsMessageBuilder;
 use ZendService\Apple\Apns\Message;
 
 /**
- * @covers \Jgut\Tify\Service\Message\ApnsBuilder
+ * @covers \Jgut\Tify\Service\Message\ApnsMessageBuilder
  */
-class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
+class ApnsMessageBuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \Jgut\Tify\Service\Message\ApnsBuilder::build
+     * @covers \Jgut\Tify\Service\Message\ApnsMessageBuilder::build
      */
     public function testPushClient()
     {
@@ -39,7 +39,7 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
             ['expire' => 600, 'badge' => 1]
         );
 
-        $client = ApnsBuilder::build($recipient, $notification);
+        $client = ApnsMessageBuilder::build($recipient, $notification);
         $this->assertInstanceOf(Message::class, $client);
     }
 }

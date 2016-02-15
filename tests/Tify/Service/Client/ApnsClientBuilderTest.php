@@ -9,39 +9,39 @@
 
 namespace Jgut\Tify\Tests\Service\Client;
 
-use Jgut\Tify\Service\Client\ApnsBuilder;
+use Jgut\Tify\Service\Client\ApnsClientBuilder;
 use ZendService\Apple\Apns\Client\Feedback;
 use ZendService\Apple\Apns\Client\Message;
 
 /**
- * @covers \Jgut\Tify\Service\Client\ApnsBuilder
+ * @covers \Jgut\Tify\Service\Client\ApnsClientBuilder
  */
-class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
+class ApnsClientBuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildPush
-     * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildClient
+     * @covers \Jgut\Tify\Service\Client\ApnsClientBuilder::buildPush
+     * @covers \Jgut\Tify\Service\Client\ApnsClientBuilder::buildClient
      *
      * @expectedException \Jgut\Tify\Exception\ServiceException
      * @expectedExceptionMessageRegExp /Unable to set local cert chain file/
      */
     public function testPushClient()
     {
-        $client = ApnsBuilder::buildPush(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
+        $client = ApnsClientBuilder::buildPush(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
 
         $this->assertInstanceOf(Message::class, $client);
     }
 
     /**
-     * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildFeedback
-     * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildClient
+     * @covers \Jgut\Tify\Service\Client\ApnsClientBuilder::buildFeedback
+     * @covers \Jgut\Tify\Service\Client\ApnsClientBuilder::buildClient
      *
      * @expectedException \Jgut\Tify\Exception\ServiceException
      * @expectedExceptionMessageRegExp /Unable to set local cert chain file/
      */
     public function testPushFeedback()
     {
-        $client = ApnsBuilder::buildFeedback(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
+        $client = ApnsClientBuilder::buildFeedback(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
 
         $this->assertInstanceOf(Feedback::class, $client);
     }

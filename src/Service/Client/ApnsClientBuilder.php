@@ -14,7 +14,7 @@ use ZendService\Apple\Apns\Client\AbstractClient;
 use ZendService\Apple\Apns\Client\Feedback as FeedbackClient;
 use ZendService\Apple\Apns\Client\Message as MessageClient;
 
-class ApnsBuilder
+class ApnsClientBuilder
 {
     /**
      * Get opened push service client.

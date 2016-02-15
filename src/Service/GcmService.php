@@ -12,8 +12,8 @@ namespace Jgut\Tify\Service;
 use Jgut\Tify\Notification\AbstractNotification;
 use Jgut\Tify\Notification\GcmNotification;
 use Jgut\Tify\Result;
-use Jgut\Tify\Service\Client\GcmBuilder as ClientBuilder;
-use Jgut\Tify\Service\Message\GcmBuilder as MessageBuilder;
+use Jgut\Tify\Service\Client\GcmClientBuilder;
+use Jgut\Tify\Service\Message\GcmMessageBuilder;
 use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
 
 class GcmService extends AbstractService implements SendInterface
@@ -62,7 +62,7 @@ class GcmService extends AbstractService implements SendInterface
         $results = [];
 
         foreach (array_chunk($notification->getTokens(), 100) as $tokensRange) {
-            $message = MessageBuilder::build($tokensRange, $notification);
+            $message = GcmMessageBuilder::build($tokensRange, $notification);
 
             $time = new \DateTime;
 
@@ -110,7 +110,7 @@ class GcmService extends AbstractService implements SendInterface
     protected function getPushService($apiKey)
     {
         if (!isset($this->pushClient)) {
-            $this->pushClient = ClientBuilder::buildPush($apiKey);
+            $this->pushClient = GcmClientBuilder::buildPush($apiKey);
         }
 
         return $this->pushClient;

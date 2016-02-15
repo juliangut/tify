@@ -14,7 +14,7 @@ use Jgut\Tify\Notification\ApnsNotification;
 use ZendService\Apple\Apns\Message as ServiceMessage;
 use ZendService\Apple\Apns\Message\Alert as ServiceMessageAlert;
 
-class ApnsBuilder
+class ApnsMessageBuilder
 {
     /**
      * Get service message from origin.
