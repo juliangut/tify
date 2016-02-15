@@ -29,18 +29,18 @@ class WnsMessage
     const TARGET_RAW = 'raw';
 
     /**
-     * Notification priority.
-     *
-     * @var int
-     */
-    protected $class;
-
-    /**
      * Notification target.
      *
      * @var string
      */
     protected $target;
+
+    /**
+     * Notification class.
+     *
+     * @var int
+     */
+    protected $class;
 
     /**
      * Notification identification.
@@ -104,6 +104,34 @@ class WnsMessage
     }
 
     /**
+     * Retrieve notification target.
+     *
+     * @return string
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Set notification target.
+     *
+     * @param string $target
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setTarget($target)
+    {
+        if (!in_array($target, [self::TARGET_TILE, self::TARGET_TOAST, self::TARGET_RAW])) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid value for notification target', $target));
+        }
+
+        $this->target = $target;
+
+        return $this;
+    }
+
+    /**
      * Retrieve notification class.
      *
      * @return int
@@ -144,34 +172,6 @@ class WnsMessage
     }
 
     /**
-     * Retrieve notification target.
-     *
-     * @return string
-     */
-    public function getTarget()
-    {
-        return $this->target;
-    }
-
-    /**
-     * Set notification target.
-     *
-     * @param string $target
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function setTarget($target)
-    {
-        if (!in_array($target, [self::TARGET_TILE, self::TARGET_TOAST, self::TARGET_RAW])) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a valid value for notification target', $target));
-        }
-
-        $this->target = $target;
-
-        return $this;
-    }
-
-    /**
      * Retrieve notification identifier.
      *
      * @return string
@@ -185,13 +185,15 @@ class WnsMessage
      * Set notification|null identifier.
      *
      * @param string $uuid
+     *
+     * @throws \InvalidArgumentException
      */
     public function setUuid($uuid = null)
     {
         $uuid = trim($uuid);
 
-        if (!preg_match('/^[0-8a-z]{8}(-[0-9a-z]{4}){3}-[0-8a-z]{12}$/', strtolower($uuid))) {
-            throw new \InvalidArgumentException('"%s" is not a valid UUID', $uuid);
+        if (!preg_match('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', strtolower($uuid))) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid UUID', $uuid));
         }
 
         $this->uuid = $uuid;
@@ -250,7 +252,7 @@ class WnsMessage
      */
     public function getNavigateTo()
     {
-        return $this->navigateTo;
+        return ltrim($this->navigateTo, '/');
     }
 
     /**

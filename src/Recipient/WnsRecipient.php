@@ -20,7 +20,7 @@ class WnsRecipient extends AbstractRecipient
     {
         $token = trim($token);
         if (!filter_var($token, FILTER_VALIDATE_URL)) {
-            throw new \InvalidArgumentException('Windows Phone tokens must be a valid URL endpoint');
+            throw new \InvalidArgumentException('Windows Notification token must be a valid URL endpoint');
         }
 
         $this->token = $token;
