@@ -9,8 +9,11 @@
 
 # Tify
 
-Unified push notification services abstraction inspired by [NotificationPusher
-](https://github.com/Ph3nol/NotificationPusher)
+Unified push notification service abstraction layer for
+
+* APNS (Apple Push Notification Service)
+* GCM (Google Cloud Messaging)
+* WNS (Windows Push Notification Service)
 
 ## Installation
 
@@ -28,60 +31,80 @@ require_once './vendor/autoload.php';
 
 ## Usage
 
-Basic usage creating a message and sending it through GCM and APNS services.
+Basic usage creating a message and sending it through GCM, APNS and WNS services.
 
 ```php
-use Jgut\Tify\Recipient\ApnsRecipient;
-use Jgut\Tify\Recipient\GcmRecipient;
 use Jgut\Tify\Manager;
 use Jgut\Tify\Message\ApnsMessage;
 use Jgut\Tify\Message\GcmMessage;
+use Jgut\Tify\Message\WnsMessage;
 use Jgut\Tify\Notification\ApnsNotification;
 use Jgut\Tify\Notification\GcmNotification;
-use Jgut\Tify\Service\AbstractService;
+use Jgut\Tify\Notification\WnsNotification;
+use Jgut\Tify\Recipient\ApnsRecipient;
+use Jgut\Tify\Recipient\GcmRecipient;
+use Jgut\Tify\Recipient\WnsRecipient;
 use Jgut\Tify\Service\ApnsService;
 use Jgut\Tify\Service\GcmService;
+use Jgut\Tify\Service\WnsService;
 
-$message = [
+$messageParameters = [
     'title' => 'title',
     'body' => 'body',
 ];
 
-//Create GCM service interface
+// Create GCM service interface
 $gcmService = new GcmService(['api_key' => '00000']);
 
-//Create GCM message
-$gcmMessage = new GcnMessage($message);
+// Create GCM message
+$gcmMessage = new GcnMessage($messageParameters);
 
-//Create a list of GCM recipients
+// Create a list of GCM recipients
 $gcmRecipients = [
     new GcmRecipient('aaaaaaaaaaa'),
     new GcmRecipient('bbbbbbbbbbb'),
 ];
 
-//Combine previous to create a GCM notification
+// Combine previous to create a GCM notification
 $gcmNotification = new GcmNotification($gcmService, $gcmMessage, $gcmRecipients);
 
-
-//Create APNS service interface
+// Create APNS service interface
 $apnsService = new ApnsService(['certificate' => 'path_to_certificate']);
 
-//Create APNS message
-$apnsMessage = new ApnsMessage($message);
+// Create APNS message
+$apnsMessage = new ApnsMessage($messageParameters);
 
-//Create a list of APNS recipients
+// Create a list of APNS recipients
 $apnsRecipients = [
     new ApnsRecipient('ccccccccccc'),
     new ApnsRecipient('ddddddddddd'),
 ];
 
-//Combine previous to create a APNS notification
+// Combine previous to create a APNS notification
 $apnsNotification = new ApnsNotification($apnsService, $apnsMessage, $apnsRecipients);
 
+// Create WNS service interface
+$wnsService = new WnsService();
+
+// Create WNS message
+$wnsMessage = new WnsMessage($messageParameters);
+
+// Create a list of WNS recipients
+$wnsRecipients = [
+    new WnsRecipient('https://...'),
+    new WnsRecipient('https://...'),
+];
+
+// Combine previous to create a WNS notification
+$wnsNotification = new WnsNotification($wnsService, $wnsMessage, $wnsRecipients);
+
+// Create notifications manager
 $manager = new Manager;
 $manager->addNotification($gcmNotification);
 $manager->addNotification($apnsNotification);
+$manager->addNotification($wnsNotification);
 
+// Send notifications
 $manager->send();
 ```
 
@@ -142,6 +165,8 @@ $message->setParameter('param_2', 'value_2');
 
 *Parameters should not be a reserved word (`from` or any word starting with `google` or `gcm`) or any GCM notification option. See [here](https://developers.google.com/cloud-messaging/http-server-ref#table2) for information on message options (notification payload)*
 
+### WNS
+
 ## Notification
 
 Each notification holds all the information to send a notification using the desired service. Each kind of service has its own options.
@@ -167,6 +192,8 @@ $notification->setOption('dry_run', false);
 ```
 
 *Find options [here](https://developers.google.com/cloud-messaging/http-server-ref#table1) in table 1.*
+
+### WNS
 
 ## Service
 

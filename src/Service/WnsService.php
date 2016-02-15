@@ -10,23 +10,14 @@
 namespace Jgut\Tify\Service;
 
 use Jgut\Tify\Notification\AbstractNotification;
-use Jgut\Tify\Notification\WpNotification;
+use Jgut\Tify\Notification\WnsNotification;
 use Jgut\Tify\Result;
-use JildertMiedema\WindowsPhone\WindowsPhonePushNotification;
+use Jgut\Tify\Service\Client\WnsClient;
+use Jgut\Tify\Service\Message\WnsMessageBuilder;
 
-class WpService extends AbstractService implements SendInterface
+class WnsService extends AbstractService implements SendInterface
 {
     const RESULT_OK = 'OK';
-
-    const PRIORITY_IMMEDIATE_TILE = 1;
-    const PRIORITY_IMMEDIATE_TOAST = 2;
-    const PRIORITY_IMMEDIATE_RAW = 3;
-    const PRIORITY_DELAY450_TILE = 11;
-    const PRIORITY_DELAY450_TOAST = 12;
-    const PRIORITY_DELAY450_RAW = 13;
-    const PRIORITY_DELAY900_TILE = 21;
-    const PRIORITY_DELAY900_TOAST = 22;
-    const PRIORITY_DELAY900_RAW = 23;
 
     /**
      * Status codes translation.
@@ -48,7 +39,7 @@ class WpService extends AbstractService implements SendInterface
     ];
 
     /**
-     * @var \JildertMiedema\WindowsPhone\WindowsPhonePushNotification
+     * @var \Jgut\Tify\Service\Client\WnsClient
      */
     protected $pushClient;
 
@@ -59,33 +50,21 @@ class WpService extends AbstractService implements SendInterface
      */
     public function send(AbstractNotification $notification)
     {
-        if (!$notification instanceof WpNotification) {
+        if (!$notification instanceof WnsNotification) {
             throw new \InvalidArgumentException('Notification must be an accepted Windows Phone notification');
         }
 
         $service = $this->getPushService();
-        $message = $notification->getMessage();
+        $message = WnsMessageBuilder::build($notification);
 
         $results = [];
 
         foreach ($notification->getTokens() as $recipientToken) {
             $time = new \DateTime;
 
-            $response = $service->pushToast(
-                $recipientToken,
-                $message->getOption('title'),
-                $message->getOption('body')
-            );
+            $response = $service->send($recipientToken, $message);
 
-            $responseStatus = $this->parseResponseStatus([
-                'httpStatus' => '',
-                'notificationStatus' => array_key_exists('X-NotificationStatus', $response)
-                    ? $response['X-NotificationStatus']
-                    : null,
-                'subscriptionStatus' => array_key_exists('X-SubscriptionStatus', $response)
-                    ? $response['X-SubscriptionStatus']
-                    : null,
-            ]);
+            $responseStatus = $this->parseResponseStatus($response);
 
             if ($responseStatus === self::RESULT_OK) {
                 $result = new Result($recipientToken, $time);
@@ -107,12 +86,12 @@ class WpService extends AbstractService implements SendInterface
     /**
      * Get opened client.
      *
-     * @return \JildertMiedema\WindowsPhone\WindowsPhonePushNotification
+     * @return \Jgut\Tify\Service\Client\WnsClient
      */
     protected function getPushService()
     {
         if (!isset($this->pushClient)) {
-            $this->pushClient = new WindowsPhonePushNotification;
+            $this->pushClient = new WnsClient;
         }
 
         return $this->pushClient;
@@ -135,12 +114,12 @@ class WpService extends AbstractService implements SendInterface
             503 => 'unavailable',
         ];
 
-        if ($responseStatus['httpStatus'] === 200) {
+        if ($responseStatus['Status'] === 200) {
             return $this->parse200ResponseStatus($responseStatus);
         }
 
-        if (in_array($responseStatus['httpStatus'], array_keys($httpStatusMapper))) {
-            return $httpStatusMapper[$responseStatus['httpStatus']];
+        if (in_array((int) $responseStatus['Status'], array_keys($httpStatusMapper))) {
+            return $httpStatusMapper[(int) $responseStatus['Status']];
         }
 
         return 'unknownError';
@@ -148,6 +127,11 @@ class WpService extends AbstractService implements SendInterface
 
     /**
      * Parse HTTP 200 status response to identify notification final status.
+     *
+     * Windows Phone Push Notification Service headers available to check against:
+     *  X-NotificationStatus
+     *  X-ServiceConnectionStatus
+     *  X-SubscriptionStatus
      *
      * @param array $responseStatus
      *
@@ -161,8 +145,8 @@ class WpService extends AbstractService implements SendInterface
             'suppressed' =>'suppressed',
         ];
 
-        if (in_array(strtolower($responseStatus['httpStatus']), array_keys($statusMapper))) {
-            return $statusMapper[strtolower($responseStatus['httpStatus'])];
+        if (in_array(strtolower($responseStatus['X-NotificationStatus']), array_keys($statusMapper))) {
+            return $statusMapper[strtolower($responseStatus['X-NotificationStatus'])];
         }
 
         return 'unknownError';

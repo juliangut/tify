@@ -19,7 +19,7 @@ use Zend\Json\Json;
  *
  * Implements notification payload parameters.
  */
-class Gcm extends ServiceMessage
+class GcmMessage extends ServiceMessage
 {
     /**
      * @var array

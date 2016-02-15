@@ -10,7 +10,6 @@
 namespace Jgut\Tify\Service\Message;
 
 use Jgut\Tify\Notification\GcmNotification;
-use Jgut\Tify\Service\Message\Gcm as ServiceMessage;
 
 class GcmMessageBuilder
 {
@@ -20,13 +19,13 @@ class GcmMessageBuilder
      * @param array                                   $tokens
      * @param \Jgut\Tify\Notification\GcmNotification $notification
      *
-     * @return \Jgut\Tify\Service\Message\Gcm
+     * @return \Jgut\Tify\Service\Message\GcmMessage
      */
     public static function build(array $tokens, GcmNotification $notification)
     {
         $message = $notification->getMessage();
 
-        $pushMessage = new ServiceMessage();
+        $pushMessage = new GcmMessage();
 
         $pushMessage
             ->setRegistrationIds($tokens)

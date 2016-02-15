@@ -16,7 +16,7 @@ use Jgut\Tify\Notification\ApnsNotification;
 use Jgut\Tify\Result;
 use Jgut\Tify\Service\Client\ApnsClientBuilder;
 use Jgut\Tify\Service\Message\ApnsMessageBuilder;
-use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
+use ZendService\Apple\Exception\RuntimeException;
 
 class ApnsService extends AbstractService implements SendInterface, FeedbackInterface
 {
@@ -95,7 +95,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
                     $result->setStatus(Result::STATUS_ERROR);
                     $result->setStatusMessage(self::$statusCodes[$response->getCode()]);
                 }
-            } catch (ServiceRuntimeException $exception) {
+            } catch (RuntimeException $exception) {
                 $result->setStatus(Result::STATUS_ERROR);
                 $result->setStatusMessage($exception->getMessage());
             }
@@ -120,7 +120,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
 
         try {
             $feedbackResponse = $service->feedback();
-        } catch (ServiceRuntimeException $exception) {
+        } catch (RuntimeException $exception) {
             throw new NotificationException($exception->getMessage(), $exception->getCode(), $exception);
         }
 

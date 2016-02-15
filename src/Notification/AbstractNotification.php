@@ -9,9 +9,9 @@
 
 namespace Jgut\Tify\Notification;
 
-use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\OptionsTrait;
+use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Service\AbstractService;
 
 abstract class AbstractNotification

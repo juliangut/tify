@@ -9,12 +9,12 @@
 
 namespace Jgut\Tify\Tests\Service\Message;
 
-use Jgut\Tify\Service\Message\Gcm as Message;
+use Jgut\Tify\Service\Message\GcmMessage as Message;
 
 /**
- * @covers \Jgut\Tify\Service\Message\Gcm
+ * @covers \Jgut\Tify\Service\Message\GcmMessage
  */
-class GcmTest extends \PHPUnit_Framework_TestCase
+class GcmMessageTest extends \PHPUnit_Framework_TestCase
 {
     protected $message;
 
@@ -24,10 +24,10 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Service\Message\Gcm::getNotificationPayload
-     * @covers \Jgut\Tify\Service\Message\Gcm::addNotificationPayload
-     * @covers \Jgut\Tify\Service\Message\Gcm::setNotificationPayload
-     * @covers \Jgut\Tify\Service\Message\Gcm::clearNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\GcmMessage::getNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\GcmMessage::addNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\GcmMessage::setNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\GcmMessage::clearNotificationPayload
      */
     public function testMutatorsAccessors()
     {
@@ -44,7 +44,7 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Service\Message\Gcm::addNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\GcmMessage::addNotificationPayload
      *
      * @expectedException \ZendService\Google\Exception\InvalidArgumentException
      */
@@ -54,7 +54,7 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Service\Message\Gcm::addNotificationPayload
+     * @covers \Jgut\Tify\Service\Message\GcmMessage::addNotificationPayload
      *
      * @expectedException \ZendService\Google\Exception\RuntimeException
      */
@@ -65,8 +65,8 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Service\Message\Gcm::toJson
-     * @covers \Jgut\Tify\Service\Message\Gcm::getPayload
+     * @covers \Jgut\Tify\Service\Message\GcmMessage::toJson
+     * @covers \Jgut\Tify\Service\Message\GcmMessage::getPayload
      */
     public function testJsonResult()
     {

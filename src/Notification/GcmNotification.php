@@ -9,12 +9,12 @@
 
 namespace Jgut\Tify\Notification;
 
-use Jgut\Tify\Service\AbstractService;
-use Jgut\Tify\Service\GcmService;
-use Jgut\Tify\Recipient\AbstractRecipient;
-use Jgut\Tify\Recipient\GcmRecipient;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\Message\GcmMessage;
+use Jgut\Tify\Recipient\AbstractRecipient;
+use Jgut\Tify\Recipient\GcmRecipient;
+use Jgut\Tify\Service\AbstractService;
+use Jgut\Tify\Service\GcmService;
 
 class GcmNotification extends AbstractNotification
 {

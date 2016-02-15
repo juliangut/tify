@@ -10,7 +10,7 @@
 namespace Jgut\Tify\Tests\Service\Message;
 
 use Jgut\Tify\Service\Message\GcmMessageBuilder;
-use Jgut\Tify\Service\Message\Gcm;
+use Jgut\Tify\Service\Message\GcmMessage;
 
 /**
  * @covers \Jgut\Tify\Service\Message\GcmMessageBuilder
@@ -29,6 +29,6 @@ class GcmMessageBuilderTest extends \PHPUnit_Framework_TestCase
         $notification = new \Jgut\Tify\Notification\GcmNotification($service, $message);
 
         $client = GcmMessageBuilder::build(['my_token'], $notification);
-        $this->assertInstanceOf(Gcm::class, $client);
+        $this->assertInstanceOf(GcmMessage::class, $client);
     }
 }

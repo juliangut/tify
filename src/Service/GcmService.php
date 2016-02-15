@@ -14,7 +14,7 @@ use Jgut\Tify\Notification\GcmNotification;
 use Jgut\Tify\Result;
 use Jgut\Tify\Service\Client\GcmClientBuilder;
 use Jgut\Tify\Service\Message\GcmMessageBuilder;
-use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
+use ZendService\Google\Exception\RuntimeException;
 
 class GcmService extends AbstractService implements SendInterface
 {
@@ -90,7 +90,7 @@ class GcmService extends AbstractService implements SendInterface
 
                     $results[] = $result;
                 }
-            } catch (ServiceRuntimeException $exception) {
+            } catch (RuntimeException $exception) {
                 foreach ($tokensRange as $token) {
                     $results[] = new Result($token, $time, Result::STATUS_ERROR, $exception->getMessage());
                 }

@@ -9,12 +9,12 @@
 
 namespace Jgut\Tify\Notification;
 
-use Jgut\Tify\Service\AbstractService;
-use Jgut\Tify\Service\ApnsService;
-use Jgut\Tify\Recipient\AbstractRecipient;
-use Jgut\Tify\Recipient\ApnsRecipient;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\Message\ApnsMessage;
+use Jgut\Tify\Recipient\AbstractRecipient;
+use Jgut\Tify\Recipient\ApnsRecipient;
+use Jgut\Tify\Service\AbstractService;
+use Jgut\Tify\Service\ApnsService;
 
 class ApnsNotification extends AbstractNotification
 {

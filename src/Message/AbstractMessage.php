@@ -45,6 +45,12 @@ abstract class AbstractMessage
         //'title_loc_key' => null,
         //'title_loc_args' => null,
         //'action_loc_key' => null,
+
+        //Windows Phone
+        //'id' => null,
+        //'navigate_to' => null,
+        //'sound' => null,
+        //'silent' => false,
     ];
 
     /**

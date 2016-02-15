@@ -6,6 +6,7 @@
     "notification",
     "GCM",
     "APNS",
+    "Windows Phone",
     "abstraction"
   ],
   "homepage": "http://github.com/juliangut/tify",
@@ -21,18 +22,17 @@
     "issues": "https://github.com/juliangut/tify/issues"
   },
   "require": {
-    "php": ">=5.5",
-    "symfony/options-resolver": "^2.7",
+    "php": ">=5.5.9",
+    "symfony/options-resolver": "^3.0",
     "zendframework/zendservice-apple-apns": "^1.1",
-    "zendframework/zendservice-google-gcm": "^1.0",
-    "jildertmiedema/windows-phone-push": "^0.0.1"
+    "zendframework/zendservice-google-gcm": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.8",
     "squizlabs/php_codesniffer": "^2.0",
     "phpmd/phpmd": "^2.0",
     "sebastian/phpcpd": "^2.0",
-    "vinkla/climb": "^0.7",
+    "vinkla/climb": "^0.8",
     "sensiolabs/security-checker": "^3.0"
   },
   "autoload": {

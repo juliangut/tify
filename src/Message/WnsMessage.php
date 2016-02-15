@@ -9,6 +9,6 @@
 
 namespace Jgut\Tify\Message;
 
-class WpMessage extends AbstractMessage
+class WnsMessage extends AbstractMessage
 {
 }
