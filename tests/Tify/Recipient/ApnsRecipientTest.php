@@ -9,27 +9,27 @@
 
 namespace Jgut\Tify\Tests\Recipient;
 
-use Jgut\Tify\Recipient\GcmRecipient;
+use Jgut\Tify\Recipient\ApnsRecipient;
 
 /**
- * @covers \Jgut\Tify\Recipient\GcmRecipient
+ * @covers \Jgut\Tify\Recipient\ApnsRecipient
  */
-class GcmTest extends \PHPUnit_Framework_TestCase
+class ApnsRecipientTest extends \PHPUnit_Framework_TestCase
 {
     protected $recipient;
 
     public function setUp()
     {
-        $this->recipient = new GcmRecipient('f59c88b12035278b86f26d448835939a');
+        $this->recipient = new ApnsRecipient('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
     }
 
     /**
-     * @covers \Jgut\Tify\Recipient\GcmRecipient::setToken
+     * @covers \Jgut\Tify\Recipient\ApnsRecipient::setToken
      *
      * @expectedException \InvalidArgumentException
      */
     public function testBadToken()
     {
-        $this->recipient->setToken('    ');
+        $this->recipient->setToken('non_hex_short_token');
     }
 }

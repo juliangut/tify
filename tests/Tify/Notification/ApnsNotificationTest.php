@@ -9,31 +9,31 @@
 
 namespace Jgut\Tify\Tests\Notification;
 
-use Jgut\Tify\Notification\GcmNotification;
+use Jgut\Tify\Notification\ApnsNotification;
 
 /**
- * @covers \Jgut\Tify\Notification\GcmNotification
+ * @covers \Jgut\Tify\Notification\ApnsNotification
  */
-class GcmTest extends \PHPUnit_Framework_TestCase
+class ApnsNotificationTest extends \PHPUnit_Framework_TestCase
 {
     protected $notification;
 
     public function setUp()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\GcmService', [], [], '', false);
-        $message = $this->getMock('\Jgut\Tify\Message\GcmMessage', [], [], '', false);
+        $service = $this->getMock('\Jgut\Tify\Service\ApnsService', [], [], '', false);
+        $message = $this->getMock('\Jgut\Tify\Message\ApnsMessage', [], [], '', false);
 
-        $this->notification = new GcmNotification($service, $message);
+        $this->notification = new ApnsNotification($service, $message);
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\GcmNotification::setService
+     * @covers \Jgut\Tify\Notification\ApnsNotification::setService
      *
      * @expectedException \InvalidArgumentException
      */
     public function testServiceSet()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\GcmService', [], [], '', false);
+        $service = $this->getMock('\Jgut\Tify\Service\ApnsService', [], [], '', false);
         $this->notification->setService($service);
         $this->assertEquals($service, $this->notification->getService());
 
@@ -43,13 +43,13 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\GcmNotification::setMessage
+     * @covers \Jgut\Tify\Notification\ApnsNotification::setMessage
      *
      * @expectedException \InvalidArgumentException
      */
     public function testMessageSet()
     {
-        $message = $this->getMock('\Jgut\Tify\Message\GcmMessage', [], [], '', false);
+        $message = $this->getMock('\Jgut\Tify\Message\ApnsMessage', [], [], '', false);
         $this->notification->setMessage($message);
         $this->assertEquals($message, $this->notification->getMessage());
 
@@ -59,13 +59,13 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\GcmNotification::addRecipient
+     * @covers \Jgut\Tify\Notification\ApnsNotification::addRecipient
      *
      * @expectedException \InvalidArgumentException
      */
     public function testRecipientAdd()
     {
-        $recipient = $this->getMock('\Jgut\Tify\Recipient\GcmRecipient', [], [], '', false);
+        $recipient = $this->getMock('\Jgut\Tify\Recipient\ApnsRecipient', [], [], '', false);
         $this->notification->addRecipient($recipient);
         $this->assertCount(1, $this->notification->getRecipients());
 

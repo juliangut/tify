@@ -9,18 +9,18 @@
 
 namespace Jgut\Tify\Tests\Message;
 
-use Jgut\Tify\Message\GcmMessage;
+use Jgut\Tify\Message\ApnsMessage;
 
 /**
- * @covers \Jgut\Tify\Message\GcmMessage
+ * @covers \Jgut\Tify\Message\ApnsMessage
  */
-class GcmTest extends \PHPUnit_Framework_TestCase
+class ApnsMessageTest extends \PHPUnit_Framework_TestCase
 {
     protected $message;
 
     public function setUp()
     {
-        $this->message = new GcmMessage();
+        $this->message = new ApnsMessage();
     }
 
     /**
@@ -41,7 +41,7 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Message\GcmMessage::setParameter
+     * @covers \Jgut\Tify\Message\ApnsMessage::setParameter
      *
      * @expectedException \InvalidArgumentException
      */
@@ -50,6 +50,6 @@ class GcmTest extends \PHPUnit_Framework_TestCase
         $this->message->setParameter('param1', 'value1');
         $this->assertCount(1, $this->message->getParameters());
 
-        $this->message->setParameter('gcm_param', 'value');
+        $this->message->setParameter('apc', 'value');
     }
 }
