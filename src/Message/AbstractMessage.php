@@ -25,32 +25,6 @@ abstract class AbstractMessage
     protected $defaultOptions = [
         'title' => null,
         'body' => null,
-
-        // GCM
-        //'icon' => null,
-        //'sound' => 'default',
-        //'badge' => 'null',
-        //'tag' => null,
-        //'color' => null,
-        //'click_action' => null,
-        //'title_loc_key' => null,
-        //'title_loc_args' => null,
-        //'body_loc_key' => null,
-        //'body_loc_args' => null,
-
-        // APNS
-        //'loc_key' => null,
-        //'loc_args' => null,
-        //'launch_image' => null,
-        //'title_loc_key' => null,
-        //'title_loc_args' => null,
-        //'action_loc_key' => null,
-
-        //Windows Phone
-        //'id' => null,
-        //'navigate_to' => null,
-        //'sound' => null,
-        //'silent' => false,
     ];
 
     /**
@@ -72,7 +46,7 @@ abstract class AbstractMessage
      */
     public function setTitle($title)
     {
-        $this->setOption('title', trim($title));
+        $this->setOption('title', $title);
 
         return $this;
     }

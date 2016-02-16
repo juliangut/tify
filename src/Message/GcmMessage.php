@@ -11,6 +11,21 @@ namespace Jgut\Tify\Message;
 
 class GcmMessage extends AbstractMessage
 {
+    /*
+     * GCM message options:
+     *
+     * icon
+     * sound
+     * badge
+     * tag
+     * color
+     * click_action
+     * title_loc_key
+     * title_loc_args
+     * body_loc_key
+     * body_loc_args
+     */
+
     /**
      * List of Google service's reserved parameters.
      *

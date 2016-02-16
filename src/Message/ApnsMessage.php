@@ -11,6 +11,17 @@ namespace Jgut\Tify\Message;
 
 class ApnsMessage extends AbstractMessage
 {
+    /*
+     * APNS message options:
+     *
+     * loc_key
+     * loc_args
+     * launch_image
+     * title_loc_key
+     * title_loc_args
+     * action_loc_key
+     */
+
     /**
      * {@inheritdoc}
      *

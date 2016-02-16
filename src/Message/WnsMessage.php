@@ -11,4 +11,12 @@ namespace Jgut\Tify\Message;
 
 class WnsMessage extends AbstractMessage
 {
+    /*
+     * WNS message options:
+     *
+     * id
+     * navigate_to
+     * sound
+     * silent
+     */
 }
