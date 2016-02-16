@@ -151,6 +151,5 @@ class MpnsClient
         }
 
         return $responseHeaders;
-
     }
 }
