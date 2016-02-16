@@ -9,14 +9,16 @@
 
 namespace Jgut\Tify\Message;
 
-class WnsMessage extends AbstractMessage
+class MpnsMessage extends AbstractMessage
 {
     /*
-     * WNS message options:
+     * Mpns message options:
      *
-     * id
      * navigate_to
-     * sound
+     * count
+     * background_image
+     * back_background_image
      * silent
+     * sound
      */
 }

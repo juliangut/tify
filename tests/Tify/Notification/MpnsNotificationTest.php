@@ -9,31 +9,31 @@
 
 namespace Jgut\Tify\Tests\Notification;
 
-use Jgut\Tify\Notification\WnsNotification;
+use Jgut\Tify\Notification\MpnsNotification;
 
 /**
- * @covers \Jgut\Tify\Notification\WnsNotification
+ * @covers \Jgut\Tify\Notification\MpnsNotification
  */
-class WnsNotificationTest extends \PHPUnit_Framework_TestCase
+class MpnsNotificationTest extends \PHPUnit_Framework_TestCase
 {
     protected $notification;
 
     public function setUp()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\WnsService', [], [], '', false);
-        $message = $this->getMock('\Jgut\Tify\Message\WnsMessage', [], [], '', false);
+        $service = $this->getMock('\Jgut\Tify\Service\MpnsService', [], [], '', false);
+        $message = $this->getMock('\Jgut\Tify\Message\MpnsMessage', [], [], '', false);
 
-        $this->notification = new WnsNotification($service, $message);
+        $this->notification = new MpnsNotification($service, $message);
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\WnsNotification::setService
+     * @covers \Jgut\Tify\Notification\MpnsNotification::setService
      *
      * @expectedException \InvalidArgumentException
      */
     public function testServiceSet()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\WnsService', [], [], '', false);
+        $service = $this->getMock('\Jgut\Tify\Service\MpnsService', [], [], '', false);
         $this->notification->setService($service);
         $this->assertEquals($service, $this->notification->getService());
 
@@ -43,13 +43,13 @@ class WnsNotificationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\WnsNotification::setMessage
+     * @covers \Jgut\Tify\Notification\MpnsNotification::setMessage
      *
      * @expectedException \InvalidArgumentException
      */
     public function testMessageSet()
     {
-        $message = $this->getMock('\Jgut\Tify\Message\WnsMessage', [], [], '', false);
+        $message = $this->getMock('\Jgut\Tify\Message\MpnsMessage', [], [], '', false);
         $this->notification->setMessage($message);
         $this->assertEquals($message, $this->notification->getMessage());
 
@@ -59,13 +59,13 @@ class WnsNotificationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Notification\WnsNotification::addRecipient
+     * @covers \Jgut\Tify\Notification\MpnsNotification::addRecipient
      *
      * @expectedException \InvalidArgumentException
      */
     public function testRecipientAdd()
     {
-        $recipient = $this->getMock('\Jgut\Tify\Recipient\WnsRecipient', [], [], '', false);
+        $recipient = $this->getMock('\Jgut\Tify\Recipient\MpnsRecipient', [], [], '', false);
         $this->notification->addRecipient($recipient);
         $this->assertCount(1, $this->notification->getRecipients());
 

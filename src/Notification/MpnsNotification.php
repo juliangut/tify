@@ -10,22 +10,22 @@
 namespace Jgut\Tify\Notification;
 
 use Jgut\Tify\Message\AbstractMessage;
-use Jgut\Tify\Message\WnsMessage;
+use Jgut\Tify\Message\MpnsMessage;
 use Jgut\Tify\Recipient\AbstractRecipient;
-use Jgut\Tify\Recipient\WnsRecipient;
+use Jgut\Tify\Recipient\MpnsRecipient;
 use Jgut\Tify\Service\AbstractService;
-use Jgut\Tify\Service\Message\WnsMessage as WnsServiceMessage;
-use Jgut\Tify\Service\WnsService;
+use Jgut\Tify\Service\Message\MpnsMessage as MpnsServiceMessage;
+use Jgut\Tify\Service\MpnsService;
 
-class WnsNotification extends AbstractNotification
+class MpnsNotification extends AbstractNotification
 {
     /**
-     * @param \Jgut\Tify\Service\WnsService       $service
-     * @param \Jgut\Tify\Message\WnsMessage       $message
-     * @param \Jgut\Tify\Recipient\WnsRecipient[] $recipients
-     * @param array                               $options
+     * @param \Jgut\Tify\Service\MpnsService       $service
+     * @param \Jgut\Tify\Message\MpnsMessage       $message
+     * @param \Jgut\Tify\Recipient\MpnsRecipient[] $recipients
+     * @param array                                $options
      */
-    public function __construct(WnsService $service, WnsMessage $message, array $recipients = [], array $options = [])
+    public function __construct(MpnsService $service, MpnsMessage $message, array $recipients = [], array $options = [])
     {
         parent::__construct($service, $message, $recipients, $options);
     }
@@ -36,8 +36,9 @@ class WnsNotification extends AbstractNotification
     protected function getDefaultOptions()
     {
         return [
-            'target' => WnsServiceMessage::TARGET_TOAST,
-            'priority' => WnsServiceMessage::CLASS_IMMEDIATE_TOAST,
+            'id' => null,
+            'target' => MpnsServiceMessage::TARGET_TOAST,
+            'class' => MpnsServiceMessage::CLASS_IMMEDIATE_TOAST,
         ];
     }
 
@@ -58,7 +59,7 @@ class WnsNotification extends AbstractNotification
      */
     public function setService(AbstractService $service)
     {
-        if (!$service instanceof WnsService) {
+        if (!$service instanceof MpnsService) {
             throw new \InvalidArgumentException('Service must be an accepted Windows Phone service');
         }
 
@@ -74,7 +75,7 @@ class WnsNotification extends AbstractNotification
      */
     public function setMessage(AbstractMessage $message)
     {
-        if (!$message instanceof WnsMessage) {
+        if (!$message instanceof MpnsMessage) {
             throw new \InvalidArgumentException('Message must be an accepted Windows Phone message');
         }
 
@@ -90,7 +91,7 @@ class WnsNotification extends AbstractNotification
      */
     public function addRecipient(AbstractRecipient $recipient)
     {
-        if (!$recipient instanceof WnsRecipient) {
+        if (!$recipient instanceof MpnsRecipient) {
             throw new \InvalidArgumentException('Recipient must be an accepted Windows Phone recipient');
         }
 

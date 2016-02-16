@@ -9,22 +9,22 @@
 
 namespace Jgut\Tify\Tests\Recipient;
 
-use Jgut\Tify\Recipient\WnsRecipient;
+use Jgut\Tify\Recipient\MpnsRecipient;
 
 /**
- * @covers \Jgut\Tify\Recipient\WnsRecipient
+ * @covers \Jgut\Tify\Recipient\MpnsRecipient
  */
-class WnsRecipientTest extends \PHPUnit_Framework_TestCase
+class MpnsRecipientTest extends \PHPUnit_Framework_TestCase
 {
     protected $recipient;
 
     public function setUp()
     {
-        $this->recipient = new WnsRecipient('http://example.com');
+        $this->recipient = new MpnsRecipient('http://example.com');
     }
 
     /**
-     * @covers \Jgut\Tify\Recipient\WnsRecipient::setToken
+     * @covers \Jgut\Tify\Recipient\MpnsRecipient::setToken
      *
      * @expectedException \InvalidArgumentException
      */

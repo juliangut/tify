@@ -9,29 +9,33 @@
 
 namespace Jgut\Tify\Service\Message;
 
-use Jgut\Tify\Notification\WnsNotification;
+use Jgut\Tify\Notification\MpnsNotification;
 
-class WnsMessageBuilder
+class MpnsMessageBuilder
 {
     /**
      * Get configured service message.
      *
-     * @param \Jgut\Tify\Notification\WnsNotification $notification
+     * @param \Jgut\Tify\Notification\MpnsNotification $notification
      *
-     * @return \Jgut\Tify\Service\Message\WnsMessage
+     * @return \Jgut\Tify\Service\Message\MpnsMessage
      */
-    public static function build(WnsNotification $notification)
+    public static function build(MpnsNotification $notification)
     {
         $message = $notification->getMessage();
 
-        $pushMessage = new WnsMessage($notification->getOption('target'), $notification->getOption('class'));
+        $pushMessage = new MpnsMessage($notification->getOption('target'), $notification->getOption('class'));
 
         $pushMessage
             ->setTitle($message->getOption('title'))
             ->setBody($message->getOption('body'))
-            ->setUuid($message->getOption('id'))
+            ->setUuid($notification->getOption('id'))
             ->setNavigateTo($message->getOption('navigate_to'))
             ->setPayload($message->getParameters())
+            ->setCount($message->getOption('count'))
+            ->setBackgroundImage($message->getOption('background_image'))
+            ->setBackBackgroundImage($message->getOption('back_background_image'))
+            ->setSilent($message->getOption('silent'))
             ->setSound($message->getOption('sound'));
 
         return $pushMessage;

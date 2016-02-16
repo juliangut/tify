@@ -10,12 +10,12 @@
 namespace Jgut\Tify\Service\Client;
 
 use Jgut\Tify\Exception\ServiceException;
-use Jgut\Tify\Service\Message\WnsMessage;
+use Jgut\Tify\Service\Message\MpnsMessage;
 
 /**
  * Windows Push Notification Service client.
  */
-class WnsClient
+class MpnsClient
 {
     /**
      * Minimum default headers.
@@ -30,24 +30,27 @@ class WnsClient
     /**
      * Push notification to remote service.
      *
-     * @param string                                $uri
-     * @param \Jgut\Tify\Service\Message\WnsMessage $message
+     * @param string                                 $uri
+     * @param \Jgut\Tify\Service\Message\MpnsMessage $message
      *
      * @return array
      */
-    public function send($uri, WnsMessage $message)
+    public function send($uri, MpnsMessage $message)
     {
+        $messageBody = (string) $message;
+
         $headers = [
+            'Content-Length' => strlen($messageBody),
             'X-NotificationClass' => $message->getClass(),
         ];
-        if ($message->getTarget() !== WnsMessage::TARGET_RAW) {
-            $headers['X-WindowsPhone-Target'] = $message->getTarget() === WnsMessage::TARGET_TILE ? 'token' : 'toast';
+        if ($message->getTarget() !== MpnsMessage::TARGET_RAW) {
+            $headers['X-WindowsPhone-Target'] = $message->getTarget() === MpnsMessage::TARGET_TILE ? 'token' : 'toast';
         }
         if ($message->getUuid() !== null) {
             $headers['X-MessageID'] = $message->getUuid();
         }
 
-        $transport = $this->getTransport($uri, array_merge(self::$defaultHttpHeaders, $headers), (string) $message);
+        $transport = $this->getTransport($uri, array_merge(self::$defaultHttpHeaders, $headers), $messageBody);
         $transferResponse = curl_exec($transport);
 
         if (curl_errno($transport) !== CURLE_OK) {
@@ -124,9 +127,9 @@ class WnsClient
     /**
      * Extract headers from transfer results.
      *
-     * @param array $transferHeaders
+     * @param array  $transferHeaders
      * @param string $transferContent
-     * @param array $transferInfo
+     * @param array  $transferInfo
      *
      * @return array
      */

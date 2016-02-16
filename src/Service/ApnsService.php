@@ -127,9 +127,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
         $responses = [];
 
         foreach ($feedbackResponse as $response) {
-            $time = new \DateTime(date('c', $response->getTime()));
-
-            $responses[$response->getToken()] = $time;
+            $responses[$response->getToken()] = new \DateTime(date('c', $response->getTime()));
         }
 
         $service->close();

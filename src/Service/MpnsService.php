@@ -10,12 +10,12 @@
 namespace Jgut\Tify\Service;
 
 use Jgut\Tify\Notification\AbstractNotification;
-use Jgut\Tify\Notification\WnsNotification;
+use Jgut\Tify\Notification\MpnsNotification;
 use Jgut\Tify\Result;
-use Jgut\Tify\Service\Client\WnsClient;
-use Jgut\Tify\Service\Message\WnsMessageBuilder;
+use Jgut\Tify\Service\Client\MpnsClient;
+use Jgut\Tify\Service\Message\MpnsMessageBuilder;
 
-class WnsService extends AbstractService implements SendInterface
+class MpnsService extends AbstractService implements SendInterface
 {
     const RESULT_OK = 'OK';
 
@@ -39,7 +39,7 @@ class WnsService extends AbstractService implements SendInterface
     ];
 
     /**
-     * @var \Jgut\Tify\Service\Client\WnsClient
+     * @var \Jgut\Tify\Service\Client\MpnsClient
      */
     protected $pushClient;
 
@@ -50,12 +50,12 @@ class WnsService extends AbstractService implements SendInterface
      */
     public function send(AbstractNotification $notification)
     {
-        if (!$notification instanceof WnsNotification) {
+        if (!$notification instanceof MpnsNotification) {
             throw new \InvalidArgumentException('Notification must be an accepted Windows Phone notification');
         }
 
         $service = $this->getPushService();
-        $message = WnsMessageBuilder::build($notification);
+        $message = MpnsMessageBuilder::build($notification);
 
         $results = [];
 
@@ -86,12 +86,12 @@ class WnsService extends AbstractService implements SendInterface
     /**
      * Get opened client.
      *
-     * @return \Jgut\Tify\Service\Client\WnsClient
+     * @return \Jgut\Tify\Service\Client\MpnsClient
      */
     protected function getPushService()
     {
         if (!isset($this->pushClient)) {
-            $this->pushClient = new WnsClient;
+            $this->pushClient = new MpnsClient;
         }
 
         return $this->pushClient;
@@ -130,7 +130,7 @@ class WnsService extends AbstractService implements SendInterface
      *
      * Windows Phone Push Notification Service headers available to check against:
      *  X-NotificationStatus
-     *  X-ServiceConnectionStatus
+     *  X-DeviceConnectionStatus
      *  X-SubscriptionStatus
      *
      * @param array $responseStatus
@@ -142,7 +142,7 @@ class WnsService extends AbstractService implements SendInterface
         static $statusMapper = [
             'received' => self::RESULT_OK,
             'queuefull' => 'queueFull',
-            'suppressed' =>'suppressed',
+            'suppressed' => 'suppressed',
         ];
 
         if (in_array(strtolower($responseStatus['X-NotificationStatus']), array_keys($statusMapper))) {

@@ -9,22 +9,22 @@
 
 namespace Jgut\Tify\Tests\Message;
 
-use Jgut\Tify\Message\WnsMessage;
+use Jgut\Tify\Message\MpnsMessage;
 
 /**
- * @covers \Jgut\Tify\Message\WnsMessage
+ * @covers \Jgut\Tify\Message\MpnsMessage
  */
-class WnsMessageTest extends \PHPUnit_Framework_TestCase
+class MpnsMessageTest extends \PHPUnit_Framework_TestCase
 {
     protected $message;
 
     public function setUp()
     {
-        $this->message = new WnsMessage();
+        $this->message = new MpnsMessage();
     }
 
     /**
-     * @covers \Jgut\Tify\Message\WnsMessage::setParameter
+     * @covers \Jgut\Tify\Message\MpnsMessage::setParameter
      *
      * @dataProvider optionsProvider
      */
@@ -43,7 +43,7 @@ class WnsMessageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Message\WnsMessage::setParameter
+     * @covers \Jgut\Tify\Message\MpnsMessage::setParameter
      */
     public function testParameters()
     {

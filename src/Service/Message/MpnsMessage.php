@@ -12,7 +12,7 @@ namespace Jgut\Tify\Service\Message;
 /**
  * Windows Push Notification Service service message.
  */
-class WnsMessage
+class MpnsMessage
 {
     const CLASS_IMMEDIATE_TILE = 1;
     const CLASS_IMMEDIATE_TOAST = 2;
@@ -76,6 +76,27 @@ class WnsMessage
      * @var array
      */
     protected $payload = [];
+
+    /**
+     * Tile notification count.
+     *
+     * @var int
+     */
+    protected $count;
+
+    /**
+     * Tile notification background image.
+     *
+     * @var string
+     */
+    protected $backgroundImage;
+
+    /**
+     * Tile notification reversed background image.
+     *
+     * @var string
+     */
+    protected $backBackgroundImage;
 
     /**
      * Use notification sound.
@@ -159,7 +180,7 @@ class WnsMessage
             self::CLASS_DELAY450_RAW,
             self::CLASS_DELAY900_TILE,
             self::CLASS_DELAY900_TOAST,
-            self::CLASS_DELAY900_RAW
+            self::CLASS_DELAY900_RAW,
         ];
 
         if (!in_array($class, $validClasses)) {
@@ -190,10 +211,12 @@ class WnsMessage
      */
     public function setUuid($uuid = null)
     {
-        $uuid = trim($uuid);
+        if ($uuid !== null) {
+            $uuid = trim($uuid);
 
-        if (!preg_match('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', strtolower($uuid))) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a valid UUID', $uuid));
+            if (!preg_match('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', strtolower($uuid))) {
+                throw new \InvalidArgumentException(sprintf('"%s" is not a valid UUID', $uuid));
+            }
         }
 
         $this->uuid = $uuid;
@@ -330,6 +353,72 @@ class WnsMessage
     }
 
     /**
+     * Retrieve tile notification count.
+     *
+     * @return int
+     */
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    /**
+     * Set tile notification count.
+     *
+     * @param int $count
+     */
+    public function setCount($count)
+    {
+        $this->count = (int) $count;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve tile notification background image.
+     *
+     * @return string
+     */
+    public function getBackgroundImage()
+    {
+        return $this->backgroundImage;
+    }
+
+    /**
+     * Retrieve tile notification reverse background image.
+     *
+     * @param string $backgroundImage
+     */
+    public function setBackgroundImage($backgroundImage)
+    {
+        $this->backgroundImage = $backgroundImage;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve tile notification background image.
+     *
+     * @return string
+     */
+    public function getBackBackgroundImage()
+    {
+        return $this->backBackgroundImage;
+    }
+
+    /**
+     * Retrieve tile notification reverse background image.
+     *
+     * @param string $backBackgroundImage
+     */
+    public function setBackBackgroundImage($backBackgroundImage)
+    {
+        $this->backBackgroundImage = $backBackgroundImage;
+
+        return $this;
+    }
+
+    /**
      * Retrieve message sound state.
      *
      * @return bool
@@ -382,27 +471,29 @@ class WnsMessage
      */
     public function __toString()
     {
-        if (in_array($this->target, [self::TARGET_TILE, self::TARGET_TOAST])) {
-            return $this->composeTileToastMessage();
+        if ($this->target === self::TARGET_TOAST) {
+            return $this->composeToastMessage();
+        } elseif ($this->target === self::TARGET_TILE) {
+            return $this->composeTileMessage();
         }
 
         return $this->composeRawMessage();
     }
 
     /**
-     * Compose Tile and Toast messages.
+     * Compose Toast message.
      *
      * @return string
      */
-    protected function composeTileToastMessage()
+    protected function composeToastMessage()
     {
         $xml = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="utf-8"?><wp:Notification xmlns:wp="WPNotification" />'
         );
 
-        $message = $xml->addChild('wp:' . ucfirst($this->target));
-        $message->addChild('wp:Text1', htmlspecialchars($this->title, ENT_XML1|ENT_QUOTES));
-        $message->addChild('wp:Text2', htmlspecialchars($this->body, ENT_XML1|ENT_QUOTES));
+        $message = $xml->addChild('wp:Toast');
+        $message->addChild('wp:Text1', htmlspecialchars($this->title, ENT_XML1 | ENT_QUOTES));
+        $message->addChild('wp:Text2', htmlspecialchars($this->body, ENT_XML1 | ENT_QUOTES));
 
         if ($this->navigateTo !== null || count($this->payload) > 0) {
             $message->addChild(
@@ -415,10 +506,54 @@ class WnsMessage
             $silent = $message->addChild('wp:Sound');
             $silent->addAttribute('Silent', 'true');
         } elseif ($this->sound !== null) {
-            $message->addChild('wp:Sound', htmlspecialchars($this->sound, ENT_XML1|ENT_QUOTES));
+            $message->addChild('wp:Sound', htmlspecialchars($this->sound, ENT_XML1 | ENT_QUOTES));
         }
 
-        return (string) $xml;
+        return $xml->asXML();
+    }
+
+    /**
+     * Compose Tile message.
+     *
+     * @return string
+     */
+    protected function composeTileMessage()
+    {
+        $xml = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="utf-8"?><wp:Notification xmlns:wp="WPNotification" />'
+        );
+
+        $message = $xml->addChild('wp:Tile');
+
+        $message->addChild('wp:Title', htmlspecialchars($this->title, ENT_XML1 | ENT_QUOTES));
+        if ($this->count !== null) {
+            $message->addChild('wp:Count', $this->count);
+        }
+        if ($this->backgroundImage !== null) {
+            $message->addChild('wp:BackgroundImage', $this->backgroundImage);
+        }
+
+        if ($this->navigateTo !== null || count($this->payload) > 0) {
+            $message->addChild(
+                'wp:Param',
+                $this->navigateTo . (count($this->payload) ? '?' . http_build_query($this->payload) : '')
+            );
+        }
+
+        $message->addChild('wp:BackTitle', htmlspecialchars($this->title, ENT_XML1 | ENT_QUOTES));
+        $message->addChild('wp:BackContent', htmlspecialchars($this->body, ENT_XML1 | ENT_QUOTES));
+        if ($this->backBackgroundImage !== null) {
+            $message->addChild('wp:BackBackgroundImage', $this->backBackgroundImage);
+        }
+
+        if ($this->isSilent()) {
+            $silent = $message->addChild('wp:Sound');
+            $silent->addAttribute('Silent', 'true');
+        } elseif ($this->sound !== null) {
+            $message->addChild('wp:Sound', htmlspecialchars($this->sound, ENT_XML1 | ENT_QUOTES));
+        }
+
+        return $xml->asXML();
     }
 
     /**
@@ -428,24 +563,24 @@ class WnsMessage
      */
     protected function composeRawMessage()
     {
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><notification>');
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><notification/>');
 
         $message = $xml->addChild('message');
-        $message->addChild('title', htmlspecialchars($this->title, ENT_XML1|ENT_QUOTES));
-        $message->addChild('body', htmlspecialchars($this->body, ENT_XML1|ENT_QUOTES));
 
+        $message->addChild('title', htmlspecialchars($this->title, ENT_XML1 | ENT_QUOTES));
+        $message->addChild('body', htmlspecialchars($this->body, ENT_XML1 | ENT_QUOTES));
         if ($this->navigateTo !== null) {
-            $message->addChild('navigateTo', htmlspecialchars($this->navigateTo, ENT_XML1|ENT_QUOTES));
+            $message->addChild('navigateTo', $this->navigateTo);
         }
 
         if (count($this->payload) > 0) {
             $parameters = $message->addChild('parameters');
 
             foreach ($this->payload as $parameter => $value) {
-                $parameters->addChild($parameter, htmlspecialchars($value, ENT_XML1|ENT_QUOTES));
+                $parameters->addChild($parameter, htmlspecialchars($value, ENT_XML1 | ENT_QUOTES));
             }
         }
 
-        return (string) $xml;
+        return $xml->asXML();
     }
 }

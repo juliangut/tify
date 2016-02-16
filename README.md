@@ -13,7 +13,7 @@ Unified push notification service abstraction layer for
 
 * APNS (Apple Push Notification Service)
 * GCM (Google Cloud Messaging)
-* WNS (Windows Push Notification Service)
+* MPNS (Microsoft Push Notification Service)
 
 ## Installation
 
@@ -31,22 +31,22 @@ require_once './vendor/autoload.php';
 
 ## Usage
 
-Basic usage creating a message and sending it through GCM, APNS and WNS services.
+Basic usage creating a message and sending it through GCM, APNS and MPNS services.
 
 ```php
 use Jgut\Tify\Manager;
 use Jgut\Tify\Message\ApnsMessage;
 use Jgut\Tify\Message\GcmMessage;
-use Jgut\Tify\Message\WnsMessage;
+use Jgut\Tify\Message\MpnsMessage;
 use Jgut\Tify\Notification\ApnsNotification;
 use Jgut\Tify\Notification\GcmNotification;
-use Jgut\Tify\Notification\WnsNotification;
+use Jgut\Tify\Notification\MpnsNotification;
 use Jgut\Tify\Recipient\ApnsRecipient;
 use Jgut\Tify\Recipient\GcmRecipient;
-use Jgut\Tify\Recipient\WnsRecipient;
+use Jgut\Tify\Recipient\MpnsRecipient;
 use Jgut\Tify\Service\ApnsService;
 use Jgut\Tify\Service\GcmService;
-use Jgut\Tify\Service\WnsService;
+use Jgut\Tify\Service\MpnsService;
 
 $messageParameters = [
     'title' => 'title',
@@ -83,20 +83,20 @@ $apnsRecipients = [
 // Combine previous to create a APNS notification
 $apnsNotification = new ApnsNotification($apnsService, $apnsMessage, $apnsRecipients);
 
-// Create WNS service interface
-$wnsService = new WnsService();
+// Create MPNS service interface
+$wnsService = new MpnsService();
 
-// Create WNS message
-$wnsMessage = new WnsMessage($messageParameters);
+// Create MPNS message
+$wnsMessage = new MpnsMessage($messageParameters);
 
-// Create a list of WNS recipients
+// Create a list of MPNS recipients
 $wnsRecipients = [
-    new WnsRecipient('https://...'),
-    new WnsRecipient('https://...'),
+    new MpnsRecipient('https://...'),
+    new MpnsRecipient('https://...'),
 ];
 
-// Combine previous to create a WNS notification
-$wnsNotification = new WnsNotification($wnsService, $wnsMessage, $wnsRecipients);
+// Combine previous to create a MPNS notification
+$wnsNotification = new MpnsNotification($wnsService, $wnsMessage, $wnsRecipients);
 
 // Create notifications manager
 $manager = new Manager;
@@ -165,7 +165,19 @@ $message->setParameter('param_2', 'value_2');
 
 *Parameters should not be a reserved word (`from` or any word starting with `google` or `gcm`) or any GCM notification option. See [here](https://developers.google.com/cloud-messaging/http-server-ref#table2) for information on message options (notification payload)*
 
-### WNS
+### MPNS
+
+```php
+$message = new \Jgut\Tify\Message\MpnsMessage(['title' => 'title']);
+
+$message->setOption('navigate_to', 'main.xaml');
+...
+
+$message->setParameter('param_1', 'value_1');
+$message->setParameter('param_2', 'value_2');
+```
+
+*Find options [here](https://msdn.microsoft.com/en-us/library/windows/apps/hh202945%28v=vs.105%29.aspx)*
 
 ## Notification
 
@@ -193,7 +205,16 @@ $notification->setOption('dry_run', false);
 
 *Find options [here](https://developers.google.com/cloud-messaging/http-server-ref#table1) in table 1.*
 
-### WNS
+### MPNS
+
+```php
+$notification = new \Jgut\Tify\Notification\MpnsNotification($wnsService, $wnsMessage, $wnsRecipients, $options);
+
+$notification->setOption('target', 'tile');
+$notification->setOption('class', 1);
+```
+
+*Only target and class options are available*
 
 ## Service
 
@@ -215,7 +236,7 @@ Holds the list of notifications and exposes two methods:
 
 ## Result
 
-`push` service returns a list of Result objects in order to match return data from APNS and GCM services and have one common interface. This objects are composed of device token, date, status and status message.
+`push` service returns a list of `Jgut\Tify\Result` objects in order to match return data from APNS, GCM and MPNS services and have one common interface. This objects are composed of device token, date, status and status message attributes.
 
 ## Contributing
 
