@@ -75,13 +75,9 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('check', ['phplint', 'phpcs', 'phpmd', 'phpcpd']);
+  grunt.registerTask('qa', ['phplint', 'phpcs', 'phpmd', 'phpcpd']);
   grunt.registerTask('security', ['climb', 'security_checker']);
   grunt.registerTask('test', ['phpunit']);
 
-  grunt.task.registerTask('build', 'Project build', function() {
-    grunt.log.writeln('Task ready to be implemented');
-  });
-
-  grunt.registerTask('default', ['check', 'security', 'test']);
+  grunt.registerTask('default', ['qa', 'test']);
 };

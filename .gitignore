@@ -1,7 +1,7 @@
 !.gitignore
 composer.phar
 vendor/
-!composer.lock
+composer.lock
 node_modules/
 build/
 .vagrant/
