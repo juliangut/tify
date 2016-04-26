@@ -16,6 +16,9 @@ use Jgut\Tify\Recipient\ApnsRecipient;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\Message\ApnsMessage;
 
+/**
+ * Class ApnsNotification
+ */
 class ApnsNotification extends AbstractNotification
 {
     /**
@@ -24,8 +27,12 @@ class ApnsNotification extends AbstractNotification
      * @param \Jgut\Tify\Recipient\ApnsRecipient[] $recipients
      * @param array                                $options
      */
-    public function __construct(ApnsService $service, ApnsMessage $message, array $recipients = [], array $options = [])
-    {
+    public function __construct(
+        ApnsService $service,
+        ApnsMessage $message,
+        array $recipients = [],
+        array $options = []
+    ) {
         parent::__construct($service, $message, $recipients, $options);
     }
 

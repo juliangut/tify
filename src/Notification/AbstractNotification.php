@@ -9,11 +9,15 @@
 
 namespace Jgut\Tify\Notification;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\OptionsTrait;
 use Jgut\Tify\Service\AbstractService;
 
+/**
+ * Class AbstractNotification
+ */
 abstract class AbstractNotification
 {
     use OptionsTrait;
@@ -67,7 +71,7 @@ abstract class AbstractNotification
             $this->addRecipient($recipient);
         }
 
-        $this->setOptions(array_merge($this->getDefaultOptions(), $options));
+        $this->options = new ArrayCollection(array_merge($this->getDefaultOptions(), $options));
     }
 
     /**
@@ -75,10 +79,7 @@ abstract class AbstractNotification
      *
      * @return array
      */
-    protected function getDefaultOptions()
-    {
-        return [];
-    }
+    abstract protected function getDefaultOptions();
 
     /**
      * Get service.
@@ -142,7 +143,7 @@ abstract class AbstractNotification
     }
 
     /**
-     * Check if notification status is pushed.
+     * Check if notification status is sent.
      *
      * @return bool
      */
@@ -152,23 +153,39 @@ abstract class AbstractNotification
     }
 
     /**
-     * Set notification as sent.
+     * Check if notification status is pending.
      *
-     * @param array $results
+     * @return bool
      */
-    final public function setSent(array $results = [])
+    final public function isPending()
     {
-        $this->status = static::STATUS_SENT;
-        $this->results = $results;
+        return $this->status === static::STATUS_PENDING;
     }
 
     /**
-     * Set notification pending (not sent).
+     * Set notification status.
+     *
+     * @param int                 $status
+     * @param \Jgut\Tify\Result[] $results
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return $this
      */
-    final public function setPending()
+    final public function setStatus($status, array $results = [])
     {
-        $this->status = static::STATUS_PENDING;
+        if (!in_array($status, [self::STATUS_PENDING, self::STATUS_SENT])) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid status', $status));
+        }
+
+        $this->status = $status;
+
         $this->results = [];
+        if ($status === static::STATUS_SENT) {
+            $this->results = $results;
+        }
+
+        return $this;
     }
 
     /**

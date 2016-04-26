@@ -14,13 +14,19 @@ use Jgut\Tify\Notification\ApnsNotification;
 use ZendService\Apple\Apns\Message as ServiceMessage;
 use ZendService\Apple\Apns\Message\Alert as ServiceMessageAlert;
 
-class ApnsBuilder
+/**
+ * Class ApnsMessageBuilder
+ */
+class ApnsMessageBuilder
 {
     /**
      * Get service message from origin.
      *
      * @param \Jgut\Tify\Recipient\ApnsRecipient       $recipient
      * @param \Jgut\Tify\Notification\ApnsNotification $notification
+     *
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      *
      * @return \ZendService\Apple\Apns\Message
      */
@@ -43,7 +49,7 @@ class ApnsBuilder
             ->setCustom($message->getParameters())
             ->setBadge($badge);
 
-        if (!is_null($notification->getOption('expire'))) {
+        if ($notification->getOption('expire') !== null) {
             $pushMessage->setExpire($notification->getOption('expire'));
         }
 

@@ -11,7 +11,7 @@ namespace Jgut\Tify\Service\Message;
 
 use ZendService\Google\Exception\InvalidArgumentException;
 use ZendService\Google\Exception\RuntimeException;
-use ZendService\Google\Gcm\Message as ServiceMessage;
+use ZendService\Google\Gcm\Message as GcmMessage;
 use Zend\Json\Json;
 
 /**
@@ -19,7 +19,7 @@ use Zend\Json\Json;
  *
  * Implements notification payload parameters.
  */
-class Gcm extends ServiceMessage
+class Gcm extends GcmMessage
 {
     /**
      * @var array
@@ -43,6 +43,8 @@ class Gcm extends ServiceMessage
      *
      * @throws \ZendService\Google\Exception\InvalidArgumentException
      * @throws \ZendService\Google\Exception\RuntimeException
+     *
+     * @return $this
      */
     public function setNotificationPayload(array $payload)
     {

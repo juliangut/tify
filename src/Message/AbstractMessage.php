@@ -9,9 +9,13 @@
 
 namespace Jgut\Tify\Message;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\OptionsTrait;
 use Jgut\Tify\ParametersTrait;
 
+/**
+ * Class AbstractMessage
+ */
 abstract class AbstractMessage
 {
     use OptionsTrait;
@@ -55,18 +59,20 @@ abstract class AbstractMessage
      */
     public function __construct(array $options = [], array $parameters = [])
     {
-        $this->setOptions(array_merge($this->defaultOptions, $options));
-        $this->setParameters($parameters);
+        $this->options = new ArrayCollection(array_merge($this->defaultOptions, $options));
+        $this->parameters = new ArrayCollection($parameters);
     }
 
     /**
      * Convenience method to set message title.
      *
      * @param string $title
+     *
+     * @return $this
      */
     public function setTitle($title)
     {
-        $this->setOption('title', trim($title));
+        $this->setOption('title', $title);
 
         return $this;
     }
@@ -75,6 +81,8 @@ abstract class AbstractMessage
      * Convenience method to set message body.
      *
      * @param string $body
+     *
+     * @return $this
      */
     public function setBody($body)
     {

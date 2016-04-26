@@ -9,9 +9,14 @@
 
 namespace Jgut\Tify\Service;
 
+use Jgut\Tify\Exception\ServiceException;
 use Jgut\Tify\ParametersTrait;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class AbstractService.
+ */
 abstract class AbstractService
 {
     use ParametersTrait;
@@ -28,38 +33,27 @@ abstract class AbstractService
      *
      * @param array $parameters
      * @param bool  $sandbox
+     *
+     * @throws \Jgut\Tify\Exception\ServiceException
      */
     public function __construct(array $parameters = [], $sandbox = false)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setDefined($this->getDefinedParameters());
-        $resolver->setDefaults($this->getDefaultParameters());
-        $resolver->setRequired($this->getRequiredParameters());
+        $parametersResolver = new OptionsResolver();
 
-        $this->parameters = $resolver->resolve($parameters);
+        $parametersResolver->setDefined($this->getDefinedParameters());
+        $parametersResolver->setDefaults($this->getDefaultParameters());
+        $parametersResolver->setRequired($this->getRequiredParameters());
+
+        try {
+            $this->parameters = $parametersResolver->resolve($parameters);
+        } catch (MissingOptionsException $exception) {
+            throw new ServiceException(sprintf('Missing parameters on "%s"', self::class));
+        } catch (\Exception $exception) {
+            throw new ServiceException('Not valid option provided');
+        }
+
         $this->sandbox = (bool) $sandbox;
     }
-
-    /**
-     * Get the list of defined parameters.
-     *
-     * @return array
-     */
-    abstract protected function getDefinedParameters();
-
-    /**
-     * Get the list of default parameters.
-     *
-     * @return array
-     */
-    abstract protected function getDefaultParameters();
-
-    /**
-     * Get the list of required parameters.
-     *
-     * @return array
-     */
-    abstract protected function getRequiredParameters();
 
     /**
      * Retrieve if sandbox.
@@ -75,11 +69,43 @@ abstract class AbstractService
      * Set Sandbox.
      *
      * @param bool $sandbox
+     *
+     * @return $this
      */
     public function setSandbox($sandbox)
     {
         $this->sandbox = (bool) $sandbox;
 
         return $this;
+    }
+
+    /**
+     * Get the list of defined parameters.
+     *
+     * @return array
+     */
+    protected function getDefinedParameters()
+    {
+        return [];
+    }
+
+    /**
+     * Get the list of default parameters.
+     *
+     * @return array
+     */
+    protected function getDefaultParameters()
+    {
+        return [];
+    }
+
+    /**
+     * Get the list of required parameters.
+     *
+     * @return array
+     */
+    protected function getRequiredParameters()
+    {
+        return [];
     }
 }

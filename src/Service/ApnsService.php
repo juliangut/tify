@@ -14,16 +14,19 @@ use Jgut\Tify\Exception\ServiceException;
 use Jgut\Tify\Notification\AbstractNotification;
 use Jgut\Tify\Notification\ApnsNotification;
 use Jgut\Tify\Result;
-use Jgut\Tify\Service\Client\ApnsBuilder as ClientBuilder;
-use Jgut\Tify\Service\Message\ApnsBuilder as MessageBuilder;
-use ZendService\Apple\Exception\RuntimeException as ServiceRuntimeException;
+use Jgut\Tify\Service\Client\ApnsClientBuilder;
+use Jgut\Tify\Service\Message\ApnsMessageBuilder;
+use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 
+/**
+ * Class ApnsService
+ */
 class ApnsService extends AbstractService implements SendInterface, FeedbackInterface
 {
     const RESULT_OK = 0;
 
     /**
-     * Status codes translation.
+     * Status codes mapping.
      *
      * @var array
      */
@@ -62,8 +65,10 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
 
         $certificatePath = $this->getParameter('certificate');
 
-        if ($certificatePath === null || !file_exists($certificatePath)) {
-            throw new ServiceException(sprintf('Certificate file "%s" does not exist', $certificatePath));
+        if ($certificatePath === null || !file_exists($certificatePath) || !is_readable($certificatePath)) {
+            throw new ServiceException(
+                sprintf('Certificate file "%s" does not exist or is not readable', $certificatePath)
+            );
         }
     }
 
@@ -84,7 +89,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
 
         /* @var \Jgut\Tify\Recipient\ApnsRecipient $recipient */
         foreach ($notification->getRecipients() as $recipient) {
-            $message = MessageBuilder::build($recipient, $notification);
+            $message = ApnsMessageBuilder::build($recipient, $notification);
 
             $result = new Result($recipient->getToken(), new \DateTime);
 
@@ -95,7 +100,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
                     $result->setStatus(Result::STATUS_ERROR);
                     $result->setStatusMessage(self::$statusCodes[$response->getCode()]);
                 }
-            } catch (ServiceRuntimeException $exception) {
+            } catch (ApnsRuntimeException $exception) {
                 $result->setStatus(Result::STATUS_ERROR);
                 $result->setStatusMessage($exception->getMessage());
             }
@@ -103,7 +108,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
             $results[] = $result;
         }
 
-        $notification->setSent($results);
+        $notification->setStatus(AbstractNotification::STATUS_SENT, $results);
 
         $service->close();
         $this->pushClient = null;
@@ -120,12 +125,13 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
 
         try {
             $feedbackResponse = $service->feedback();
-        } catch (ServiceRuntimeException $exception) {
+        } catch (ApnsRuntimeException $exception) {
             throw new NotificationException($exception->getMessage(), $exception->getCode(), $exception);
         }
 
         $responses = [];
 
+        /** @var \ZendService\Apple\Apns\Response\Feedback $response */
         foreach ($feedbackResponse as $response) {
             $time = new \DateTime(date('c', $response->getTime()));
 
@@ -145,8 +151,8 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
      */
     protected function getPushService()
     {
-        if (!isset($this->pushClient)) {
-            $this->pushClient = ClientBuilder::buildPush(
+        if ($this->pushClient === null) {
+            $this->pushClient = ApnsClientBuilder::buildPush(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
                 $this->sandbox
@@ -163,8 +169,8 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
      */
     protected function getFeedbackService()
     {
-        if (!isset($this->feedbackClient)) {
-            $this->feedbackClient = ClientBuilder::buildFeedback(
+        if ($this->feedbackClient === null) {
+            $this->feedbackClient = ApnsClientBuilder::buildFeedback(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
                 $this->sandbox

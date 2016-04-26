@@ -16,6 +16,9 @@ use Jgut\Tify\Recipient\GcmRecipient;
 use Jgut\Tify\Message\AbstractMessage;
 use Jgut\Tify\Message\GcmMessage;
 
+/**
+ * Class GcmNotification
+ */
 class GcmNotification extends AbstractNotification
 {
     /**
@@ -24,8 +27,12 @@ class GcmNotification extends AbstractNotification
      * @param \Jgut\Tify\Recipient\GcmRecipient[] $recipients
      * @param array                               $options
      */
-    public function __construct(GcmService $service, GcmMessage $message, array $recipients = [], array $options = [])
-    {
+    public function __construct(
+        GcmService $service,
+        GcmMessage $message,
+        array $recipients = [],
+        array $options = []
+    ) {
         parent::__construct($service, $message, $recipients, $options);
     }
 

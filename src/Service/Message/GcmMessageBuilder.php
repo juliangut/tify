@@ -12,13 +12,19 @@ namespace Jgut\Tify\Service\Message;
 use Jgut\Tify\Notification\GcmNotification;
 use Jgut\Tify\Service\Message\Gcm as ServiceMessage;
 
-class GcmBuilder
+/**
+ * Class GcmMessageBuilder
+ */
+class GcmMessageBuilder
 {
     /**
      * Get configured service message.
      *
      * @param array                                   $tokens
      * @param \Jgut\Tify\Notification\GcmNotification $notification
+     *
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      *
      * @return \Jgut\Tify\Service\Message\Gcm
      */

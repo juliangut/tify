@@ -12,14 +12,17 @@ namespace Jgut\Tify\Service;
 use Jgut\Tify\Notification\AbstractNotification;
 use Jgut\Tify\Notification\GcmNotification;
 use Jgut\Tify\Result;
-use Jgut\Tify\Service\Client\GcmBuilder as ClientBuilder;
-use Jgut\Tify\Service\Message\GcmBuilder as MessageBuilder;
-use ZendService\Google\Exception\RuntimeException as ServiceRuntimeException;
+use Jgut\Tify\Service\Client\GcmClientBuilder;
+use Jgut\Tify\Service\Message\GcmMessageBuilder;
+use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 
+/**
+ * Class GcmService
+ */
 class GcmService extends AbstractService implements SendInterface
 {
     /**
-     * Status codes translation.
+     * Status codes mapping.
      *
      * @see https://developers.google.com/cloud-messaging/http-server-ref
      *
@@ -57,12 +60,12 @@ class GcmService extends AbstractService implements SendInterface
             throw new \InvalidArgumentException('Notification must be an accepted GCM notification');
         }
 
-        $service = $this->getPushService($this->getParameter('api_key'));
+        $service = $this->getPushService();
 
         $results = [];
 
         foreach (array_chunk($notification->getTokens(), 100) as $tokensRange) {
-            $message = MessageBuilder::build($tokensRange, $notification);
+            $message = GcmMessageBuilder::build($tokensRange, $notification);
 
             $time = new \DateTime;
 
@@ -70,47 +73,40 @@ class GcmService extends AbstractService implements SendInterface
                 $response = $service->send($message)->getResults();
 
                 foreach ($tokensRange as $token) {
-                    if (isset($response[$token]) && !isset($response[$token]['error'])) {
+                    if (array_key_exists($token, $response) && !array_key_exists('error', $response[$token])) {
                         $result = new Result($token, $time);
-                    } elseif (isset($response[$token])) {
-                        $result = new Result(
-                            $token,
-                            $time,
-                            Result::STATUS_ERROR,
-                            self::$statusCodes[$response[$token]['error']]
-                        );
                     } else {
+                        $errorCode = array_key_exists($token, $response) ? $response[$token]['error'] : 'UnknownError';
+
                         $result = new Result(
                             $token,
                             $time,
                             Result::STATUS_ERROR,
-                            self::$statusCodes['UnknownError']
+                            self::$statusCodes[$errorCode]
                         );
                     }
 
                     $results[] = $result;
                 }
-            } catch (ServiceRuntimeException $exception) {
+            } catch (GcmRuntimeException $exception) {
                 foreach ($tokensRange as $token) {
                     $results[] = new Result($token, $time, Result::STATUS_ERROR, $exception->getMessage());
                 }
             }
         }
 
-        $notification->setSent($results);
+        $notification->setStatus(AbstractNotification::STATUS_SENT, $results);
     }
 
     /**
      * Get opened client.
      *
-     * @param string $apiKey
-     *
      * @return \ZendService\Google\Gcm\Client
      */
-    protected function getPushService($apiKey)
+    protected function getPushService()
     {
-        if (!isset($this->pushClient)) {
-            $this->pushClient = ClientBuilder::buildPush($apiKey);
+        if ($this->pushClient === null) {
+            $this->pushClient = GcmClientBuilder::buildPush($this->getParameter('api_key'));
         }
 
         return $this->pushClient;
@@ -122,14 +118,6 @@ class GcmService extends AbstractService implements SendInterface
     protected function getDefinedParameters()
     {
         return ['api_key'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultParameters()
-    {
-        return [];
     }
 
     /**

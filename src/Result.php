@@ -9,6 +9,9 @@
 
 namespace Jgut\Tify;
 
+/**
+ * Class Result
+ */
 class Result
 {
     const STATUS_SUCCESS = 0;
@@ -47,9 +50,15 @@ class Result
      * @param \DateTime|null $date
      * @param int            $status
      * @param string         $statusMessage
+     *
+     * @throws \InvalidArgumentException
      */
-    public function __construct($token, \DateTime $date = null, $status = self::STATUS_SUCCESS, $statusMessage = '')
-    {
+    public function __construct(
+        $token,
+        \DateTime $date = null,
+        $status = self::STATUS_SUCCESS,
+        $statusMessage = ''
+    ) {
         $this->token = $token;
 
         $this->setDate($date !== null ? $date : new \DateTime);
@@ -71,6 +80,8 @@ class Result
      * Set result device token.
      *
      * @param string $token
+     *
+     * @return $this
      */
     public function setToken($token)
     {
@@ -93,6 +104,8 @@ class Result
      * Set result time.
      *
      * @param \DateTime $date
+     *
+     * @return $this
      */
     public function setDate(\DateTime $date)
     {
@@ -135,6 +148,10 @@ class Result
      * Set result status.
      *
      * @param int $status
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return $this
      */
     public function setStatus($status)
     {
@@ -158,9 +175,11 @@ class Result
     }
 
     /**
-     * Check successfull status message.
+     * Check successful status message.
      *
      * @param string $statusMessage
+     *
+     * @return $this
      */
     public function setStatusMessage($statusMessage)
     {

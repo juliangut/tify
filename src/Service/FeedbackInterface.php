@@ -9,6 +9,9 @@
 
 namespace Jgut\Tify\Service;
 
+/**
+ * Interface FeedbackInterface
+ */
 interface FeedbackInterface
 {
     /**

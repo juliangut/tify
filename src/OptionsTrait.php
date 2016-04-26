@@ -9,12 +9,24 @@
 
 namespace Jgut\Tify;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 trait OptionsTrait
 {
     /**
-     * @var array
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $options = [];
+
+    /**
+     * Initialize options collection.
+     */
+    protected function initializeOptions()
+    {
+        if (!$this->options instanceof ArrayCollection) {
+            $this->options = new ArrayCollection;
+        }
+    }
 
     /**
      * Get options.
@@ -23,6 +35,8 @@ trait OptionsTrait
      */
     public function getOptions()
     {
+        $this->initializeOptions();
+
         return $this->options;
     }
 
@@ -35,7 +49,9 @@ trait OptionsTrait
      */
     public function hasOption($option)
     {
-        return array_key_exists($option, $this->options);
+        $this->initializeOptions();
+
+        return $this->options->containsKey($option);
     }
 
     /**
@@ -48,20 +64,28 @@ trait OptionsTrait
      */
     public function getOption($option, $default = null)
     {
-        return $this->hasOption($option) ? $this->options[$option] : $default;
+        $this->initializeOptions();
+
+        return $this->options->containsKey($option) ? $this->options->get($option) : $default;
     }
 
     /**
      * Set options.
      *
      * @param array $options
+     *
+     * @return $this
      */
     public function setOptions($options)
     {
-        $this->options = [];
+        if (!$this->options instanceof ArrayCollection) {
+            $this->options->clear();
+        } else {
+            $this->initializeOptions();
+        }
 
         foreach ($options as $option => $value) {
-            $this->setOption($option, $value);
+            $this->options->set($option, $value);
         }
 
         return $this;
@@ -72,10 +96,14 @@ trait OptionsTrait
      *
      * @param string $option
      * @param mixed  $value
+     *
+     * @return $this
      */
     public function setOption($option, $value)
     {
-        $this->options[$option] = $value;
+        $this->initializeParameters();
+
+        $this->options->set($option, $value);
 
         return $this;
     }

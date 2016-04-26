@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Tests\Service\Client;
 
-use Jgut\Tify\Service\Client\GcmBuilder;
+use Jgut\Tify\Service\Client\GcmClientBuilder;
 use ZendService\Google\Gcm\Client;
 
 /**
@@ -22,7 +22,7 @@ class GcmBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testPushClient()
     {
-        $client = GcmBuilder::buildPush('my_api_key');
+        $client = GcmClientBuilder::buildPush('my_api_key');
 
         $this->assertInstanceOf(Client::class, $client);
     }

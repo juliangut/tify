@@ -9,12 +9,24 @@
 
 namespace Jgut\Tify;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 trait ParametersTrait
 {
     /**
-     * @var array
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $parameters = [];
+
+    /**
+     * Initialize options collection.
+     */
+    protected function initializeParameters()
+    {
+        if (!$this->parameters instanceof ArrayCollection) {
+            $this->parameters = new ArrayCollection;
+        }
+    }
 
     /**
      * Has parameter.
@@ -25,7 +37,9 @@ trait ParametersTrait
      */
     public function hasParameter($parameter)
     {
-        return array_key_exists($parameter, $this->parameters);
+        $this->initializeParameters();
+
+        return $this->parameters->containsKey($parameter);
     }
 
     /**
@@ -38,7 +52,9 @@ trait ParametersTrait
      */
     public function getParameter($parameter, $default = null)
     {
-        return $this->hasParameter($parameter) ? $this->parameters[$parameter] : $default;
+        $this->initializeParameters();
+
+        return $this->parameters->containsKey($parameter) ? $this->parameters->get($parameter) : $default;
     }
 
     /**
@@ -48,6 +64,8 @@ trait ParametersTrait
      */
     public function getParameters()
     {
+        $this->initializeParameters();
+
         return $this->parameters;
     }
 
@@ -55,13 +73,19 @@ trait ParametersTrait
      * Set parameters.
      *
      * @param array $parameters
+     *
+     * @return $this
      */
     public function setParameters($parameters)
     {
-        $this->parameters = [];
+        if (!$this->parameters instanceof ArrayCollection) {
+            $this->parameters->clear();
+        } else {
+            $this->initializeParameters();
+        }
 
         foreach ($parameters as $parameter => $value) {
-            $this->setParameter($parameter, $value);
+            $this->parameters->set($parameter, $value);
         }
 
         return $this;
@@ -72,10 +96,14 @@ trait ParametersTrait
      *
      * @param string $parameter
      * @param mixed  $value
+     *
+     * @return $this
      */
     public function setParameter($parameter, $value)
     {
-        $this->parameters[$parameter] = $value;
+        $this->initializeParameters();
+
+        $this->parameters->set($parameter, $value);
 
         return $this;
     }

@@ -9,21 +9,25 @@
 
 namespace Jgut\Tify\Recipient;
 
+/**
+ * Class ApnsRecipient
+ */
 class ApnsRecipient extends AbstractRecipient
 {
     /**
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
+     *
+     * @return $this
      */
     public function setToken($token)
     {
-        $token = trim($token);
-        if (!ctype_xdigit($token) || strlen($token) !== 64) {
+        if (!ctype_xdigit($token) || strlen(trim($token)) !== 64) {
             throw new \InvalidArgumentException('APNS token must be a 64 hex string');
         }
 
-        $this->token = $token;
+        $this->token = trim($token);
 
         return $this;
     }

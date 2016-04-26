@@ -13,7 +13,10 @@ use Zend\Http\Client as HttpClient;
 use Zend\Http\Client\Adapter\Socket;
 use ZendService\Google\Gcm\Client;
 
-class GcmBuilder
+/**
+ * Class GcmClientBuilder
+ */
+class GcmClientBuilder
 {
     /**
      * Get opened push service client.

@@ -9,8 +9,12 @@
 
 namespace Jgut\Tify\Recipient;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\ParametersTrait;
 
+/**
+ * Class AbstractRecipient
+ */
 abstract class AbstractRecipient
 {
     use ParametersTrait;
@@ -31,7 +35,7 @@ abstract class AbstractRecipient
     public function __construct($token, array $parameters = [])
     {
         $this->setToken($token);
-        $this->parameters = $parameters;
+        $this->parameters = new ArrayCollection($parameters);
     }
 
     /**

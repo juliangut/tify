@@ -11,6 +11,9 @@ namespace Jgut\Tify\Service;
 
 use Jgut\Tify\Notification\AbstractNotification;
 
+/**
+ * Interface SendInterface
+ */
 interface SendInterface
 {
     /**

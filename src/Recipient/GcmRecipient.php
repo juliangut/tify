@@ -9,21 +9,25 @@
 
 namespace Jgut\Tify\Recipient;
 
+/**
+ * Class GcmRecipient
+ */
 class GcmRecipient extends AbstractRecipient
 {
     /**
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
+     *
+     * @return $this
      */
     public function setToken($token)
     {
-        $token = trim($token);
-        if ($token === '') {
+        if (trim($token) === '') {
             throw new \InvalidArgumentException('GCM token can not be empty');
         }
 
-        $this->token = $token;
+        $this->token = trim($token);
 
         return $this;
     }

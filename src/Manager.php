@@ -9,19 +9,63 @@
 
 namespace Jgut\Tify;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Service\AbstractService;
 use Jgut\Tify\Exception\ServiceException;
 use Jgut\Tify\Notification\AbstractNotification;
 use Jgut\Tify\Service\FeedbackInterface;
 
+/**
+ * Notifications manager.
+ */
 class Manager
 {
     /**
-     * Registered notifications.
-     *
-     * @var array
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
-    protected $notifications = [];
+    protected $notifications;
+
+    /**
+     * Manager constructor.
+     */
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection;
+    }
+
+    /**
+     * Retrieve registered notifications.
+     *
+     * @return array
+     */
+    public function getNotifications()
+    {
+        return $this->notifications->toArray();
+    }
+
+    /**
+     * Register notification.
+     *
+     * @param \Jgut\Tify\Notification\AbstractNotification $notification
+     *
+     * @return $this
+     */
+    public function addNotification(AbstractNotification $notification)
+    {
+        $this->notifications->add($notification);
+
+        return $this;
+    }
+
+    /**
+     * Clear list of notifications.
+     */
+    public function clearNotifications()
+    {
+        $this->notifications->clear();
+
+        return $this;
+    }
 
     /**
      * Push notifications.
@@ -30,17 +74,17 @@ class Manager
      */
     public function push()
     {
-        $results = [];
+        $results = new ArrayCollection;
 
         foreach ($this->notifications as $notification) {
-            $notification->setPending();
+            $notification->setStatus(AbstractNotification::STATUS_PENDING);
 
             $notification->getService()->send($notification);
 
-            $results = array_merge($results, $notification->getResults());
+            $results->add($notification->getResults());
         }
 
-        return $results;
+        return $results->toArray();
     }
 
     /**
@@ -59,37 +103,5 @@ class Manager
         }
 
         return $service->feedback();
-    }
-
-    /**
-     * Retrieve registered notifications.
-     *
-     * @return array
-     */
-    public function getNotifications()
-    {
-        return $this->notifications;
-    }
-
-    /**
-     * Register notification.
-     *
-     * @param \Jgut\Tify\Notification\AbstractNotification $notification
-     */
-    public function addNotification(AbstractNotification $notification)
-    {
-        $this->notifications[] = $notification;
-
-        return $this;
-    }
-
-    /**
-     * Clear list of notifications.
-     */
-    public function clearNotifications()
-    {
-        $this->notifications = [];
-
-        return $this;
     }
 }

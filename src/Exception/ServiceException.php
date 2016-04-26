@@ -9,6 +9,9 @@
 
 namespace Jgut\Tify\Exception;
 
+/**
+ * Class ServiceException
+ */
 class ServiceException extends \RuntimeException
 {
 }

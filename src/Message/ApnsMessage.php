@@ -9,22 +9,25 @@
 
 namespace Jgut\Tify\Message;
 
+/**
+ * Class ApnsMessage
+ */
 class ApnsMessage extends AbstractMessage
 {
     /**
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
+     *
+     * @return $this
      */
     public function setParameter($parameter, $value)
     {
-        $parameter = trim($parameter);
-
-        if ($parameter === 'apc') {
+        if (trim($parameter) === 'apc') {
             throw new \InvalidArgumentException('"apc" can not be used as a custom parameter as it is reserved');
         }
 
-        $this->parameters[$parameter] = $value;
+        $this->parameters[trim($parameter)] = $value;
 
         return $this;
     }

@@ -9,6 +9,9 @@
 
 namespace Jgut\Tify\Exception;
 
+/**
+ * Class NotificationException
+ */
 class NotificationException extends \RuntimeException
 {
 }

@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Tests\Service\Client;
 
-use Jgut\Tify\Service\Client\ApnsBuilder;
+use Jgut\Tify\Service\Client\ApnsClientBuilder;
 use ZendService\Apple\Apns\Client\Feedback;
 use ZendService\Apple\Apns\Client\Message;
 
@@ -27,7 +27,7 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testPushClient()
     {
-        $client = ApnsBuilder::buildPush(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
+        $client = ApnsClientBuilder::buildPush(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
 
         $this->assertInstanceOf(Message::class, $client);
     }
@@ -41,7 +41,7 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testPushFeedback()
     {
-        $client = ApnsBuilder::buildFeedback(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
+        $client = ApnsClientBuilder::buildFeedback(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
 
         $this->assertInstanceOf(Feedback::class, $client);
     }

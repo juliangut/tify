@@ -9,10 +9,13 @@
 
 namespace Jgut\Tify\Message;
 
+/**
+ * Class GcmMessage
+ */
 class GcmMessage extends AbstractMessage
 {
     /**
-     * List of Google service's reserved parameters.
+     * List of Google GCM service reserved parameters.
      *
      * @var array
      */
@@ -29,6 +32,8 @@ class GcmMessage extends AbstractMessage
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
+     *
+     * @return $this
      */
     public function setParameter($parameter, $value)
     {
