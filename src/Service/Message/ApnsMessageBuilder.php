@@ -9,8 +9,8 @@
 
 namespace Jgut\Tify\Service\Message;
 
+use Jgut\Tify\Notification;
 use Jgut\Tify\Recipient\ApnsRecipient;
-use Jgut\Tify\Notification\ApnsNotification;
 use ZendService\Apple\Apns\Message as ServiceMessage;
 use ZendService\Apple\Apns\Message\Alert as ServiceMessageAlert;
 
@@ -22,47 +22,47 @@ class ApnsMessageBuilder
     /**
      * Get service message from origin.
      *
-     * @param \Jgut\Tify\Recipient\ApnsRecipient       $recipient
-     * @param \Jgut\Tify\Notification\ApnsNotification $notification
+     * @param \Jgut\Tify\Recipient\ApnsRecipient $recipient
+     * @param \Jgut\Tify\Notification            $notification
      *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      *
      * @return \ZendService\Apple\Apns\Message
      */
-    public static function build(ApnsRecipient $recipient, ApnsNotification $notification)
+    public static function build(ApnsRecipient $recipient, Notification $notification)
     {
         $message = $notification->getMessage();
 
-        $badge = ((int) $notification->getOption('badge', 0) === 0)
+        $badge = ((int) $notification->getParameter('badge', 0) === 0)
             ? null
-            : $notification->getOption('badge') + (int) $recipient->getParameter('badge', 0);
+            : $notification->getParameter('badge') + (int) $recipient->getData('badge', 0);
 
         $pushMessage = new ServiceMessage();
 
         $pushMessage
-            ->setId(sha1($recipient->getToken() . $message->getOption('body')))
+            ->setId(sha1($recipient->getToken() . $message->getParameter('body')))
             ->setToken($recipient->getToken())
-            ->setSound($notification->getOption('sound'))
-            ->setContentAvailable($notification->getOption('content_available'))
-            ->setCategory($notification->getOption('category'))
-            ->setCustom($message->getParameters())
+            ->setSound($notification->getParameter('sound'))
+            ->setContentAvailable($notification->getParameter('content_available'))
+            ->setCategory($notification->getParameter('category'))
+            ->setCustom($message->getPayload())
             ->setBadge($badge);
 
-        if ($notification->getOption('expire') !== null) {
-            $pushMessage->setExpire($notification->getOption('expire'));
+        if ($notification->getParameter('expire') !== null) {
+            $pushMessage->setExpire($notification->getParameter('expire'));
         }
 
-        if ($message->getOption('title') !== null || $message->getOption('body') !== null) {
+        if ($message->getParameter('title') !== null || $message->getParameter('body') !== null) {
             $pushMessage->setAlert(new ServiceMessageAlert(
-                $message->getOption('body'),
-                $message->getOption('action_loc_key'),
-                $message->getOption('loc_key'),
-                $message->getOption('loc_args'),
-                $message->getOption('launch_image'),
-                $message->getOption('title'),
-                $message->getOption('title_loc_key'),
-                $message->getOption('title_loc_args')
+                $message->getParameter('body'),
+                $message->getParameter('action_loc_key'),
+                $message->getParameter('loc_key'),
+                $message->getParameter('loc_args'),
+                $message->getParameter('launch_image'),
+                $message->getParameter('title'),
+                $message->getParameter('title_loc_key'),
+                $message->getParameter('title_loc_args')
             ));
         }
 

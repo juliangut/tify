@@ -9,8 +9,8 @@
 
 namespace Jgut\Tify\Service\Message;
 
-use Jgut\Tify\Notification\GcmNotification;
-use Jgut\Tify\Service\Message\Gcm as ServiceMessage;
+use Jgut\Tify\Notification;
+use Jgut\Tify\Service\Message\Gcm as GcmMessage;
 
 /**
  * Class GcmMessageBuilder
@@ -20,31 +20,31 @@ class GcmMessageBuilder
     /**
      * Get configured service message.
      *
-     * @param array                                   $tokens
-     * @param \Jgut\Tify\Notification\GcmNotification $notification
+     * @param array                   $tokens
+     * @param \Jgut\Tify\Notification $notification
      *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      *
-     * @return \Jgut\Tify\Service\Message\Gcm
+     * @return \ZendService\Google\Gcm\Message
      */
-    public static function build(array $tokens, GcmNotification $notification)
+    public static function build(array $tokens, Notification $notification)
     {
         $message = $notification->getMessage();
 
-        $pushMessage = new ServiceMessage();
+        $pushMessage = new GcmMessage();
 
         $pushMessage
             ->setRegistrationIds($tokens)
-            ->setCollapseKey($notification->getOption('collapse_key'))
-            ->setDelayWhileIdle($notification->getOption('delay_while_idle'))
-            ->setTimeToLive($notification->getOption('time_to_live'))
-            ->setRestrictedPackageName($notification->getOption('restricted_package_name'))
-            ->setDryRun($notification->getOption('dry_run'))
-            ->setData($message->getParameters());
+            ->setCollapseKey($notification->getParameter('collapse_key'))
+            ->setDelayWhileIdle($notification->getParameter('delay_while_idle'))
+            ->setTimeToLive($notification->getParameter('time_to_live'))
+            ->setRestrictedPackageName($notification->getParameter('restricted_package_name'))
+            ->setDryRun($notification->getParameter('dry_run'))
+            ->setData($message->getPayload());
 
-        if ($message->getOption('title') !== null || $message->getOption('body') !== null) {
-            $pushMessage->setNotificationPayload($message->getOptions());
+        if ($message->getParameter('title') !== null || $message->getParameter('body') !== null) {
+            $pushMessage->setNotificationPayload($message->getParameters());
         }
 
         return $pushMessage;

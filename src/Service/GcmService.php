@@ -9,8 +9,9 @@
 
 namespace Jgut\Tify\Service;
 
-use Jgut\Tify\Notification\AbstractNotification;
-use Jgut\Tify\Notification\GcmNotification;
+use Jgut\Tify\Notification;
+use Jgut\Tify\Recipient\AbstractRecipient;
+use Jgut\Tify\Recipient\GcmRecipient;
 use Jgut\Tify\Result;
 use Jgut\Tify\Service\Client\GcmClientBuilder;
 use Jgut\Tify\Service\Message\GcmMessageBuilder;
@@ -53,49 +54,41 @@ class GcmService extends AbstractService implements SendInterface
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
-    public function send(AbstractNotification $notification)
+    public function send(Notification $notification)
     {
-        if (!$notification instanceof GcmNotification) {
-            throw new \InvalidArgumentException('Notification must be an accepted GCM notification');
-        }
-
         $service = $this->getPushService();
 
-        $results = [];
-
-        foreach (array_chunk($notification->getTokens(), 100) as $tokensRange) {
-            $message = GcmMessageBuilder::build($tokensRange, $notification);
-
-            $time = new \DateTime;
+        foreach ($this->getPushMessages($notification) as $message) {
+            /** @var \ZendService\Google\Gcm\Message $message */
+            $time = new \DateTime('now', new \DateTimeZone('UTC'));
 
             try {
-                $response = $service->send($message)->getResults();
+                $pushResponse = $service->send($message)->getResults();
 
-                foreach ($tokensRange as $token) {
-                    if (array_key_exists($token, $response) && !array_key_exists('error', $response[$token])) {
-                        $result = new Result($token, $time);
-                    } else {
-                        $errorCode = array_key_exists($token, $response) ? $response[$token]['error'] : 'UnknownError';
+                foreach ($message->getRegistrationIds() as $token) {
+                    $result = new Result($token, $time);
 
-                        $result = new Result(
-                            $token,
-                            $time,
-                            Result::STATUS_ERROR,
-                            self::$statusCodes[$errorCode]
-                        );
+                    if (!array_key_exists($token, $pushResponse) || array_key_exists('error', $pushResponse[$token])) {
+                        $result->setStatus(Result::STATUS_ERROR);
+
+                        $errorCode = array_key_exists($token, $pushResponse)
+                            ? $pushResponse[$token]['error']
+                            : 'UnknownError';
+                        $result->setStatusMessage(self::$statusCodes[$errorCode]);
                     }
 
-                    $results[] = $result;
+                    $notification->addResult($result);
                 }
             } catch (GcmRuntimeException $exception) {
-                foreach ($tokensRange as $token) {
-                    $results[] = new Result($token, $time, Result::STATUS_ERROR, $exception->getMessage());
+                foreach ($message->getRegistrationIds() as $token) {
+                    $notification->addResult(new Result($token, $time, Result::STATUS_ERROR, $exception->getMessage()));
                 }
             }
         }
 
-        $notification->setStatus(AbstractNotification::STATUS_SENT, $results);
+        $notification->setStatus(Notification::STATUS_SENT);
     }
 
     /**
@@ -110,6 +103,38 @@ class GcmService extends AbstractService implements SendInterface
         }
 
         return $this->pushClient;
+    }
+
+    /**
+     * Get push service formatted messages.
+     *
+     * @param \Jgut\Tify\Notification $notification
+     *
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     *
+     * @return \ZendService\Google\Gcm\Message
+     */
+    protected function getPushMessages(Notification $notification)
+    {
+        /** @var \Jgut\Tify\Recipient\GcmRecipient[] $recipients */
+        $recipients = array_filter(
+            $notification->getRecipients(),
+            function (AbstractRecipient $recipient) {
+                return $recipient instanceof GcmRecipient;
+            }
+        );
+
+        $tokens = array_map(
+            function (AbstractRecipient $recipient) {
+                return $recipient->getToken();
+            },
+            $recipients
+        );
+
+        foreach (array_chunk($tokens, 100) as $tokensRange) {
+            yield GcmMessageBuilder::build($tokensRange, $notification);
+        }
     }
 
     /**

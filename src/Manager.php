@@ -12,8 +12,8 @@ namespace Jgut\Tify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Service\AbstractService;
 use Jgut\Tify\Exception\ServiceException;
-use Jgut\Tify\Notification\AbstractNotification;
 use Jgut\Tify\Service\FeedbackInterface;
+use Jgut\Tify\Service\SendInterface;
 
 /**
  * Notifications manager.
@@ -36,7 +36,7 @@ class Manager
     /**
      * Retrieve registered notifications.
      *
-     * @return array
+     * @return \Jgut\Tify\Notification[]
      */
     public function getNotifications()
     {
@@ -46,11 +46,11 @@ class Manager
     /**
      * Register notification.
      *
-     * @param \Jgut\Tify\Notification\AbstractNotification $notification
+     * @param \Jgut\Tify\Notification $notification
      *
      * @return $this
      */
-    public function addNotification(AbstractNotification $notification)
+    public function addNotification(Notification $notification)
     {
         $this->notifications->add($notification);
 
@@ -70,6 +70,8 @@ class Manager
     /**
      * Push notifications.
      *
+     * @throws \InvalidArgumentException
+     *
      * @return \Jgut\Tify\Result[]
      */
     public function push()
@@ -77,14 +79,19 @@ class Manager
         $results = new ArrayCollection;
 
         foreach ($this->notifications as $notification) {
-            $notification->setStatus(AbstractNotification::STATUS_PENDING);
+            /** @var \Jgut\Tify\Notification $notification */
+            $notification->setStatus(Notification::STATUS_PENDING);
+            $notification->clearResults();
 
-            $notification->getService()->send($notification);
+            $service = $notification->getService();
+            if ($service instanceof SendInterface) {
+                $service->send($notification);
+            }
 
             $results->add($notification->getResults());
         }
 
-        return $results->toArray();
+        return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($results)));
     }
 
     /**
@@ -99,7 +106,7 @@ class Manager
     public function feedback(AbstractService $service)
     {
         if (!$service instanceof FeedbackInterface) {
-            throw new ServiceException(sprintf('%s is not a feedback enabled service', get_class($service)));
+            throw new ServiceException(sprintf('"%s" is not a feedback enabled service', get_class($service)));
         }
 
         return $service->feedback();

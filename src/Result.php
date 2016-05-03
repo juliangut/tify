@@ -10,7 +10,7 @@
 namespace Jgut\Tify;
 
 /**
- * Class Result
+ * Push result abstraction.
  */
 class Result
 {
@@ -55,13 +55,13 @@ class Result
      */
     public function __construct(
         $token,
-        \DateTime $date = null,
+        \DateTime $date,
         $status = self::STATUS_SUCCESS,
-        $statusMessage = ''
+        $statusMessage = null
     ) {
         $this->token = $token;
 
-        $this->setDate($date !== null ? $date : new \DateTime);
+        $this->setDate($date);
         $this->setStatus($status);
         $this->setStatusMessage($statusMessage);
     }
@@ -167,7 +167,7 @@ class Result
     /**
      * Retrieve result status message.
      *
-     * @return string
+     * @return string|null
      */
     public function getStatusMessage()
     {
@@ -177,13 +177,13 @@ class Result
     /**
      * Check successful status message.
      *
-     * @param string $statusMessage
+     * @param string|null $statusMessage
      *
      * @return $this
      */
-    public function setStatusMessage($statusMessage)
+    public function setStatusMessage($statusMessage = null)
     {
-        $this->statusMessage = trim($statusMessage);
+        $this->statusMessage = $statusMessage !== null ? trim($statusMessage) : null;
 
         return $this;
     }

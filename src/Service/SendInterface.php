@@ -9,7 +9,7 @@
 
 namespace Jgut\Tify\Service;
 
-use Jgut\Tify\Notification\AbstractNotification;
+use Jgut\Tify\Notification;
 
 /**
  * Interface SendInterface
@@ -19,7 +19,7 @@ interface SendInterface
     /**
      * Send a notification.
      *
-     * @param \Jgut\Tify\Notification\AbstractNotification $notification
+     * @param \Jgut\Tify\Notification $notification
      */
-    public function send(AbstractNotification $notification);
+    public function send(Notification $notification);
 }

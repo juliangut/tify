@@ -10,7 +10,7 @@
 namespace Jgut\Tify\Service;
 
 use Jgut\Tify\Exception\ServiceException;
-use Jgut\Tify\ParametersTrait;
+use Jgut\Tify\ParameterTrait;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 abstract class AbstractService
 {
-    use ParametersTrait;
+    use ParameterTrait;
 
     /**
      * Sandbox environment.
@@ -49,7 +49,7 @@ abstract class AbstractService
         } catch (MissingOptionsException $exception) {
             throw new ServiceException(sprintf('Missing parameters on "%s"', self::class));
         } catch (\Exception $exception) {
-            throw new ServiceException('Not valid option provided');
+            throw new ServiceException('Invalid parameter provided');
         }
 
         $this->sandbox = (bool) $sandbox;

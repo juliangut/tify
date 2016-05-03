@@ -42,6 +42,8 @@ class ApnsClientBuilder
      * @param string $passPhrase
      * @param bool   $sandbox
      *
+     * @throws \Jgut\Tify\Exception\ServiceException
+     *
      * @return \ZendService\Apple\Apns\Client\Feedback
      */
     public static function buildFeedback($certificate, $passPhrase = '', $sandbox = false)
@@ -56,6 +58,8 @@ class ApnsClientBuilder
      * @param string                                        $certificate
      * @param string                                        $passPhrase
      * @param bool                                          $sandbox
+     *
+     * @throws \Jgut\Tify\Exception\ServiceException
      *
      * @return \ZendService\Apple\Apns\Client\AbstractClient
      *

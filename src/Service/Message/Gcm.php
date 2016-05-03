@@ -65,6 +65,8 @@ class Gcm extends GcmMessage
      *
      * @throws \ZendService\Google\Exception\InvalidArgumentException
      * @throws \ZendService\Google\Exception\RuntimeException
+     *
+     * @return $this
      */
     public function addNotificationPayload($key, $value)
     {

@@ -11,8 +11,9 @@ namespace Jgut\Tify\Service;
 
 use Jgut\Tify\Exception\NotificationException;
 use Jgut\Tify\Exception\ServiceException;
-use Jgut\Tify\Notification\AbstractNotification;
-use Jgut\Tify\Notification\ApnsNotification;
+use Jgut\Tify\Notification;
+use Jgut\Tify\Recipient\AbstractRecipient;
+use Jgut\Tify\Recipient\ApnsRecipient;
 use Jgut\Tify\Result;
 use Jgut\Tify\Service\Client\ApnsClientBuilder;
 use Jgut\Tify\Service\Message\ApnsMessageBuilder;
@@ -76,39 +77,32 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
-    public function send(AbstractNotification $notification)
+    public function send(Notification $notification)
     {
-        if (!$notification instanceof ApnsNotification) {
-            throw new \InvalidArgumentException('Notification must be an accepted APNS notification');
-        }
-
         $service = $this->getPushService();
 
-        $results = [];
-
-        /* @var \Jgut\Tify\Recipient\ApnsRecipient $recipient */
-        foreach ($notification->getRecipients() as $recipient) {
-            $message = ApnsMessageBuilder::build($recipient, $notification);
-
-            $result = new Result($recipient->getToken(), new \DateTime);
+        /* @var \ZendService\Apple\Apns\Message $message */
+        foreach ($this->getPushMessages($notification) as $message) {
+            $result = new Result($message->getToken(), new \DateTime('now', new \DateTimeZone('UTC')));
 
             try {
-                $response = $service->send($message);
+                $pushResponse = $service->send($message);
 
-                if ($response->getCode() !== static::RESULT_OK) {
+                if ($pushResponse->getCode() !== static::RESULT_OK) {
                     $result->setStatus(Result::STATUS_ERROR);
-                    $result->setStatusMessage(self::$statusCodes[$response->getCode()]);
+                    $result->setStatusMessage(self::$statusCodes[$pushResponse->getCode()]);
                 }
             } catch (ApnsRuntimeException $exception) {
                 $result->setStatus(Result::STATUS_ERROR);
                 $result->setStatusMessage($exception->getMessage());
             }
 
-            $results[] = $result;
+            $notification->addResult($result);
         }
 
-        $notification->setStatus(AbstractNotification::STATUS_SENT, $results);
+        $notification->setStatus(Notification::STATUS_SENT);
 
         $service->close();
         $this->pushClient = null;
@@ -147,6 +141,8 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
     /**
      * Get opened ServiceClient
      *
+     * @throws \Jgut\Tify\Exception\ServiceException
+     *
      * @return \ZendService\Apple\Apns\Client\Message
      */
     protected function getPushService()
@@ -178,6 +174,31 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
         }
 
         return $this->feedbackClient;
+    }
+
+    /**
+     * Get push service formatted messages.
+     *
+     * @param \Jgut\Tify\Notification $notification
+     *
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     *
+     * @return \ZendService\Apple\Apns\Message
+     */
+    protected function getPushMessages(Notification $notification)
+    {
+        /** @var \Jgut\Tify\Recipient\ApnsRecipient[] $recipients */
+        $recipients = array_filter(
+            $notification->getRecipients(),
+            function (AbstractRecipient $recipient) {
+                return $recipient instanceof ApnsRecipient;
+            }
+        );
+
+        foreach ($recipients as $recipient) {
+            yield ApnsMessageBuilder::build($recipient, $notification);
+        }
     }
 
     /**
