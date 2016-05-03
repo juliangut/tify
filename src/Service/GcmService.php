@@ -61,7 +61,7 @@ class GcmService extends AbstractService implements SendInterface
         $service = $this->getPushService();
 
         foreach ($this->getPushMessages($notification) as $message) {
-            /** @var \ZendService\Google\Gcm\Message $message */
+            /* @var \ZendService\Google\Gcm\Message $message */
             $time = new \DateTime('now', new \DateTimeZone('UTC'));
 
             try {
@@ -117,7 +117,7 @@ class GcmService extends AbstractService implements SendInterface
      */
     protected function getPushMessages(Notification $notification)
     {
-        /** @var \Jgut\Tify\Recipient\GcmRecipient[] $recipients */
+        /* @var \Jgut\Tify\Recipient\GcmRecipient[] $recipients */
         $recipients = array_filter(
             $notification->getRecipients(),
             function (AbstractRecipient $recipient) {

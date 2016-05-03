@@ -16,7 +16,7 @@ use Jgut\Tify\Service\AbstractService;
 /**
  * Notification handler.
  */
-abstract class Notification
+class Notification
 {
     use ParameterTrait;
 
@@ -74,10 +74,10 @@ abstract class Notification
     /**
      * Notification constructor.
      *
-     * @param \Jgut\Tify\Service\AbstractService       $service
-     * @param \Jgut\Tify\Message                       $message
-     * @param \Jgut\Tify\Recipient\ApnsRecipient[]     $recipients
-     * @param array                                    $parameters
+     * @param \Jgut\Tify\Service\AbstractService   $service
+     * @param \Jgut\Tify\Message                   $message
+     * @param \Jgut\Tify\Recipient\ApnsRecipient[] $recipients
+     * @param array                                $parameters
      *
      * @throws \InvalidArgumentException
      */

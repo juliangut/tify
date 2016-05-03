@@ -11,8 +11,8 @@ namespace Jgut\Tify\Service\Message;
 
 use Jgut\Tify\Notification;
 use Jgut\Tify\Recipient\ApnsRecipient;
-use ZendService\Apple\Apns\Message as ServiceMessage;
 use ZendService\Apple\Apns\Message\Alert as ServiceMessageAlert;
+use ZendService\Apple\Apns\Message as ServiceMessage;
 
 /**
  * Class ApnsMessageBuilder

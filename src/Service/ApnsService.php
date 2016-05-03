@@ -125,7 +125,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
 
         $responses = [];
 
-        /** @var \ZendService\Apple\Apns\Response\Feedback $response */
+        /* @var \ZendService\Apple\Apns\Response\Feedback $response */
         foreach ($feedbackResponse as $response) {
             $time = new \DateTime(date('c', $response->getTime()));
 
@@ -188,7 +188,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
      */
     protected function getPushMessages(Notification $notification)
     {
-        /** @var \Jgut\Tify\Recipient\ApnsRecipient[] $recipients */
+        /* @var \Jgut\Tify\Recipient\ApnsRecipient[] $recipients */
         $recipients = array_filter(
             $notification->getRecipients(),
             function (AbstractRecipient $recipient) {

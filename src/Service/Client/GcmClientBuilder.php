@@ -9,8 +9,8 @@
 
 namespace Jgut\Tify\Service\Client;
 
-use Zend\Http\Client as HttpClient;
 use Zend\Http\Client\Adapter\Socket;
+use Zend\Http\Client as HttpClient;
 use ZendService\Google\Gcm\Client;
 
 /**

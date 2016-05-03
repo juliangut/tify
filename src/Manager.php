@@ -10,8 +10,8 @@
 namespace Jgut\Tify;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Jgut\Tify\Service\AbstractService;
 use Jgut\Tify\Exception\ServiceException;
+use Jgut\Tify\Service\AbstractService;
 use Jgut\Tify\Service\FeedbackInterface;
 use Jgut\Tify\Service\SendInterface;
 
@@ -79,7 +79,7 @@ class Manager
         $results = new ArrayCollection;
 
         foreach ($this->notifications as $notification) {
-            /** @var \Jgut\Tify\Notification $notification */
+            /* @var \Jgut\Tify\Notification $notification */
             $notification->setStatus(Notification::STATUS_PENDING);
             $notification->clearResults();
 

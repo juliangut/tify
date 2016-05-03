@@ -9,10 +9,10 @@
 
 namespace Jgut\Tify\Service\Message;
 
+use Zend\Json\Json;
 use ZendService\Google\Exception\InvalidArgumentException;
 use ZendService\Google\Exception\RuntimeException;
 use ZendService\Google\Gcm\Message as GcmMessage;
-use Zend\Json\Json;
 
 /**
  * Custom GCM service message.
