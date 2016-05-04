@@ -11,7 +11,6 @@ namespace Jgut\Tify;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Recipient\AbstractRecipient;
-use Jgut\Tify\Adapter\AbstractAdapter;
 
 /**
  * Notification handler.
