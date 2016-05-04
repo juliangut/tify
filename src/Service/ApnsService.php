@@ -77,6 +77,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
+     * @throws \Jgut\Tify\Exception\ServiceException
      * @throws \RuntimeException
      */
     public function send(Notification $notification)
