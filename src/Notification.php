@@ -11,7 +11,7 @@ namespace Jgut\Tify;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Recipient\AbstractRecipient;
-use Jgut\Tify\Service\AbstractService;
+use Jgut\Tify\Adapter\AbstractAdapter;
 
 /**
  * Notification handler.
@@ -45,9 +45,9 @@ class Notification
     ];
 
     /**
-     * @var \Jgut\Tify\Service\AbstractService
+     * @var \Jgut\Tify\Adapter\AbstractAdapter
      */
-    protected $service;
+    protected $adapter;
 
     /**
      * @var \Jgut\Tify\Message
@@ -74,7 +74,7 @@ class Notification
     /**
      * Notification constructor.
      *
-     * @param \Jgut\Tify\Service\AbstractService   $service
+     * @param \Jgut\Tify\Adapter\AbstractAdapter   $adapter
      * @param \Jgut\Tify\Message                   $message
      * @param \Jgut\Tify\Recipient\ApnsRecipient[] $recipients
      * @param array                                $parameters
@@ -82,12 +82,12 @@ class Notification
      * @throws \InvalidArgumentException
      */
     public function __construct(
-        AbstractService $service,
+        AbstractAdapter $adapter,
         Message         $message,
         array           $recipients = [],
         array           $parameters = []
     ) {
-        $this->service = $service;
+        $this->adapter = $adapter;
         $this->message = $message;
 
         foreach ($recipients as $recipient) {
@@ -101,27 +101,27 @@ class Notification
     }
 
     /**
-     * Get service.
+     * Get adapter.
      *
-     * @return \Jgut\Tify\Service\AbstractService
+     * @return \Jgut\Tify\Adapter\AbstractAdapter
      */
-    public function getService()
+    public function getAdapter()
     {
-        return $this->service;
+        return $this->adapter;
     }
 
     /**
-     * Set service.
+     * Set adapter.
      *
-     * @param \Jgut\Tify\Service\AbstractService $service
+     * @param \Jgut\Tify\Adapter\AbstractAdapter $adapter
      *
      * @throws \InvalidArgumentException
      *
      * @return $this
      */
-    public function setService(AbstractService $service)
+    public function setAdapter(AbstractAdapter $adapter)
     {
-        $this->service = $service;
+        $this->adapter = $adapter;
 
         return $this;
     }

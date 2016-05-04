@@ -13,7 +13,7 @@ use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Result;
-use Jgut\Tify\Service\AbstractService;
+use Jgut\Tify\Adapter\AbstractAdapter;
 
 /**
  * Notification tests.
@@ -21,7 +21,7 @@ use Jgut\Tify\Service\AbstractService;
 class NotificationTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Service\AbstractService
+     * @var \Jgut\Tify\Adapter\AbstractAdapter
      */
     protected $service;
 
@@ -37,7 +37,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->service = $this->getMockForAbstractClass(AbstractService::class);
+        $this->service = $this->getMockForAbstractClass(AbstractAdapter::class);
         $this->message = $this->getMock(Message::class, [], [], '', false);
         $recipient = $this->getMockForAbstractClass(AbstractRecipient::class, [], '', false);
 
@@ -49,7 +49,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaults()
     {
-        self::assertEquals($this->service, $this->notification->getService());
+        self::assertEquals($this->service, $this->notification->getAdapter());
         self::assertEquals($this->message, $this->notification->getMessage());
         self::assertCount(1, $this->notification->getRecipients());
         self::assertCount(0, $this->notification->getResults());
@@ -57,9 +57,9 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     public function testService()
     {
-        $service = $this->getMockForAbstractClass(AbstractService::class);
-        $this->notification->setService($service);
-        self::assertEquals($service, $this->notification->getService());
+        $service = $this->getMockForAbstractClass(AbstractAdapter::class);
+        $this->notification->setAdapter($service);
+        self::assertEquals($service, $this->notification->getAdapter());
     }
 
     public function testMessage()

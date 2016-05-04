@@ -12,8 +12,8 @@ namespace Jgut\Tify\Tests;
 use Jgut\Tify\Manager;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Service\ApnsService;
-use Jgut\Tify\Service\GcmService;
+use Jgut\Tify\Adapter\ApnsAdapter;
+use Jgut\Tify\Adapter\GcmAdapter;
 
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,7 +46,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testSend()
     {
-        $service = $this->getMock(GcmService::class, [], [], '', false);
+        $service = $this->getMock(GcmAdapter::class, [], [], '', false);
 
         $message = $this->getMock(Message::class, [], [], '', false);
 
@@ -58,16 +58,16 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Jgut\Tify\Exception\ServiceException
+     * @expectedException \Jgut\Tify\Exception\AdapterException
      */
     public function testFeedback()
     {
-        $service = $this->getMock(ApnsService::class, [], [], '', false);
+        $service = $this->getMock(ApnsAdapter::class, [], [], '', false);
         $service->expects(self::once())->method('feedback')->will(self::returnValue([]));
 
         self::assertCount(0, $this->manager->feedback($service));
 
-        $service = $this->getMock('\Jgut\Tify\Service\GcmService', [], [], '', false);
+        $service = $this->getMock(GcmAdapter::class, [], [], '', false);
         $this->manager->feedback($service);
     }
 }

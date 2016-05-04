@@ -7,9 +7,9 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Service\Client;
+namespace Jgut\Tify\Tests\Adapter\Client;
 
-use Jgut\Tify\Service\Client\ApnsClientBuilder;
+use Jgut\Tify\Adapter\Client\ApnsClientBuilder;
 use ZendService\Apple\Apns\Client\Feedback;
 use ZendService\Apple\Apns\Client\Message;
 
@@ -19,7 +19,7 @@ use ZendService\Apple\Apns\Client\Message;
 class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException \Jgut\Tify\Exception\ServiceException
+     * @expectedException \Jgut\Tify\Exception\AdapterException
      * @expectedExceptionMessageRegExp /^Unable to connect/
      * @expectedExceptionMessageRegExp /^Unable to set local cert chain file/
      */
@@ -31,7 +31,7 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Jgut\Tify\Exception\ServiceException
+     * @expectedException \Jgut\Tify\Exception\AdapterException
      * @expectedExceptionMessageRegExp /^Unable to connect/
      * @expectedExceptionMessageRegExp /^Unable to set local cert chain file/
      */

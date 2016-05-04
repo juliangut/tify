@@ -7,11 +7,17 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Exception;
+namespace Jgut\Tify\Adapter;
 
 /**
- * Class ServiceException
+ * Interface FeedbackInterface
  */
-class ServiceException extends \RuntimeException
+interface FeedbackInterface
 {
+    /**
+     * Request feedback information.
+     *
+     * @return array
+     */
+    public function feedback();
 }

@@ -7,10 +7,10 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Service;
+namespace Jgut\Tify\Adapter;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Jgut\Tify\Exception\ServiceException;
+use Jgut\Tify\Exception\AdapterException;
 use Jgut\Tify\ParameterTrait;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class AbstractService.
  */
-abstract class AbstractService
+abstract class AbstractAdapter
 {
     use ParameterTrait;
 
@@ -35,7 +35,7 @@ abstract class AbstractService
      * @param array $parameters
      * @param bool  $sandbox
      *
-     * @throws \Jgut\Tify\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\AdapterException
      */
     public function __construct(array $parameters = [], $sandbox = false)
     {
@@ -48,9 +48,9 @@ abstract class AbstractService
         try {
             $this->parameters = new ArrayCollection($parametersResolver->resolve($parameters));
         } catch (MissingOptionsException $exception) {
-            throw new ServiceException(sprintf('Missing parameters on "%s"', self::class));
+            throw new AdapterException(sprintf('Missing parameters on "%s"', self::class));
         } catch (\Exception $exception) {
-            throw new ServiceException('Invalid parameter provided' . $exception->getMessage());
+            throw new AdapterException('Invalid parameter provided' . $exception->getMessage());
         }
 
         $this->sandbox = (bool) $sandbox;

@@ -7,9 +7,9 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Service\Client;
+namespace Jgut\Tify\Adapter\Client;
 
-use Jgut\Tify\Exception\ServiceException;
+use Jgut\Tify\Exception\AdapterException;
 use ZendService\Apple\Apns\Client\AbstractClient;
 use ZendService\Apple\Apns\Client\Feedback as FeedbackClient;
 use ZendService\Apple\Apns\Client\Message as MessageClient;
@@ -26,7 +26,7 @@ class ApnsClientBuilder
      * @param string $passPhrase
      * @param bool   $sandbox
      *
-     * @throws \Jgut\Tify\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\AdapterException
      *
      * @return \ZendService\Apple\Apns\Client\Message
      */
@@ -42,7 +42,7 @@ class ApnsClientBuilder
      * @param string $passPhrase
      * @param bool   $sandbox
      *
-     * @throws \Jgut\Tify\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\AdapterException
      *
      * @return \ZendService\Apple\Apns\Client\Feedback
      */
@@ -59,7 +59,7 @@ class ApnsClientBuilder
      * @param string                                        $passPhrase
      * @param bool                                          $sandbox
      *
-     * @throws \Jgut\Tify\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\AdapterException
      *
      * @return \ZendService\Apple\Apns\Client\AbstractClient
      *
@@ -74,7 +74,7 @@ class ApnsClientBuilder
                 $passPhrase
             );
         } catch (\Exception $exception) {
-            throw new ServiceException($exception->getMessage(), $exception->getCode(), $exception);
+            throw new AdapterException($exception->getMessage(), $exception->getCode(), $exception);
         }
 
         return $client;

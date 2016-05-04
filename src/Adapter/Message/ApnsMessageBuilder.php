@@ -7,7 +7,7 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Service\Message;
+namespace Jgut\Tify\Adapter\Message;
 
 use Jgut\Tify\Notification;
 use Jgut\Tify\Recipient\ApnsRecipient;

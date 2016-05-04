@@ -7,9 +7,9 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Service\Client;
+namespace Jgut\Tify\Tests\Adapter\Client;
 
-use Jgut\Tify\Service\Client\GcmClientBuilder;
+use Jgut\Tify\Adapter\Client\GcmClientBuilder;
 use ZendService\Google\Gcm\Client;
 
 /**

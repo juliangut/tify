@@ -7,9 +7,9 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Service\Message;
+namespace Jgut\Tify\Tests\Adapter\Message;
 
-use Jgut\Tify\Service\Message\Gcm as Message;
+use Jgut\Tify\Adapter\Message\Gcm as Message;
 
 /**
  * Custom Gcm message tests.
@@ -17,7 +17,7 @@ use Jgut\Tify\Service\Message\Gcm as Message;
 class GcmTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Service\Message\Gcm
+     * @var \Jgut\Tify\Adapter\Message\Gcm
      */
     protected $message;
 

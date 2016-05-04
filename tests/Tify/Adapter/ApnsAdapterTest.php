@@ -7,25 +7,25 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Service;
+namespace Jgut\Tify\Tests\Adapter;
 
-use Jgut\Tify\Service\ApnsService;
+use Jgut\Tify\Adapter\ApnsAdapter;
 
 /**
- * Apns service tests.
+ * Apns adapter tests.
  */
-class ApnsServiceTest extends \PHPUnit_Framework_TestCase
+class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Service\AbstractService
+     * @var \Jgut\Tify\Adapter\AbstractAdapter
      */
-    protected $service;
+    protected $adapter;
 
     /**
-     * @expectedException \Jgut\Tify\Exception\ServiceException
+     * @expectedException \Jgut\Tify\Exception\AdapterException
      */
     public function testInvalidCertificate()
     {
-        new ApnsService(['certificate' => 'fake_path']);
+        new ApnsAdapter(['certificate' => 'fake_path']);
     }
 }

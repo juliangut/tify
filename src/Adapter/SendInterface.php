@@ -7,17 +7,19 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Service;
+namespace Jgut\Tify\Adapter;
+
+use Jgut\Tify\Notification;
 
 /**
- * Interface FeedbackInterface
+ * Interface SendInterface
  */
-interface FeedbackInterface
+interface SendInterface
 {
     /**
-     * Request feedback information.
+     * Send a notification.
      *
-     * @return array
+     * @param \Jgut\Tify\Notification $notification
      */
-    public function feedback();
+    public function send(Notification $notification);
 }

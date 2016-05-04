@@ -10,10 +10,10 @@
 namespace Jgut\Tify;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Jgut\Tify\Exception\ServiceException;
-use Jgut\Tify\Service\AbstractService;
-use Jgut\Tify\Service\FeedbackInterface;
-use Jgut\Tify\Service\SendInterface;
+use Jgut\Tify\Exception\AdapterException;
+use Jgut\Tify\Adapter\AbstractAdapter;
+use Jgut\Tify\Adapter\FeedbackInterface;
+use Jgut\Tify\Adapter\SendInterface;
 
 /**
  * Notifications manager.
@@ -83,10 +83,10 @@ class Manager
             $notification->setStatus(Notification::STATUS_PENDING);
             $notification->clearResults();
 
-            $service = $notification->getService();
+            $adapter = $notification->getAdapter();
             // @codeCoverageIgnoreStart
-            if ($service instanceof SendInterface) {
-                $service->send($notification);
+            if ($adapter instanceof SendInterface) {
+                $adapter->send($notification);
             }
             // @codeCoverageIgnoreEnd
 
@@ -99,18 +99,18 @@ class Manager
     /**
      * Get feedback from service.
      *
-     * @param \Jgut\Tify\Service\AbstractService $service
+     * @param \Jgut\Tify\Adapter\AbstractAdapter $adapter
      *
-     * @throws \Jgut\Tify\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\AdapterException
      *
      * @return array
      */
-    public function feedback(AbstractService $service)
+    public function feedback(AbstractAdapter $adapter)
     {
-        if (!$service instanceof FeedbackInterface) {
-            throw new ServiceException(sprintf('"%s" is not a feedback enabled service', get_class($service)));
+        if (!$adapter instanceof FeedbackInterface) {
+            throw new AdapterException(sprintf('"%s" is not a feedback enabled service', get_class($adapter)));
         }
 
-        return $service->feedback();
+        return $adapter->feedback();
     }
 }

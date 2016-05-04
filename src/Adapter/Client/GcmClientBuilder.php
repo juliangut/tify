@@ -7,7 +7,7 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Service\Client;
+namespace Jgut\Tify\Adapter\Client;
 
 use Zend\Http\Client\Adapter\Socket;
 use Zend\Http\Client as HttpClient;

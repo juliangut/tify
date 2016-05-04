@@ -7,20 +7,20 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Service;
+namespace Jgut\Tify\Adapter;
 
 use Jgut\Tify\Notification;
 use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Recipient\GcmRecipient;
 use Jgut\Tify\Result;
-use Jgut\Tify\Service\Client\GcmClientBuilder;
-use Jgut\Tify\Service\Message\GcmMessageBuilder;
+use Jgut\Tify\Adapter\Client\GcmClientBuilder;
+use Jgut\Tify\Adapter\Message\GcmMessageBuilder;
 use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 
 /**
- * Class GcmService
+ * Class GcmAdapter
  */
-class GcmService extends AbstractService implements SendInterface
+class GcmAdapter extends AbstractAdapter implements SendInterface
 {
     /**
      * Status codes mapping.
@@ -58,14 +58,14 @@ class GcmService extends AbstractService implements SendInterface
      */
     public function send(Notification $notification)
     {
-        $service = $this->getPushService();
+        $client = $this->getPushClient();
 
         foreach ($this->getPushMessages($notification) as $message) {
             /* @var \ZendService\Google\Gcm\Message $message */
             $time = new \DateTime('now', new \DateTimeZone('UTC'));
 
             try {
-                $pushResponse = $service->send($message)->getResults();
+                $pushResponse = $client->send($message)->getResults();
 
                 foreach ($message->getRegistrationIds() as $token) {
                     $result = new Result($token, $time);
@@ -96,7 +96,7 @@ class GcmService extends AbstractService implements SendInterface
      *
      * @return \ZendService\Google\Gcm\Client
      */
-    protected function getPushService()
+    protected function getPushClient()
     {
         if ($this->pushClient === null) {
             $this->pushClient = GcmClientBuilder::buildPush($this->getParameter('api_key'));

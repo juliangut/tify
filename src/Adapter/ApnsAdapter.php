@@ -7,22 +7,22 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Service;
+namespace Jgut\Tify\Adapter;
 
 use Jgut\Tify\Exception\NotificationException;
-use Jgut\Tify\Exception\ServiceException;
+use Jgut\Tify\Exception\AdapterException;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Recipient\ApnsRecipient;
 use Jgut\Tify\Result;
-use Jgut\Tify\Service\Client\ApnsClientBuilder;
-use Jgut\Tify\Service\Message\ApnsMessageBuilder;
+use Jgut\Tify\Adapter\Client\ApnsClientBuilder;
+use Jgut\Tify\Adapter\Message\ApnsMessageBuilder;
 use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 
 /**
- * Class ApnsService
+ * Class ApnsAdapter
  */
-class ApnsService extends AbstractService implements SendInterface, FeedbackInterface
+class ApnsAdapter extends AbstractAdapter implements SendInterface, FeedbackInterface
 {
     const RESULT_OK = 0;
 
@@ -58,7 +58,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
     /**
      * {@inheritdoc}
      *
-     * @throws \Jgut\Tify\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\AdapterException
      */
     public function __construct(array $parameters = [], $sandbox = false)
     {
@@ -67,7 +67,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
         $certificatePath = $this->getParameter('certificate');
 
         if ($certificatePath === null || !file_exists($certificatePath) || !is_readable($certificatePath)) {
-            throw new ServiceException(
+            throw new AdapterException(
                 sprintf('Certificate file "%s" does not exist or is not readable', $certificatePath)
             );
         }
@@ -77,19 +77,19 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
-     * @throws \Jgut\Tify\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\AdapterException
      * @throws \RuntimeException
      */
     public function send(Notification $notification)
     {
-        $service = $this->getPushService();
+        $client = $this->getPushClient();
 
         /* @var \ZendService\Apple\Apns\Message $message */
         foreach ($this->getPushMessages($notification) as $message) {
             $result = new Result($message->getToken(), new \DateTime('now', new \DateTimeZone('UTC')));
 
             try {
-                $pushResponse = $service->send($message);
+                $pushResponse = $client->send($message);
 
                 if ($pushResponse->getCode() !== static::RESULT_OK) {
                     $result->setStatus(Result::STATUS_ERROR);
@@ -105,7 +105,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
 
         $notification->setStatus(Notification::STATUS_SENT);
 
-        $service->close();
+        $client->close();
         $this->pushClient = null;
     }
 
@@ -116,10 +116,10 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
      */
     public function feedback()
     {
-        $service = $this->getFeedbackService();
+        $client = $this->getFeedbackClient();
 
         try {
-            $feedbackResponse = $service->feedback();
+            $feedbackResponse = $client->feedback();
         } catch (ApnsRuntimeException $exception) {
             throw new NotificationException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -133,7 +133,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
             $responses[$response->getToken()] = $time;
         }
 
-        $service->close();
+        $client->close();
         $this->feedbackClient = null;
 
         return $responses;
@@ -142,11 +142,11 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
     /**
      * Get opened ServiceClient
      *
-     * @throws \Jgut\Tify\Exception\ServiceException
+     * @throws \Jgut\Tify\Exception\AdapterException
      *
      * @return \ZendService\Apple\Apns\Client\Message
      */
-    protected function getPushService()
+    protected function getPushClient()
     {
         if ($this->pushClient === null) {
             $this->pushClient = ApnsClientBuilder::buildPush(
@@ -164,7 +164,7 @@ class ApnsService extends AbstractService implements SendInterface, FeedbackInte
      *
      * @return \ZendService\Apple\Apns\Client\Feedback
      */
-    protected function getFeedbackService()
+    protected function getFeedbackClient()
     {
         if ($this->feedbackClient === null) {
             $this->feedbackClient = ApnsClientBuilder::buildFeedback(

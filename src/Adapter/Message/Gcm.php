@@ -7,7 +7,7 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Service\Message;
+namespace Jgut\Tify\Adapter\Message;
 
 use Zend\Json\Json;
 use ZendService\Google\Exception\InvalidArgumentException;
