@@ -7,23 +7,23 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Adapter\Message;
+namespace Jgut\Tify\Tests\Adapter\Gcm;
 
-use Jgut\Tify\Adapter\Message\Gcm as Message;
+use Jgut\Tify\Adapter\Gcm\GcmMessage;
 
 /**
  * Custom Gcm message tests.
  */
-class GcmTest extends \PHPUnit_Framework_TestCase
+class GcmMessageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Adapter\Message\Gcm
+     * @var \Jgut\Tify\Adapter\Gcm\GcmMessage
      */
     protected $message;
 
     public function setUp()
     {
-        $this->message = new Message();
+        $this->message = new GcmMessage();
     }
 
     public function testMutatorsAccessors()

@@ -9,17 +9,15 @@
 
 namespace Jgut\Tify\Adapter;
 
-use Jgut\Tify\Notification;
-
 /**
- * Interface SendAdapterInterface
+ * Interface FeedbackAdapter
  */
-interface SendAdapterInterface
+interface FeedbackAdapter
 {
     /**
-     * Send a notification.
+     * Request feedback information.
      *
-     * @param \Jgut\Tify\Notification $notification
+     * @return array
      */
-    public function send(Notification $notification);
+    public function feedback();
 }

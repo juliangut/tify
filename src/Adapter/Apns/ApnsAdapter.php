@@ -7,22 +7,23 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Adapter;
+namespace Jgut\Tify\Adapter\Apns;
 
+use Jgut\Tify\Adapter\AbstractAdapter;
+use Jgut\Tify\Adapter\FeedbackAdapter;
+use Jgut\Tify\Adapter\SendAdapter;
 use Jgut\Tify\Exception\NotificationException;
 use Jgut\Tify\Exception\AdapterException;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Recipient\ApnsRecipient;
 use Jgut\Tify\Result;
-use Jgut\Tify\Adapter\Client\ApnsClientBuilder;
-use Jgut\Tify\Adapter\Message\ApnsMessageBuilder;
 use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 
 /**
  * Class ApnsAdapter
  */
-class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, FeedbackAdapterInterface
+class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapter
 {
     const RESULT_OK = 0;
 
@@ -31,7 +32,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, Feedb
      *
      * @var array
      */
-    private static $statusCodes = [
+    protected static $statusCodes = [
         0 => 'OK',
         1 => 'Processing Error',
         2 => 'Missing Recipient Token',
@@ -46,6 +47,13 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, Feedb
     ];
 
     /**
+     * APNS service builder.
+     *
+     * @var \Jgut\Tify\Adapter\Apns\ApnsBuilder
+     */
+    protected $builder;
+
+    /**
      * @var \ZendService\Apple\Apns\Client\Message
      */
     protected $pushClient;
@@ -56,11 +64,13 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, Feedb
     protected $feedbackClient;
 
     /**
-     * {@inheritdoc}
+     * @param array                               $parameters
+     * @param bool                                $sandbox
+     * @param \Jgut\Tify\Adapter\Apns\ApnsBuilder $builder
      *
      * @throws \Jgut\Tify\Exception\AdapterException
      */
-    public function __construct(array $parameters = [], $sandbox = false)
+    public function __construct(array $parameters = [], $sandbox = false, ApnsBuilder $builder = null)
     {
         parent::__construct($parameters, $sandbox);
 
@@ -71,6 +81,13 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, Feedb
                 sprintf('Certificate file "%s" does not exist or is not readable', $certificatePath)
             );
         }
+
+        // @codeCoverageIgnoreStart
+        if ($builder === null) {
+            $builder = new ApnsBuilder;
+        }
+        // @codeCoverageIgnoreEnd
+        $this->builder = $builder;
     }
 
     /**
@@ -95,10 +112,12 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, Feedb
                     $result->setStatus(Result::STATUS_ERROR);
                     $result->setStatusMessage(self::$statusCodes[$pushResponse->getCode()]);
                 }
+            // @codeCoverageIgnoreStart
             } catch (ApnsRuntimeException $exception) {
                 $result->setStatus(Result::STATUS_ERROR);
                 $result->setStatusMessage($exception->getMessage());
             }
+            // @codeCoverageIgnoreEnd
 
             $notification->addResult($result);
         }
@@ -117,15 +136,17 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, Feedb
         $client = $this->getFeedbackClient();
 
         try {
-            $feedbackResponse = $client->feedback();
+            /* @var \ZendService\Apple\Apns\Response\Feedback[] $feedbackResponses */
+            $feedbackResponses = $client->feedback();
+        // @codeCoverageIgnoreStart
         } catch (ApnsRuntimeException $exception) {
             throw new NotificationException($exception->getMessage(), $exception->getCode(), $exception);
         }
+        // @codeCoverageIgnoreEnd
 
         $responses = [];
 
-        /* @var \ZendService\Apple\Apns\Response\Feedback $response */
-        foreach ($feedbackResponse as $response) {
+        foreach ($feedbackResponses as $response) {
             $responses[] = $response->getToken();
         }
 
@@ -145,7 +166,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, Feedb
     protected function getPushClient()
     {
         if ($this->pushClient === null) {
-            $this->pushClient = ApnsClientBuilder::buildPush(
+            $this->pushClient = $this->builder->buildPushClient(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
                 $this->sandbox
@@ -163,7 +184,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, Feedb
     protected function getFeedbackClient()
     {
         if ($this->feedbackClient === null) {
-            $this->feedbackClient = ApnsClientBuilder::buildFeedback(
+            $this->feedbackClient = $this->builder->buildFeedbackClient(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
                 $this->sandbox
@@ -194,7 +215,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, Feedb
         );
 
         foreach ($recipients as $recipient) {
-            yield ApnsMessageBuilder::build($recipient, $notification);
+            yield $this->builder->buildPushMessage($recipient, $notification);
         }
     }
 

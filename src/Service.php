@@ -11,8 +11,8 @@ namespace Jgut\Tify;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Adapter\AbstractAdapter;
-use Jgut\Tify\Adapter\FeedbackAdapterInterface;
-use Jgut\Tify\Adapter\SendAdapterInterface;
+use Jgut\Tify\Adapter\FeedbackAdapter;
+use Jgut\Tify\Adapter\SendAdapter;
 
 /**
  * Notifications service.
@@ -122,11 +122,11 @@ class Service
     {
         $results = [];
 
-        /** @var \Jgut\Tify\Adapter\SendAdapterInterface[] $pushAdapters */
+        /** @var \Jgut\Tify\Adapter\SendAdapter[] $pushAdapters */
         $pushAdapters = array_filter(
             $this->adapters->toArray(),
             function (AbstractAdapter $adapter) {
-                return $adapter instanceof SendAdapterInterface;
+                return $adapter instanceof SendAdapter;
             }
         );
 
@@ -157,11 +157,11 @@ class Service
     {
         $results = [];
 
-        /** @var \Jgut\Tify\Adapter\FeedbackAdapterInterface[] $feedbackAdapters */
+        /** @var \Jgut\Tify\Adapter\FeedbackAdapter[] $feedbackAdapters */
         $feedbackAdapters = array_filter(
             $this->adapters->toArray(),
             function (AbstractAdapter $adapter) {
-                return $adapter instanceof FeedbackAdapterInterface;
+                return $adapter instanceof FeedbackAdapter;
             }
         );
 

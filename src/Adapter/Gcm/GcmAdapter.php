@@ -7,20 +7,20 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Adapter;
+namespace Jgut\Tify\Adapter\Gcm;
 
+use Jgut\Tify\Adapter\AbstractAdapter;
+use Jgut\Tify\Adapter\SendAdapter;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Recipient\GcmRecipient;
 use Jgut\Tify\Result;
-use Jgut\Tify\Adapter\Client\GcmClientBuilder;
-use Jgut\Tify\Adapter\Message\GcmMessageBuilder;
 use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 
 /**
  * Class GcmAdapter
  */
-class GcmAdapter extends AbstractAdapter implements SendAdapterInterface
+class GcmAdapter extends AbstractAdapter implements SendAdapter
 {
     /**
      * Status codes mapping.
@@ -29,7 +29,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapterInterface
      *
      * @var array
      */
-    private static $statusCodes = [
+    protected static $statusCodes = [
         'MissingRegistration' => 'Missing Registration Token',
         'InvalidRegistration' => 'Invalid Registration Token',
         'NotRegistered' => 'Unregistered Recipient',
@@ -46,9 +46,34 @@ class GcmAdapter extends AbstractAdapter implements SendAdapterInterface
     ];
 
     /**
+     * GCM service builder.
+     *
+     * @var \Jgut\Tify\Adapter\Gcm\GcmBuilder
+     */
+    protected $builder;
+
+    /**
      * @var \ZendService\Google\Gcm\Client
      */
     protected $pushClient;
+
+    /**
+     * @param array                             $parameters
+     * @param \Jgut\Tify\Adapter\Gcm\GcmBuilder $builder
+     *
+     * @throws \Jgut\Tify\Exception\AdapterException
+     */
+    public function __construct(array $parameters = [], GcmBuilder $builder = null)
+    {
+        parent::__construct($parameters);
+
+        // @codeCoverageIgnoreStart
+        if ($builder === null) {
+            $builder = new GcmBuilder;
+        }
+        // @codeCoverageIgnoreEnd
+        $this->builder = $builder;
+    }
 
     /**
      * {@inheritdoc}
@@ -81,11 +106,13 @@ class GcmAdapter extends AbstractAdapter implements SendAdapterInterface
 
                     $notification->addResult($result);
                 }
+            // @codeCoverageIgnoreStart
             } catch (GcmRuntimeException $exception) {
                 foreach ($message->getRegistrationIds() as $token) {
                     $notification->addResult(new Result($token, $time, Result::STATUS_ERROR, $exception->getMessage()));
                 }
             }
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -97,7 +124,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapterInterface
     protected function getPushClient()
     {
         if ($this->pushClient === null) {
-            $this->pushClient = GcmClientBuilder::buildPush($this->getParameter('api_key'));
+            $this->pushClient = $this->builder->buildPushClient($this->getParameter('api_key'));
         }
 
         return $this->pushClient;
@@ -131,7 +158,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapterInterface
         );
 
         foreach (array_chunk($tokens, 100) as $tokensRange) {
-            yield GcmMessageBuilder::build($tokensRange, $notification);
+            yield $this->builder->buildPushMessage($tokensRange, $notification);
         }
     }
 

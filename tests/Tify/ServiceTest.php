@@ -14,8 +14,8 @@ use Jgut\Tify\Result;
 use Jgut\Tify\Service;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Adapter\ApnsAdapter;
-use Jgut\Tify\Adapter\GcmAdapter;
+use Jgut\Tify\Adapter\Apns\ApnsAdapter;
+use Jgut\Tify\Adapter\Gcm\GcmAdapter;
 
 class ServiceTest extends \PHPUnit_Framework_TestCase
 {

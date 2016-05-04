@@ -7,16 +7,44 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Adapter\Message;
+namespace Jgut\Tify\Adapter\Gcm;
 
 use Jgut\Tify\Notification;
-use Jgut\Tify\Adapter\Message\Gcm as GcmMessage;
+use Zend\Http\Client\Adapter\Socket;
+use Zend\Http\Client as HttpClient;
+use ZendService\Google\Gcm\Client;
 
 /**
- * Class GcmMessageBuilder
+ * Class GcmBuilder
  */
-class GcmMessageBuilder
+class GcmBuilder
 {
+    /**
+     * Get opened push service client.
+     *
+     * @param string $apiKey
+     *
+     * @return \ZendService\Google\Gcm\Client
+     */
+    public function buildPushClient($apiKey)
+    {
+        $client = new Client;
+        $client->setApiKey($apiKey);
+
+        $httpClient = new HttpClient(
+            null,
+            [
+                'service' => Socket::class,
+                'strictredirects' => true,
+                'sslverifypeer' => false,
+            ]
+        );
+
+        $client->setHttpClient($httpClient);
+
+        return $client;
+    }
+
     /**
      * Get configured service message.
      *
@@ -28,7 +56,7 @@ class GcmMessageBuilder
      *
      * @return \ZendService\Google\Gcm\Message
      */
-    public static function build(array $tokens, Notification $notification)
+    public function buildPushMessage(array $tokens, Notification $notification)
     {
         $message = $notification->getMessage();
 

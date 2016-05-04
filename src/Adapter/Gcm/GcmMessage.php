@@ -7,19 +7,19 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Adapter\Message;
+namespace Jgut\Tify\Adapter\Gcm;
 
 use Zend\Json\Json;
 use ZendService\Google\Exception\InvalidArgumentException;
 use ZendService\Google\Exception\RuntimeException;
-use ZendService\Google\Gcm\Message as GcmMessage;
+use ZendService\Google\Gcm\Message;
 
 /**
  * Custom GCM service message.
  *
  * Implements notification payload parameters.
  */
-class Gcm extends GcmMessage
+class GcmMessage extends Message
 {
     /**
      * @var array
