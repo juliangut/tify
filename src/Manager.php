@@ -87,7 +87,6 @@ class Manager
             // @codeCoverageIgnoreStart
             if ($service instanceof SendInterface) {
                 $service->send($notification);
-
             }
             // @codeCoverageIgnoreEnd
 
