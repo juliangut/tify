@@ -67,7 +67,8 @@ class Notification
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(Message $message, array $recipients = [], array $parameters = []) {
+    public function __construct(Message $message, array $recipients = [], array $parameters = [])
+    {
         $this->message = $message;
 
         foreach ($recipients as $recipient) {

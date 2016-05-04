@@ -9,10 +9,10 @@
 
 namespace Jgut\Tify\Tests\Adapter\Gcm;
 
+use Jgut\Tify\Adapter\Gcm\GcmBuilder;
 use Jgut\Tify\Adapter\Gcm\GcmMessage;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Adapter\Gcm\GcmBuilder;
 use ZendService\Google\Gcm\Client;
 
 /**

@@ -140,7 +140,7 @@ class Service
             }
         }
 
-        $return = array();
+        $return = [];
         array_walk_recursive($results, function ($current) use (&$return) {
             $return[] = $current;
         });
@@ -169,7 +169,7 @@ class Service
             $results[] = $adapter->feedback();
         }
 
-        $return = array();
+        $return = [];
         array_walk_recursive($results, function ($current) use (&$return) {
             $return[] = $current;
         });

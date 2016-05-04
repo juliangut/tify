@@ -13,7 +13,6 @@ use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Result;
-use Jgut\Tify\Adapter\AbstractAdapter;
 
 /**
  * Notification tests.

@@ -9,7 +9,6 @@
 
 namespace Jgut\Tify\Tests\Mock;
 
-
 use Jgut\Tify\Adapter\AbstractAdapter;
 
 class AdapterMock extends AbstractAdapter

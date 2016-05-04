@@ -10,12 +10,12 @@
 namespace Jgut\Tify\Tests;
 
 use Jgut\Tify\Adapter\AbstractAdapter;
+use Jgut\Tify\Adapter\Apns\ApnsAdapter;
+use Jgut\Tify\Adapter\Gcm\GcmAdapter;
 use Jgut\Tify\Result;
 use Jgut\Tify\Service;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Adapter\Apns\ApnsAdapter;
-use Jgut\Tify\Adapter\Gcm\GcmAdapter;
 
 class ServiceTest extends \PHPUnit_Framework_TestCase
 {
