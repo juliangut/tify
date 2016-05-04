@@ -84,9 +84,12 @@ class Manager
             $notification->clearResults();
 
             $service = $notification->getService();
+            // @codeCoverageIgnoreStart
             if ($service instanceof SendInterface) {
                 $service->send($notification);
+
             }
+            // @codeCoverageIgnoreEnd
 
             $results->add($notification->getResults());
         }

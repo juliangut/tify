@@ -9,30 +9,31 @@
 
 namespace Jgut\Tify\Tests\Service\Message;
 
+use Jgut\Tify\Message;
+use Jgut\Tify\Notification;
+use Jgut\Tify\Recipient\ApnsRecipient;
+use Jgut\Tify\Service\ApnsService;
 use Jgut\Tify\Service\Message\ApnsMessageBuilder;
-use ZendService\Apple\Apns\Message;
+use ZendService\Apple\Apns\Message as ApnsMessage;
 
 /**
- * @covers \Jgut\Tify\Service\Message\ApnsBuilder
+ * Apns message builder tests.
  */
 class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers \Jgut\Tify\Service\Message\ApnsBuilder::build
-     */
     public function testPushClient()
     {
-        $recipient = new \Jgut\Tify\Recipient\ApnsRecipient(
+        $recipient = new ApnsRecipient(
             '9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527'
         );
 
-        $service = new \Jgut\Tify\Service\ApnsService(
+        $service = new ApnsService(
             ['certificate' => dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem']
         );
 
-        $message = new \Jgut\Tify\Message\ApnsMessage(['title' => 'title']);
+        $message = new Message(['title' => 'title']);
 
-        $notification = new \Jgut\Tify\Notification\ApnsNotification(
+        $notification = new Notification(
             $service,
             $message,
             [],
@@ -40,6 +41,6 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
         );
 
         $client = ApnsMessageBuilder::build($recipient, $notification);
-        $this->assertInstanceOf(Message::class, $client);
+        self::assertInstanceOf(ApnsMessage::class, $client);
     }
 }

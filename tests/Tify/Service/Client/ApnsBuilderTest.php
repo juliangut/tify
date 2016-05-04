@@ -14,35 +14,31 @@ use ZendService\Apple\Apns\Client\Feedback;
 use ZendService\Apple\Apns\Client\Message;
 
 /**
- * @covers \Jgut\Tify\Service\Client\ApnsBuilder
+ * Apns service builder
  */
 class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildPush
-     * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildClient
-     *
      * @expectedException \Jgut\Tify\Exception\ServiceException
-     * @expectedExceptionMessageRegExp /Unable to set local cert chain file/
+     * @expectedExceptionMessageRegExp /^Unable to connect/
+     * @expectedExceptionMessageRegExp /^Unable to set local cert chain file/
      */
     public function testPushClient()
     {
-        $client = ApnsClientBuilder::buildPush(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
+        $client = ApnsClientBuilder::buildPush(__DIR__ . '/../../../files/apns_certificate.pem');
 
-        $this->assertInstanceOf(Message::class, $client);
+        self::assertInstanceOf(Message::class, $client);
     }
 
     /**
-     * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildFeedback
-     * @covers \Jgut\Tify\Service\Client\ApnsBuilder::buildClient
-     *
      * @expectedException \Jgut\Tify\Exception\ServiceException
-     * @expectedExceptionMessageRegExp /Unable to set local cert chain file/
+     * @expectedExceptionMessageRegExp /^Unable to connect/
+     * @expectedExceptionMessageRegExp /^Unable to set local cert chain file/
      */
-    public function testPushFeedback()
+    public function testFeedbackClient()
     {
-        $client = ApnsClientBuilder::buildFeedback(dirname(dirname(dirname(__DIR__))) . '/files/apns_certificate.pem');
+        $client = ApnsClientBuilder::buildFeedback(__DIR__ . '/../../../files/apns_certificate.pem');
 
-        $this->assertInstanceOf(Feedback::class, $client);
+        self::assertInstanceOf(Feedback::class, $client);
     }
 }

@@ -9,6 +9,7 @@
 
 namespace Jgut\Tify\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Exception\ServiceException;
 use Jgut\Tify\ParameterTrait;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
@@ -45,11 +46,11 @@ abstract class AbstractService
         $parametersResolver->setRequired($this->getRequiredParameters());
 
         try {
-            $this->parameters = $parametersResolver->resolve($parameters);
+            $this->parameters = new ArrayCollection($parametersResolver->resolve($parameters));
         } catch (MissingOptionsException $exception) {
             throw new ServiceException(sprintf('Missing parameters on "%s"', self::class));
         } catch (\Exception $exception) {
-            throw new ServiceException('Invalid parameter provided');
+            throw new ServiceException('Invalid parameter provided' . $exception->getMessage());
         }
 
         $this->sandbox = (bool) $sandbox;

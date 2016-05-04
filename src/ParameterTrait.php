@@ -104,7 +104,7 @@ trait ParameterTrait
      */
     public function setParameter($parameter, $value)
     {
-        $this->initializePayload();
+        $this->initializeParameters();
 
         $this->parameters->set(trim($parameter), $value);
 

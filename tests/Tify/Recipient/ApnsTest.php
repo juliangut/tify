@@ -12,10 +12,13 @@ namespace Jgut\Tify\Tests\Recipient;
 use Jgut\Tify\Recipient\ApnsRecipient;
 
 /**
- * @covers \Jgut\Tify\Recipient\ApnsRecipient
+ * Apns recipient tests.
  */
 class ApnsTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Jgut\Tify\Recipient\ApnsRecipient
+     */
     protected $recipient;
 
     public function setUp()
@@ -24,8 +27,6 @@ class ApnsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Recipient\ApnsRecipient::setToken
-     *
      * @expectedException \InvalidArgumentException
      */
     public function testBadToken()

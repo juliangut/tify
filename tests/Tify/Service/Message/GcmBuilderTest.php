@@ -9,23 +9,26 @@
 
 namespace Jgut\Tify\Tests\Service\Message;
 
+use Jgut\Tify\Message;
+use Jgut\Tify\Notification;
+use Jgut\Tify\Service\GcmService;
 use Jgut\Tify\Service\Message\Gcm;
 use Jgut\Tify\Service\Message\GcmMessageBuilder;
 
 /**
- * @covers \Jgut\Tify\Service\Message\GcmBuilder
+ * Gcm message builder tests.
  */
 class GcmBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testPushClient()
     {
-        $service = new \Jgut\Tify\Service\GcmService(['api_key' => 'my_api_key']);
+        $service = new GcmService(['api_key' => 'my_api_key']);
 
-        $message = new \Jgut\Tify\Message(['title' => 'title', 'body' => 'body']);
+        $message = new Message(['title' => 'title', 'body' => 'body']);
 
-        $notification = new \Jgut\Tify\Notification($service, $message);
+        $notification = new Notification($service, $message);
 
         $client = GcmMessageBuilder::build(['my_token'], $notification);
-        $this->assertInstanceOf(Gcm::class, $client);
+        self::assertInstanceOf(Gcm::class, $client);
     }
 }

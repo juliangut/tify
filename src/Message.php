@@ -130,7 +130,7 @@ class Message
             }
         }
 
-        $this->payload[$parameter] = $value;
+        $this->parameters[$parameter] = $value;
 
         return $this;
     }

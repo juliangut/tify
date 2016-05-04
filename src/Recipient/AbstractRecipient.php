@@ -9,11 +9,15 @@
 
 namespace Jgut\Tify\Recipient;
 
+use Jgut\Tify\ParameterTrait;
+
 /**
  * Class AbstractRecipient
  */
 abstract class AbstractRecipient
 {
+    use ParameterTrait;
+
     /**
      * Recipient token.
      *

@@ -10,12 +10,16 @@
 namespace Jgut\Tify\Tests;
 
 use Jgut\Tify\Manager;
+use Jgut\Tify\Message;
+use Jgut\Tify\Notification;
+use Jgut\Tify\Service\ApnsService;
+use Jgut\Tify\Service\GcmService;
 
-/**
- * @covers \Jgut\Tify\Manager
- */
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Jgut\Tify\Manager
+     */
     protected $manager;
 
     public function setUp()
@@ -23,54 +27,45 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->manager = new Manager;
     }
 
-    /**
-     * @covers \Jgut\Tify\Manager::addNotification
-     * @covers \Jgut\Tify\Manager::getNotifications
-     */
     public function testAccesorsMutators()
     {
-        $this->assertEmpty($this->manager->getNotifications());
+        self::assertEmpty($this->manager->getNotifications());
 
         $this->manager->addNotification($this->getMock(
-            '\Jgut\Tify\Notification\AbstractNotification',
+            Notification::class,
             [],
             [],
             '',
             false
         ));
-        $this->assertCount(1, $this->manager->getNotifications());
+        self::assertCount(1, $this->manager->getNotifications());
 
         $this->manager->clearNotifications();
-        $this->assertCount(0, $this->manager->getNotifications());
+        self::assertCount(0, $this->manager->getNotifications());
     }
 
-    /**
-     * @covers \Jgut\Tify\Manager::push
-     */
     public function testSend()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\GcmService', [], [], '', false);
+        $service = $this->getMock(GcmService::class, [], [], '', false);
 
-        $message = $this->getMock('\Jgut\Tify\Message\GcmMessage', [], [], '', false);
+        $message = $this->getMock(Message::class, [], [], '', false);
 
-        $notification = $this->getMock('\Jgut\Tify\Notification\GcmNotification', [], [$service, $message, []]);
+        $notification = $this->getMock(Notification::class, [], [$service, $message, []]);
 
         $this->manager->addNotification($notification);
 
-        $this->assertCount(0, $this->manager->push());
+        self::assertCount(0, $this->manager->push());
     }
 
     /**
-     * @covers \Jgut\Tify\Manager::feedback
-     *
      * @expectedException \Jgut\Tify\Exception\ServiceException
      */
     public function testFeedback()
     {
-        $service = $this->getMock('\Jgut\Tify\Service\ApnsService', [], [], '', false);
-        $service->expects($this->once())->method('feedback')->will($this->returnValue([]));
+        $service = $this->getMock(ApnsService::class, [], [], '', false);
+        $service->expects(self::once())->method('feedback')->will(self::returnValue([]));
 
-        $this->assertCount(0, $this->manager->feedback($service));
+        self::assertCount(0, $this->manager->feedback($service));
 
         $service = $this->getMock('\Jgut\Tify\Service\GcmService', [], [], '', false);
         $this->manager->feedback($service);

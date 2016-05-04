@@ -77,7 +77,7 @@ class Gcm extends GcmMessage
         }
 
         if (array_key_exists($key, $this->notificationPayload)) {
-            throw new RuntimeException('$key conflicts with current set notification payload data');
+            throw new RuntimeException(sprintf('"%s" conflicts with current set notification payload data', $key));
         }
 
         $this->notificationPayload[$key] = $value;

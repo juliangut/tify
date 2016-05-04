@@ -229,7 +229,7 @@ class Notification
      */
     public function setStatus($status)
     {
-        if (!in_array($status, [self::STATUS_PENDING, self::STATUS_SENT])) {
+        if (!in_array($status, [self::STATUS_PENDING, self::STATUS_SENT], true)) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a valid status', $status));
         }
 

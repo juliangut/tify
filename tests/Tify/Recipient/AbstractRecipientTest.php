@@ -9,26 +9,28 @@
 
 namespace Jgut\Tify\Tests\Recipient;
 
+use Jgut\Tify\Recipient\AbstractRecipient;
+
 /**
- * @covers \Jgut\Tify\Recipient\AbstractRecipient
+ * AbstractRecipient tests.
  */
 class AbstractRecipientTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Jgut\Tify\Recipient\AbstractRecipient
+     */
     protected $recipient;
 
     public function setUp()
     {
         $this->recipient = $this->getMockForAbstractClass(
-            '\Jgut\Tify\Recipient\AbstractRecipient',
+            AbstractRecipient::class,
             ['9a4ecb987ef59c88b12035278b86f26d44883593']
         );
     }
 
-    /**
-     * @covers \Jgut\Tify\Recipient\AbstractRecipient::getToken
-     */
     public function testDefaults()
     {
-        $this->assertNull($this->recipient->getToken());
+        self::assertNull($this->recipient->getToken());
     }
 }

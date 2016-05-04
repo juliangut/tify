@@ -12,10 +12,13 @@ namespace Jgut\Tify\Tests\Recipient;
 use Jgut\Tify\Recipient\GcmRecipient;
 
 /**
- * @covers \Jgut\Tify\Recipient\GcmRecipient
+ * Gcm recipient tests.
  */
 class GcmTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Jgut\Tify\Recipient\GcmRecipient
+     */
     protected $recipient;
 
     public function setUp()
@@ -24,8 +27,6 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Recipient\GcmRecipient::setToken
-     *
      * @expectedException \InvalidArgumentException
      */
     public function testBadToken()

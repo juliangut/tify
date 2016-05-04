@@ -13,17 +13,14 @@ use Jgut\Tify\Service\Client\GcmClientBuilder;
 use ZendService\Google\Gcm\Client;
 
 /**
- * @covers \Jgut\Tify\Service\Client\GcmBuilder
+ * Gcm service builder
  */
 class GcmBuilderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers \Jgut\Tify\Service\Client\GcmBuilder::buildPush
-     */
     public function testPushClient()
     {
         $client = GcmClientBuilder::buildPush('my_api_key');
 
-        $this->assertInstanceOf(Client::class, $client);
+        self::assertInstanceOf(Client::class, $client);
     }
 }

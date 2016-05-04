@@ -9,42 +9,34 @@
 
 namespace Jgut\Tify\Tests\Service;
 
+use Jgut\Tify\Service\AbstractService;
+
 /**
- * @covers \Jgut\Tify\Service\AbstractService
+ * AbstractService tests.
  */
 class AbstractServiceTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Jgut\Tify\Service\AbstractService
+     */
     protected $service;
 
     public function setUp()
     {
-        $this->service = $this->getMockForAbstractClass(
-            '\Jgut\Tify\Service\AbstractService',
-            [],
-            '',
-            false,
-            false
-        );
+        $this->service = $this->getMockForAbstractClass(AbstractService::class, [], '', false);
     }
 
-    /**
-     * @covers \Jgut\Tify\Service\AbstractService::isSandbox
-     */
     public function testDefaults()
     {
-        $this->assertFalse($this->service->isSandbox());
+        self::assertFalse($this->service->isSandbox());
     }
 
-    /**
-     * @covers \Jgut\Tify\Service\AbstractService::setSandbox
-     * @covers \Jgut\Tify\Service\AbstractService::isSandbox
-     */
     public function testAccessorsMutators()
     {
         $this->service->setSandbox(true);
-        $this->assertTrue($this->service->isSandbox());
+        self::assertTrue($this->service->isSandbox());
 
         $this->service->setSandbox(false);
-        $this->assertFalse($this->service->isSandbox());
+        self::assertFalse($this->service->isSandbox());
     }
 }

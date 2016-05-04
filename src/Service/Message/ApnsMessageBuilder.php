@@ -36,7 +36,7 @@ class ApnsMessageBuilder
 
         $badge = ((int) $notification->getParameter('badge', 0) === 0)
             ? null
-            : $notification->getParameter('badge') + (int) $recipient->getData('badge', 0);
+            : $notification->getParameter('badge') + (int) $recipient->getParameter('badge', 0);
 
         $pushMessage = new ServiceMessage();
 

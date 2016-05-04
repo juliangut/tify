@@ -12,10 +12,13 @@ namespace Jgut\Tify\Tests\Service\Message;
 use Jgut\Tify\Service\Message\Gcm as Message;
 
 /**
- * @covers \Jgut\Tify\Service\Message\Gcm
+ * Custom Gcm message tests.
  */
 class GcmTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Jgut\Tify\Service\Message\Gcm
+     */
     protected $message;
 
     public function setUp()
@@ -23,30 +26,22 @@ class GcmTest extends \PHPUnit_Framework_TestCase
         $this->message = new Message();
     }
 
-    /**
-     * @covers \Jgut\Tify\Service\Message\Gcm::getNotificationPayload
-     * @covers \Jgut\Tify\Service\Message\Gcm::addNotificationPayload
-     * @covers \Jgut\Tify\Service\Message\Gcm::setNotificationPayload
-     * @covers \Jgut\Tify\Service\Message\Gcm::clearNotificationPayload
-     */
     public function testMutatorsAccessors()
     {
-        $this->assertCount(0, $this->message->getNotificationPayload());
+        self::assertCount(0, $this->message->getNotificationPayload());
 
         $this->message->addNotificationPayload('first', 'first');
-        $this->assertCount(1, $this->message->getNotificationPayload());
+        self::assertCount(1, $this->message->getNotificationPayload());
 
         $this->message->setNotificationPayload(['first' => 'first', 'second' => 'second']);
-        $this->assertCount(2, $this->message->getNotificationPayload());
+        self::assertCount(2, $this->message->getNotificationPayload());
 
         $this->message->clearNotificationPayload();
-        $this->assertCount(0, $this->message->getNotificationPayload());
+        self::assertCount(0, $this->message->getNotificationPayload());
     }
 
     /**
-     * @covers \Jgut\Tify\Service\Message\Gcm::addNotificationPayload
-     *
-     * @expectedException \ZendService\Google\Exception\InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testInvalidKey()
     {
@@ -54,9 +49,7 @@ class GcmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Jgut\Tify\Service\Message\Gcm::addNotificationPayload
-     *
-     * @expectedException \ZendService\Google\Exception\RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testDuplicatedKey()
     {
@@ -64,10 +57,6 @@ class GcmTest extends \PHPUnit_Framework_TestCase
         $this->message->addNotificationPayload('first', 'first');
     }
 
-    /**
-     * @covers \Jgut\Tify\Service\Message\Gcm::toJson
-     * @covers \Jgut\Tify\Service\Message\Gcm::getPayload
-     */
     public function testJsonResult()
     {
         $this->message->setRegistrationIds(['sdfshj']);
@@ -80,6 +69,6 @@ class GcmTest extends \PHPUnit_Framework_TestCase
         $this->message->addNotificationPayload('first', 'first');
 
         $result = json_decode($this->message->toJson());
-        $this->assertTrue(isset($result->notification->first));
+        self::assertTrue(isset($result->notification->first));
     }
 }
