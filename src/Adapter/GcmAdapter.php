@@ -20,7 +20,7 @@ use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 /**
  * Class GcmAdapter
  */
-class GcmAdapter extends AbstractAdapter implements SendInterface
+class GcmAdapter extends AbstractAdapter implements SendAdapterInterface
 {
     /**
      * Status codes mapping.
@@ -65,16 +65,16 @@ class GcmAdapter extends AbstractAdapter implements SendInterface
             $time = new \DateTime('now', new \DateTimeZone('UTC'));
 
             try {
-                $pushResponse = $client->send($message)->getResults();
+                $pushResponses = $client->send($message)->getResults();
 
                 foreach ($message->getRegistrationIds() as $token) {
                     $result = new Result($token, $time);
 
-                    if (!array_key_exists($token, $pushResponse) || array_key_exists('error', $pushResponse[$token])) {
+                    if (!array_key_exists($token, $pushResponses) || array_key_exists('error', $pushResponses[$token])) {
                         $result->setStatus(Result::STATUS_ERROR);
 
-                        $errorCode = array_key_exists($token, $pushResponse)
-                            ? $pushResponse[$token]['error']
+                        $errorCode = array_key_exists($token, $pushResponses)
+                            ? $pushResponses[$token]['error']
                             : 'UnknownError';
                         $result->setStatusMessage(self::$statusCodes[$errorCode]);
                     }
@@ -87,8 +87,6 @@ class GcmAdapter extends AbstractAdapter implements SendInterface
                 }
             }
         }
-
-        $notification->setStatus(Notification::STATUS_SENT);
     }
 
     /**

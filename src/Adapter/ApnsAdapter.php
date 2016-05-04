@@ -22,7 +22,7 @@ use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 /**
  * Class ApnsAdapter
  */
-class ApnsAdapter extends AbstractAdapter implements SendInterface, FeedbackInterface
+class ApnsAdapter extends AbstractAdapter implements SendAdapterInterface, FeedbackAdapterInterface
 {
     const RESULT_OK = 0;
 
@@ -103,8 +103,6 @@ class ApnsAdapter extends AbstractAdapter implements SendInterface, FeedbackInte
             $notification->addResult($result);
         }
 
-        $notification->setStatus(Notification::STATUS_SENT);
-
         $client->close();
         $this->pushClient = null;
     }
@@ -128,9 +126,7 @@ class ApnsAdapter extends AbstractAdapter implements SendInterface, FeedbackInte
 
         /* @var \ZendService\Apple\Apns\Response\Feedback $response */
         foreach ($feedbackResponse as $response) {
-            $time = new \DateTime(date('c', $response->getTime()));
-
-            $responses[$response->getToken()] = $time;
+            $responses[] = $response->getToken();
         }
 
         $client->close();

@@ -50,7 +50,7 @@ abstract class AbstractAdapter
         } catch (MissingOptionsException $exception) {
             throw new AdapterException(sprintf('Missing parameters on "%s"', self::class));
         } catch (\Exception $exception) {
-            throw new AdapterException('Invalid parameter provided' . $exception->getMessage());
+            throw new AdapterException('Invalid parameter provided');
         }
 
         $this->sandbox = (bool) $sandbox;

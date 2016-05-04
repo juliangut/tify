@@ -33,12 +33,7 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
 
         $message = new Message(['title' => 'title']);
 
-        $notification = new Notification(
-            $service,
-            $message,
-            [],
-            ['expire' => 600, 'badge' => 1]
-        );
+        $notification = new Notification($message, [], ['expire' => 600, 'badge' => 1]);
 
         $client = ApnsMessageBuilder::build($recipient, $notification);
         self::assertInstanceOf(ApnsMessage::class, $client);

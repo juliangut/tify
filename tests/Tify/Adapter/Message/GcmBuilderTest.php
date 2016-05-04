@@ -26,7 +26,7 @@ class GcmBuilderTest extends \PHPUnit_Framework_TestCase
 
         $message = new Message(['title' => 'title', 'body' => 'body']);
 
-        $notification = new Notification($service, $message);
+        $notification = new Notification($message);
 
         $client = GcmMessageBuilder::build(['my_token'], $notification);
         self::assertInstanceOf(Gcm::class, $client);

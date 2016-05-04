@@ -10,6 +10,7 @@
 namespace Jgut\Tify\Tests\Adapter;
 
 use Jgut\Tify\Adapter\AbstractAdapter;
+use Jgut\Tify\Tests\Mock\AdapterMock;
 
 /**
  * Abstract adapter tests.
@@ -24,6 +25,24 @@ class AbstractAdapterTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->adapter = $this->getMockForAbstractClass(AbstractAdapter::class, [], '', false);
+    }
+
+    /**
+     * @expectedException \Jgut\Tify\Exception\AdapterException
+     * @expectedExceptionMessage Invalid parameter provided
+     */
+    public function testUndefinedParameter()
+    {
+        $this->getMockForAbstractClass(AbstractAdapter::class, [['undefined' => null]]);
+    }
+
+    /**
+     * @expectedException \Jgut\Tify\Exception\AdapterException
+     * @expectedExceptionMessageRegExp /^Missing parameters/
+     */
+    public function testMissingParameter()
+    {
+        $this->getMockForAbstractClass(AdapterMock::class);
     }
 
     public function testDefaults()

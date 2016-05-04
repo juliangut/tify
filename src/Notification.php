@@ -20,9 +20,6 @@ class Notification
 {
     use ParameterTrait;
 
-    const STATUS_PENDING = 0;
-    const STATUS_SENT = 1;
-
     /**
      * Default notification parameters.
      *
@@ -45,11 +42,6 @@ class Notification
     ];
 
     /**
-     * @var \Jgut\Tify\Adapter\AbstractAdapter
-     */
-    protected $adapter;
-
-    /**
      * @var \Jgut\Tify\Message
      */
     protected $message;
@@ -58,11 +50,6 @@ class Notification
      * @var \Jgut\Tify\Recipient\AbstractRecipient[]
      */
     protected $recipients = [];
-
-    /**
-     * @var int
-     */
-    protected $status = self::STATUS_PENDING;
 
     /**
      * Notification results.
@@ -74,20 +61,13 @@ class Notification
     /**
      * Notification constructor.
      *
-     * @param \Jgut\Tify\Adapter\AbstractAdapter   $adapter
      * @param \Jgut\Tify\Message                   $message
      * @param \Jgut\Tify\Recipient\ApnsRecipient[] $recipients
      * @param array                                $parameters
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(
-        AbstractAdapter $adapter,
-        Message         $message,
-        array           $recipients = [],
-        array           $parameters = []
-    ) {
-        $this->adapter = $adapter;
+    public function __construct(Message $message, array $recipients = [], array $parameters = []) {
         $this->message = $message;
 
         foreach ($recipients as $recipient) {
@@ -96,34 +76,7 @@ class Notification
 
         $this->setParameters(array_merge($this->defaultParameters, $parameters));
 
-        $this->status = self::STATUS_PENDING;
         $this->results = new ArrayCollection;
-    }
-
-    /**
-     * Get adapter.
-     *
-     * @return \Jgut\Tify\Adapter\AbstractAdapter
-     */
-    public function getAdapter()
-    {
-        return $this->adapter;
-    }
-
-    /**
-     * Set adapter.
-     *
-     * @param \Jgut\Tify\Adapter\AbstractAdapter $adapter
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return $this
-     */
-    public function setAdapter(AbstractAdapter $adapter)
-    {
-        $this->adapter = $adapter;
-
-        return $this;
     }
 
     /**
@@ -184,56 +137,6 @@ class Notification
     public function clearRecipients()
     {
         $this->recipients = [];
-
-        return $this;
-    }
-
-    /**
-     * Retrieve notification status.
-     *
-     * @return int
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Check if notification status is sent.
-     *
-     * @return bool
-     */
-    public function isSent()
-    {
-        return $this->status === static::STATUS_SENT;
-    }
-
-    /**
-     * Check if notification status is pending.
-     *
-     * @return bool
-     */
-    public function isPending()
-    {
-        return $this->status === static::STATUS_PENDING;
-    }
-
-    /**
-     * Set notification status.
-     *
-     * @param int $status
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return $this
-     */
-    public function setStatus($status)
-    {
-        if (!in_array($status, [self::STATUS_PENDING, self::STATUS_SENT], true)) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a valid status', $status));
-        }
-
-        $this->status = $status;
 
         return $this;
     }

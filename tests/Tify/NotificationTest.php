@@ -21,11 +21,6 @@ use Jgut\Tify\Adapter\AbstractAdapter;
 class NotificationTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Adapter\AbstractAdapter
-     */
-    protected $service;
-
-    /**
      * @var \Jgut\Tify\Message
      */
     protected $message;
@@ -37,29 +32,20 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->service = $this->getMockForAbstractClass(AbstractAdapter::class);
         $this->message = $this->getMock(Message::class, [], [], '', false);
         $recipient = $this->getMockForAbstractClass(AbstractRecipient::class, [], '', false);
 
         $this->notification = $this->getMockForAbstractClass(
             Notification::class,
-            [$this->service, $this->message, [$recipient]]
+            [$this->message, [$recipient]]
         );
     }
 
     public function testDefaults()
     {
-        self::assertEquals($this->service, $this->notification->getAdapter());
         self::assertEquals($this->message, $this->notification->getMessage());
         self::assertCount(1, $this->notification->getRecipients());
         self::assertCount(0, $this->notification->getResults());
-    }
-
-    public function testService()
-    {
-        $service = $this->getMockForAbstractClass(AbstractAdapter::class);
-        $this->notification->setAdapter($service);
-        self::assertEquals($service, $this->notification->getAdapter());
     }
 
     public function testMessage()
@@ -77,28 +63,6 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
         $this->notification->clearRecipients();
         self::assertCount(0, $this->notification->getRecipients());
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testStatus()
-    {
-        self::assertEquals(Notification::STATUS_PENDING, $this->notification->getStatus());
-        self::assertFalse($this->notification->isSent());
-        self::assertTrue($this->notification->isPending());
-
-        $this->notification->setStatus(Notification::STATUS_SENT);
-        self::assertEquals(Notification::STATUS_SENT, $this->notification->getStatus());
-        self::assertTrue($this->notification->isSent());
-        self::assertFalse($this->notification->isPending());
-
-        $this->notification->setStatus(Notification::STATUS_PENDING);
-        self::assertEquals(Notification::STATUS_PENDING, $this->notification->getStatus());
-        self::assertFalse($this->notification->isSent());
-        self::assertTrue($this->notification->isPending());
-
-        $this->notification->setStatus('made_up_status');
     }
 
     public function testResults()
