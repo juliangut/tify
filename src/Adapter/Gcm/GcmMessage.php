@@ -50,8 +50,8 @@ class GcmMessage extends Message
     {
         $this->clearNotificationPayload();
 
-        foreach ($payload as $k => $v) {
-            $this->addNotificationPayload($k, $v);
+        foreach ($payload as $key => $value) {
+            $this->addNotificationPayload($key, $value);
         }
 
         return $this;
@@ -73,7 +73,7 @@ class GcmMessage extends Message
         $key = trim($key);
 
         if ($key === '') {
-            throw new InvalidArgumentException('$key must be a non-empty string');
+            throw new InvalidArgumentException('Notification payload key must be a non-empty string');
         }
 
         if (array_key_exists($key, $this->notificationPayload)) {
@@ -114,8 +114,14 @@ class GcmMessage extends Message
         if ($this->timeToLive !== 2419200) {
             $json['time_to_live'] = $this->timeToLive;
         }
+        if ($this->restrictedPackageName) {
+            $json['restricted_package_name'] = $this->restrictedPackageName;
+        }
+        if ($this->dryRun) {
+            $json['dry_run'] = $this->dryRun;
+        }
 
-        $json = array_merge($json, $this->getPayload());
+        $json = array_merge($json, $this->getCompoundPayload());
 
         return Json::encode($json);
     }
@@ -125,7 +131,7 @@ class GcmMessage extends Message
      *
      * @return array
      */
-    protected function getPayload()
+    protected function getCompoundPayload()
     {
         $payload = [];
 

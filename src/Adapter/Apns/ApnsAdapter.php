@@ -15,7 +15,7 @@ use Jgut\Tify\Adapter\SendAdapter;
 use Jgut\Tify\Exception\AdapterException;
 use Jgut\Tify\Exception\NotificationException;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Recipient\ApnsRecipient;
+use Jgut\Tify\Receiver\ApnsReceiver;
 use Jgut\Tify\Result;
 use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 
@@ -34,7 +34,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
     protected static $statusCodes = [
         0 => 'OK',
         1 => 'Processing Error',
-        2 => 'Missing Recipient Token',
+        2 => 'Missing Device Token',
         3 => 'Missing Topic',
         4 => 'Missing Payload',
         5 => 'Invalid Token Size',
@@ -208,16 +208,16 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
      */
     protected function getPushMessages(Notification $notification)
     {
-        /* @var \Jgut\Tify\Recipient\ApnsRecipient[] $recipients */
-        $recipients = array_filter(
-            $notification->getRecipients(),
-            function ($recipient) {
-                return $recipient instanceof ApnsRecipient;
+        /* @var \Jgut\Tify\Receiver\ApnsReceiver[] $receivers */
+        $receivers = array_filter(
+            $notification->getReceivers(),
+            function ($receiver) {
+                return $receiver instanceof ApnsReceiver;
             }
         );
 
-        foreach ($recipients as $recipient) {
-            yield $this->builder->buildPushMessage($recipient, $notification);
+        foreach ($receivers as $receiver) {
+            yield $this->builder->buildPushMessage($receiver, $notification);
         }
     }
 

@@ -26,169 +26,112 @@ Then require_once the autoload file:
 require_once './vendor/autoload.php';
 ```
 
-## Usage
+## Concepts
 
-Basic usage creating a message and sending it through GCM and APNS services.
+### Receiver
 
-```php
-use Jgut\Tify\Recipient\ApnsRecipient;
-use Jgut\Tify\Recipient\GcmRecipient;
-use Jgut\Tify\Manager;
-use Jgut\Tify\Message\ApnsMessage;
-use Jgut\Tify\Message\GcmMessage;
-use Jgut\Tify\Notification\ApnsNotification;
-use Jgut\Tify\Notification\GcmNotification;
-use Jgut\Tify\Service\AbstractService;
-use Jgut\Tify\Service\ApnsService;
-use Jgut\Tify\Service\GcmService;
-
-$message = [
-    'title' => 'title',
-    'body' => 'body',
-];
-
-//Create GCM service interface
-$gcmService = new GcmService(['api_key' => '00000']);
-
-//Create GCM message
-$gcmMessage = new GcnMessage($message);
-
-//Create a list of GCM recipients
-$gcmRecipients = [
-    new GcmRecipient('aaaaaaaaaaa'),
-    new GcmRecipient('bbbbbbbbbbb'),
-];
-
-//Combine previous to create a GCM notification
-$gcmNotification = new GcmNotification($gcmService, $gcmMessage, $gcmRecipients);
-
-
-//Create APNS service interface
-$apnsService = new ApnsService(['certificate' => 'path_to_certificate']);
-
-//Create APNS message
-$apnsMessage = new ApnsMessage($message);
-
-//Create a list of APNS recipients
-$apnsRecipients = [
-    new ApnsRecipient('ccccccccccc'),
-    new ApnsRecipient('ddddddddddd'),
-];
-
-//Combine previous to create a APNS notification
-$apnsNotification = new ApnsNotification($apnsService, $apnsMessage, $apnsRecipients);
-
-$manager = new Manager;
-$manager->addNotification($gcmNotification);
-$manager->addNotification($apnsNotification);
-
-$manager->send();
-```
-
-Except for the `Manager` component all the rest of the parts are service dependent, meaning there are recipients, messages and notificiations specific for the two services provided, Apple's `APNS` and Google's `GCM` and they have to combined accordingly.
-
-## Recipient
-
-Recipients have one mandatory parameter `token`.
+Each of the individual devices that will receive push notification. Identified by a device `token` provided by push service (APNS or GCM).
 
 ```php
-new \Jgut\Tify\Recipient\ApnsRecipient('recipient_token');
-new \Jgut\Tify\Recipient\GcmRecipient('recipient_token');
+new \Jgut\Tify\Receiver\ApnsReceiver('device_token');
+new \Jgut\Tify\Receiver\GcmReceiver('device_token');
 ```
 
-APNS recipients can store an additional `badge` parameter that will be used in junction with message `badge` parameter if provided.
+`device_token` follow different formats depending on service type. Review APNS and GCM documentation for proper formatting.
 
-## Message
+### Message
 
-Messages compose the final information arriving to recipients. GCM and APNS messages hold different information according to each service specification.
+Messages compose the final information arriving to receivers. GCM and APNS messages hold different information according to each service specification.
 
-In order for the message payload to be created `title` and/or `body` options should be provided. If they are not present custom message parameters should be included to be passed to the app.
+In order for the message payload to be created one of the following message parameters must be present:
 
-Messages can hold any number of custom parametes that will compose additional data sent to the destination clients.
+* APNS
+  * `title`
+  * `title_loc_key`
+  * `body`
+  * `loc_key`
+* GCM
+  * `title`
+  * `title_loc_key`
+  * `body`
+  * `body_loc_key`
 
-### APNS
+Messages can hold any number of custom payload data that will compose additional data sent to the destination receivers. This key/value payload must comply with some limitations to be fully compatible with different services (avoid using 'aps' or keys starting with 'google' and 'gcm').
 
-```php
-$message = new \Jgut\Tify\Message\ApnsMessage(['title' => 'title', 'body' => 'body']);
+*Find APNS message parameters [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-2.*
 
-$message->setOption('loc_key', 'LOCK_KEY');
-$message->setOption('launch_image', 'image.jpg');
-...
+*Find GCM message parameters [here](https://developers.google.com/cloud-messaging/http-server-ref#table2) in table 2.*
 
-$message->setParameter('param_1', 'value_1');
-$message->setParameter('param_2', 'value_2');
-```
+*Payload data should not be a reserved word (`aps`, `from` or any word starting with `google` or `gcm`) or any GCM notification parameters.*
 
-*Find options [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-2.*
+### Notification
 
-*There can not be an `aps` parameter as it is reserved by the APNS service.*
+Container to keep a message and its associated destination receivers.
 
-### GCM
+Notifications hold some extra parameters used by the push notification services to control behaviour and/or be used in notification creation
 
-```php
-$message = new \Jgut\Tify\Message\GcmMessage;
-$message->setTitle('title');
-$message->setBody('body');
+*Find APNS notification parameters [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-1.*
 
-$message->setOption('click_action', 'OPEN_ACTIVITY_1');
-$message->setOption('icon', 'icon.png');
-...
+*Find GCM notification parameters [here](https://developers.google.com/cloud-messaging/http-server-ref#table1) in table 1.*
 
-$message->setParameter('param_1', 'value_1');
-$message->setParameter('param_2', 'value_2');
-```
+### Adapter
 
-*Find options [here](https://developers.google.com/cloud-messaging/http-server-ref#table2) in table 2.*
+Adapters will be given notifications to actually send the messages to associated receivers using the corresponding notification service. Receivers will be automatically filtered for the correct service.
 
-*Parameters should not be a reserved word (`from` or any word starting with `google` or `gcm`) or any GCM notification option. See [here](https://developers.google.com/cloud-messaging/http-server-ref#table2) for information on message options (notification payload)*
-
-## Notification
-
-Each notification holds all the information to send a notification using the desired service. Each kind of service has its own options.
-
-### APNS
-
-```php
-$notification = new \Jgut\Tify\Notification\ApnsNotification($apnsService, $apnsMessage, $apnsRecipients, $options);
-
-$notification->setOption('expire', 600);
-$notification->setOption('badge', 1);
-```
-
-*Find options [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-1.*
-
-### GCM
-
-```php
-$notification = new \Jgut\Tify\Notification\GcmNotification($apnsService, $apnsMessage, $apnsRecipients, $options);
-
-$notification->setOption('time_to_live', 600);
-$notification->setOption('dry_run', false);
-```
-
-*Find options [here](https://developers.google.com/cloud-messaging/http-server-ref#table1) in table 1.*
-
-## Service
-
-It is the piece that actually sends the messages. Services can be shared between notifications so normally you won't need to create more than one service for GCM and another for APNS and reuse them in all the notifications.
-
-For APNS service `certificate` option is mandatory, denoting the path to the service certificate. In GCM `api_key` is the mandatory option denoting Google API key.
+For APNS adapter `certificate` parameter is mandatory, denoting the path to the service certificate (.pem file). In GCM `api_key` is the mandatory parameter denoting Google API key.
 
 ```php
 $apnsService = new \Jgut\Tify\Service\ApnsService(['certificate' => 'path_to_certificate.pem']);
 $gcmService = new \Jgut\Tify\Service\GcmService(['api_key' => 'google_api_key']);
 ```
 
-## Manager
+### Service
 
-Holds the list of notifications and exposes two methods:
+For simplicity instead of handing notifications to adapters one by one 'Tify Service' can be used to send Notifications to its corresponding receivers using correct provided Adapters automatically merging notification Results into a single array.
 
-* `push` performs notifications send to devices.
-* `feedback` uses APNS feedback service.
+### Result
 
-## Result
+`push` service returns a list of Result objects in order to match non-equal returning data from APNS and GCM services. Provides one common interface to access services return data.
 
-`push` service returns a list of Result objects in order to match return data from APNS and GCM services and have one common interface. This objects are composed of device token, date, status and status message.
+This objects are composed of device token, date, status and status message (in case of error).
+
+## Usage
+
+Basic usage creating a message and sending it through GCM and APNS services.
+
+```php
+use Jgut\Tify\Adapter\Apns\ApnsAdapter;
+use Jgut\Tify\Adapter\Gcm\GcmAdapter;
+use Jgut\Tify\Message;
+use Jgut\Tify\Notification;
+use Jgut\Tify\Receiver\ApnsReceiver;
+use Jgut\Tify\Receiver\GcmReceiver;
+use Jgut\Tify\Service;
+
+$adapters = [
+    new GcmAdapter(['api_key' => '00000']),
+    new ApnsAdapter(['certificate' => 'path_to_certificate'])
+];
+
+$message = new Message([
+    'title' => 'title',
+    'body' => 'body',
+]);
+
+$receivers = [
+    new GcmReceiver('aaaaaaaaaaa'),
+    new GcmReceiver('bbbbbbbbbbb'),
+    new ApnsReceiver('ccccccccccc'),
+    new ApnsReceiver('ddddddddddd'),
+];
+
+$notifications = [
+    new Notification($message, $receivers)
+];
+
+$service = new Service($adapters, $notifications);
+$results = $service->send();
+```
 
 ## Contributing
 

@@ -11,7 +11,7 @@ namespace Jgut\Tify\Tests\Notification;
 
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Recipient\AbstractRecipient;
+use Jgut\Tify\Receiver\AbstractReceiver;
 use Jgut\Tify\Result;
 
 /**
@@ -32,18 +32,18 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->message = $this->getMock(Message::class, [], [], '', false);
-        $recipient = $this->getMockForAbstractClass(AbstractRecipient::class, [], '', false);
+        $receiver = $this->getMockForAbstractClass(AbstractReceiver::class, [], '', false);
 
         $this->notification = $this->getMockForAbstractClass(
             Notification::class,
-            [$this->message, [$recipient]]
+            [$this->message, [$receiver]]
         );
     }
 
     public function testDefaults()
     {
         self::assertEquals($this->message, $this->notification->getMessage());
-        self::assertCount(1, $this->notification->getRecipients());
+        self::assertCount(1, $this->notification->getReceivers());
         self::assertCount(0, $this->notification->getResults());
     }
 
@@ -54,14 +54,14 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         self::assertEquals($message, $this->notification->getMessage());
     }
 
-    public function testRecipients()
+    public function testReceivers()
     {
-        $recipient = $this->getMockForAbstractClass(AbstractRecipient::class, [], '', false);
-        $this->notification->addRecipient($recipient);
-        self::assertCount(1, $this->notification->getRecipients());
+        $receiver = $this->getMockForAbstractClass(AbstractReceiver::class, [], '', false);
+        $this->notification->addReceiver($receiver);
+        self::assertCount(1, $this->notification->getReceivers());
 
-        $this->notification->clearRecipients();
-        self::assertCount(0, $this->notification->getRecipients());
+        $this->notification->clearReceivers();
+        self::assertCount(0, $this->notification->getReceivers());
     }
 
     public function testResults()

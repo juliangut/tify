@@ -54,7 +54,7 @@ class GcmBuilder
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      *
-     * @return \ZendService\Google\Gcm\Message
+     * @return \Jgut\Tify\Adapter\Gcm\GcmMessage
      */
     public function buildPushMessage(array $tokens, Notification $notification)
     {
@@ -69,9 +69,11 @@ class GcmBuilder
             ->setTimeToLive($notification->getParameter('time_to_live'))
             ->setRestrictedPackageName($notification->getParameter('restricted_package_name'))
             ->setDryRun($notification->getParameter('dry_run'))
-            ->setData($message->getPayload());
+            ->setData($message->getPayloadData());
 
-        if ($message->getParameter('title') !== null || $message->getParameter('body') !== null) {
+        if ($message->getParameter('title') !== null || $message->getParameter('body') !== null
+            || $message->getParameter('title_loc_key') !== null || $message->getParameter('body_loc_key') !== null
+        ) {
             $pushMessage->setNotificationPayload($message->getParameters());
         }
 

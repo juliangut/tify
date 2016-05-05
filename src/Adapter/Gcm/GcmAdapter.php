@@ -12,7 +12,7 @@ namespace Jgut\Tify\Adapter\Gcm;
 use Jgut\Tify\Adapter\AbstractAdapter;
 use Jgut\Tify\Adapter\SendAdapter;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Recipient\GcmRecipient;
+use Jgut\Tify\Receiver\GcmReceiver;
 use Jgut\Tify\Result;
 use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 
@@ -31,7 +31,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
     protected static $statusCodes = [
         'MissingRegistration' => 'Missing Registration Token',
         'InvalidRegistration' => 'Invalid Registration Token',
-        'NotRegistered' => 'Unregistered Recipient',
+        'NotRegistered' => 'Unregistered Device',
         'InvalidPackageName' => 'Invalid Package Name',
         'MismatchSenderId' => 'Mismatched Sender',
         'MessageTooBig' => 'Message Too Big',
@@ -39,7 +39,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
         'InvalidTtl' => 'Invalid Time to Live',
         'Unavailable' => 'Timeout',
         'InternalServerError' => 'Internal Server Error',
-        'RecipientMessageRateExceeded' => 'Recipient Message Rate Exceeded',
+        'DeviceMessageRateExceeded' => 'Device Message Rate Exceeded',
         'TopicsMessageRateExceeded' => 'Topics Message Rate Exceeded',
         'UnknownError' => 'Unknown Error',
     ];
@@ -143,20 +143,20 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
      */
     protected function getPushMessages(Notification $notification)
     {
-        /* @var \Jgut\Tify\Recipient\GcmRecipient[] $recipients */
-        $recipients = array_filter(
-            $notification->getRecipients(),
-            function ($recipient) {
-                return $recipient instanceof GcmRecipient;
+        /* @var \Jgut\Tify\Receiver\GcmReceiver[] $receivers */
+        $receivers = array_filter(
+            $notification->getReceivers(),
+            function ($receiver) {
+                return $receiver instanceof GcmReceiver;
             }
         );
 
         $tokens = array_map(
-            function ($recipient) {
-                /* @var \Jgut\Tify\Recipient\GcmRecipient $recipient */
-                return $recipient->getToken();
+            function ($receiver) {
+                /* @var \Jgut\Tify\Receiver\GcmReceiver $receiver */
+                return $receiver->getToken();
             },
-            $recipients
+            $receivers
         );
 
         foreach (array_chunk($tokens, 100) as $tokensRange) {

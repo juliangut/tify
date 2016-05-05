@@ -7,12 +7,12 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Recipient;
+namespace Jgut\Tify\Receiver;
 
 /**
- * Class GcmRecipient
+ * Class GcmReceiver
  */
-class GcmRecipient extends AbstractRecipient
+class GcmReceiver extends AbstractReceiver
 {
     /**
      * {@inheritdoc}

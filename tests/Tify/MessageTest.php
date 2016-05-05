@@ -33,6 +33,9 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     {
         self::assertTrue($this->message->hasParameter($parameter));
         self::assertNull($this->message->getParameter($parameter));
+
+        self::assertNull($this->message->getPayload('any_parameter'));
+        self::assertEmpty($this->message->getPayloadData());
     }
 
     public function defaultParametersProvider()
@@ -52,25 +55,42 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('message body', $this->message->getParameter('body'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidAPNSParameter()
+    public function testPayload()
     {
-        $this->message->setParameter('apc', 'value');
+        $this->message->setPayload('first', true);
+        self::assertTrue($this->message->hasPayload('first'));
+        self::assertTrue($this->message->getPayload('first'));
+        self::assertCount(1, $this->message->getPayloadData());
+
+        $this->message->setPayloadData([
+            'second' => 'second',
+            'third' => 'third',
+        ]);
+        self::assertTrue($this->message->hasPayload('second'));
+        self::assertCount(2, $this->message->getPayloadData());
     }
 
     /**
-     * @dataProvider invalidGCMParametersProvider
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidAPNSPayload()
+    {
+        $this->message->setPayload('apc', 'value');
+    }
+
+    /**
+     * @dataProvider invalidGCMPayloadProvider
+     *
+     * @param string $parameter
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidGCMParameter($parameter)
+    public function testInvalidGCMPayload($parameter)
     {
-        $this->message->setParameter($parameter, 'value');
+        $this->message->setPayload($parameter, 'value');
     }
 
-    public function invalidGCMParametersProvider()
+    public function invalidGCMPayloadProvider()
     {
         return [
             ['google'],
@@ -83,6 +103,8 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             ['time_to_live'],
             ['restricted_package_name'],
             ['dry_run'],
+            ['priority'],
+            ['content_available'],
         ];
     }
 }

@@ -13,7 +13,7 @@ use Jgut\Tify\Adapter\Apns\ApnsAdapter;
 use Jgut\Tify\Adapter\Apns\ApnsBuilder;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Recipient\ApnsRecipient;
+use Jgut\Tify\Receiver\ApnsReceiver;
 use ZendService\Apple\Apns\Client\Feedback as FeedbackClient;
 use ZendService\Apple\Apns\Client\Message as MessageClient;
 use ZendService\Apple\Apns\Message as ServiceMessage;
@@ -71,9 +71,9 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
     {
         $message = $this->getMock(Message::class, [], [], '', false);
 
-        $recipient = $this->getMock(ApnsRecipient::class, [], [], '', false);
+        $receiver = $this->getMock(ApnsReceiver::class, [], [], '', false);
 
-        $notification = new Notification($message, [$recipient]);
+        $notification = new Notification($message, [$receiver]);
         $this->adapter->send($notification);
 
         self::assertCount(1, $notification->getResults());

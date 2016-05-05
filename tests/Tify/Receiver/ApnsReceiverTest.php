@@ -7,23 +7,23 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Recipient;
+namespace Jgut\Tify\Tests\Receiver;
 
-use Jgut\Tify\Recipient\GcmRecipient;
+use Jgut\Tify\Receiver\ApnsReceiver;
 
 /**
- * Gcm recipient tests.
+ * Apns receiver tests.
  */
-class GcmTest extends \PHPUnit_Framework_TestCase
+class ApnsReceiverTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Recipient\GcmRecipient
+     * @var \Jgut\Tify\Receiver\ApnsReceiver
      */
-    protected $recipient;
+    protected $receiver;
 
     public function setUp()
     {
-        $this->recipient = new GcmRecipient('f59c88b12035278b86f26d448835939a');
+        $this->receiver = new ApnsReceiver('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
     }
 
     /**
@@ -31,6 +31,6 @@ class GcmTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadToken()
     {
-        $this->recipient->setToken('    ');
+        $this->receiver->setToken('non_hex_short_token');
     }
 }

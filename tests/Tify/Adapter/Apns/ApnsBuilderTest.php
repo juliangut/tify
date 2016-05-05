@@ -12,7 +12,7 @@ namespace Jgut\Tify\Tests\Adapter\Apns;
 use Jgut\Tify\Adapter\Apns\ApnsBuilder;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Recipient\ApnsRecipient;
+use Jgut\Tify\Receiver\ApnsReceiver;
 use ZendService\Apple\Apns\Client\Feedback as FeedbackClient;
 use ZendService\Apple\Apns\Client\Message as MessageClient;
 use ZendService\Apple\Apns\Message as ApnsMessage;
@@ -58,15 +58,20 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testPushMessage()
     {
-        $recipient = new ApnsRecipient(
+        $receiver = new ApnsReceiver(
             '9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527'
         );
 
-        $message = new Message(['title' => 'title']);
+        $message = new Message(['title_loc_key' => 'MESSAGE_TITLE']);
 
-        $notification = new Notification($message, [], ['expire' => 600, 'badge' => 1]);
+        $urlArgs = ['arg1' => 'val1'];
+        $notification = new Notification($message, [$receiver], ['url-args' => $urlArgs, 'expire' => 600]);
 
-        $client = $this->builder->buildPushMessage($recipient, $notification);
-        self::assertInstanceOf(ApnsMessage::class, $client);
+        $pushMessage = $this->builder->buildPushMessage($receiver, $notification);
+
+        self::assertInstanceOf(ApnsMessage::class, $pushMessage);
+        self::assertEquals($urlArgs, $pushMessage->getUrlArgs());
+        self::assertEquals(600, $pushMessage->getExpire());
+        self::assertEquals('MESSAGE_TITLE', $pushMessage->getAlert()->getTitleLocKey());
     }
 }

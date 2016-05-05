@@ -14,7 +14,7 @@ use Jgut\Tify\Adapter\Gcm\GcmBuilder;
 use Jgut\Tify\Adapter\Gcm\GcmMessage;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Recipient\GcmRecipient;
+use Jgut\Tify\Receiver\GcmReceiver;
 use ZendService\Google\Gcm\Client;
 use ZendService\Google\Gcm\Response;
 
@@ -59,10 +59,10 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
     {
         $message = $this->getMock(Message::class, [], [], '', false);
 
-        $recipient = $this->getMock(GcmRecipient::class, [], [], '', false);
-        $recipient->expects(self::any())->method('getToken')->will(self::returnValue('aaa'));
+        $receiver = $this->getMock(GcmReceiver::class, [], [], '', false);
+        $receiver->expects(self::any())->method('getToken')->will(self::returnValue('aaa'));
 
-        $notification = new Notification($message, [$recipient]);
+        $notification = new Notification($message, [$receiver]);
         $this->adapter->send($notification);
 
         self::assertCount(2, $notification->getResults());

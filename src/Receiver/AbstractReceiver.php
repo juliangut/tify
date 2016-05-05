@@ -7,19 +7,17 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Recipient;
+namespace Jgut\Tify\Receiver;
 
 use Jgut\Tify\ParameterTrait;
 
 /**
- * Class AbstractRecipient
+ * Class AbstractReceiver
  */
-abstract class AbstractRecipient
+abstract class AbstractReceiver
 {
-    use ParameterTrait;
-
     /**
-     * Recipient token.
+     * Receiver token.
      *
      * @var string
      */

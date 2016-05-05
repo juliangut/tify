@@ -7,30 +7,30 @@
  * @license https://github.com/juliangut/tify/blob/master/LICENSE
  */
 
-namespace Jgut\Tify\Tests\Recipient;
+namespace Jgut\Tify\Tests\Receiver;
 
-use Jgut\Tify\Recipient\AbstractRecipient;
+use Jgut\Tify\Receiver\AbstractReceiver;
 
 /**
- * AbstractRecipient tests.
+ * AbstractReceiver tests.
  */
-class AbstractRecipientTest extends \PHPUnit_Framework_TestCase
+class AbstractReceiverTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Recipient\AbstractRecipient
+     * @var \Jgut\Tify\Receiver\AbstractReceiver
      */
-    protected $recipient;
+    protected $receiver;
 
     public function setUp()
     {
-        $this->recipient = $this->getMockForAbstractClass(
-            AbstractRecipient::class,
+        $this->receiver = $this->getMockForAbstractClass(
+            AbstractReceiver::class,
             ['9a4ecb987ef59c88b12035278b86f26d44883593']
         );
     }
 
     public function testDefaults()
     {
-        self::assertNull($this->recipient->getToken());
+        self::assertNull($this->receiver->getToken());
     }
 }
