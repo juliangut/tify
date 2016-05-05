@@ -99,7 +99,7 @@ class ApnsBuilder
     {
         $message = $notification->getMessage();
 
-        $id = sha1(
+        $messageId = sha1(
             sprintf(
                 '%s%s%s%s',
                 $receiver->getToken(),
@@ -111,7 +111,7 @@ class ApnsBuilder
         $badge = (int) $notification->getParameter('badge') === 0 ? null : (int) $notification->getParameter('badge');
 
         $pushMessage = (new ServiceMessage())
-            ->setId($id)
+            ->setId($messageId)
             ->setToken($receiver->getToken())
             ->setBadge($badge)
             ->setSound($notification->getParameter('sound'))
