@@ -56,13 +56,13 @@ In order for the message payload to be created one of the following message para
   * `body`
   * `body_loc_key`
 
-Messages can hold any number of custom payload data that will compose additional data sent to the destination receivers. This key/value payload must comply with some limitations to be fully compatible with different services (avoid using 'aps' or keys starting with 'google' and 'gcm').
+Messages can hold any number of custom payload data that will compose additional data sent to the destination receivers.
+
+This key/value payload data must comply with some limitations to be fully compatible with different services at once, for this a prefix (`data_` by default) is automatically added to the key. This prefix can be changed or removed if needed, but be aware that payload data should not be a reserved word (`aps`, `from` or any word starting with `google` or `gcm`) or any GCM notification parameters.
 
 *Find APNS message parameters [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-2.*
 
 *Find GCM message parameters [here](https://developers.google.com/cloud-messaging/http-server-ref#table2) in table 2.*
-
-*Payload data should not be a reserved word (`aps`, `from` or any word starting with `google` or `gcm`) or any GCM notification parameters.*
 
 ### Notification
 

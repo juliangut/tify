@@ -53,6 +53,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         $this->message->setBody('message body');
         self::assertEquals('message body', $this->message->getParameter('body'));
+
+        self::assertEquals('data_', $this->message->getPayloadPrefix());
+        $this->message->setPayloadPrefix('');
+        self::assertEquals('', $this->message->getPayloadPrefix());
     }
 
     public function testPayload()
@@ -75,6 +79,8 @@ class MessageTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidAPNSPayload()
     {
+        $this->message->setPayloadPrefix('');
+
         $this->message->setPayload('apc', 'value');
     }
 
@@ -87,6 +93,8 @@ class MessageTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidGCMPayload($parameter)
     {
+        $this->message->setPayloadPrefix('');
+
         $this->message->setPayload($parameter, 'value');
     }
 

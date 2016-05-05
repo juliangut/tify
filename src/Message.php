@@ -19,34 +19,7 @@ class Message
     use ParameterTrait;
 
     /**
-     * List of reserved payload data.
-     *
-     * @see https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG
-     *          /Chapters/TheNotificationPayload.html
-     * @see https://developers.google.com/cloud-messaging/http-server-ref#downstream-http-messages-json
-     *
-     * @var array
-     */
-    protected static $reservedRegex = [
-        // APNS
-        '/^apc$/',
-
-        // GCM
-        '/^(google|gcm)/',
-        '/^from$/',
-        '/^collapse_key$/',
-        '/^delay_while_idle$/',
-        '/^time_to_live$/',
-        '/^restricted_package_name$/',
-        '/^dry_run$/',
-        '/^priority$/',
-        '/^content_available$/',
-    ];
-
-    /**
      * Default message parameters.
-     *
-     * @see self::$reserverRegex
      *
      * @var array
      */
@@ -75,7 +48,35 @@ class Message
     ];
 
     /**
-     * Data payload.
+     * Reserved payload keys.
+     *
+     * @var array
+     */
+    protected static $reservedKeyRegex = [
+        // APNS
+        '/^apc$/',
+
+        // GCM
+        '/^(google|gcm)/',
+        '/^from$/',
+        '/^collapse_key$/',
+        '/^delay_while_idle$/',
+        '/^time_to_live$/',
+        '/^restricted_package_name$/',
+        '/^dry_run$/',
+        '/^priority$/',
+        '/^content_available$/',
+    ];
+
+    /**
+     * Payload prefix
+     *
+     * @var string
+     */
+    protected $payloadPrefix = 'data_';
+
+    /**
+     * Message payload.
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
@@ -129,6 +130,30 @@ class Message
     }
 
     /**
+     * Retrieve payload prefix.
+     *
+     * @return string
+     */
+    public function getPayloadPrefix()
+    {
+        return $this->payloadPrefix;
+    }
+
+    /**
+     * Set payload prefix.
+     *
+     * @param string $prefix
+     *
+     * @return $this
+     */
+    public function setPayloadPrefix($prefix)
+    {
+        $this->payloadPrefix = trim($prefix);
+
+        return $this;
+    }
+
+    /**
      * Get payload data.
      *
      * @return array
@@ -149,8 +174,8 @@ class Message
     {
         $this->payload->clear();
 
-        foreach ($data as $payload => $value) {
-            $this->setPayload($payload, $value);
+        foreach ($data as $key => $value) {
+            $this->setPayload($key, $value);
         }
 
         return $this;
@@ -159,54 +184,76 @@ class Message
     /**
      * Has payload data.
      *
-     * @param string $payload
+     * @param string $key
      *
      * @return bool
      */
-    public function hasPayload($payload)
+    public function hasPayload($key)
     {
-        return $this->payload->containsKey($payload);
+        return $this->payload->containsKey($this->composePayloadKey($key));
     }
 
     /**
      * Get payload data.
      *
-     * @param string $payload
+     * @param string $key
      * @param mixed  $default
      *
      * @return mixed
      */
-    public function getPayload($payload, $default = null)
+    public function getPayload($key, $default = null)
     {
-        return $this->payload->containsKey($payload) ? $this->payload->get($payload) : $default;
+        $key = $this->composePayloadKey($key);
+
+        return $this->payload->containsKey($key) ? $this->payload->get($key) : $default;
     }
 
     /**
      * Set payload data.
      *
-     * @param string $payload
+     * @param string $key
      * @param mixed  $value
      *
      * @throws \InvalidArgumentException
      *
      * @return $this
      */
-    public function setPayload($payload, $value)
+    public function setPayload($key, $value)
     {
-        $payload = trim($payload);
+        $key = $this->composePayloadKey($key);
 
-        foreach (self::$reservedRegex as $reservedRegex) {
-            if (preg_match($reservedRegex, $payload)) {
+        foreach (self::$reservedKeyRegex as $reservedKeyRegex) {
+            if (preg_match($reservedKeyRegex, $key)) {
                 throw new \InvalidArgumentException(sprintf(
-                    '"%s" can not be used as custom data, starts or contains the reserved string "%s"',
-                    $payload,
-                    preg_replace('![/^$]!', '', $reservedRegex)
+                    '"%s" can not be used as message payload key, starts or contains the reserved string "%s"',
+                    $key,
+                    preg_replace('![/^$]!', '', $reservedKeyRegex)
                 ));
             }
         }
 
-        $this->payload->set($payload, $value);
+        $this->payload->set($key, $value);
 
         return $this;
+    }
+
+    /**
+     * Compose payload key with prefix.
+     *
+     * @param string $key
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return string
+     */
+    protected function composePayloadKey($key)
+    {
+        $key = trim($key);
+
+        if ($key === '') {
+            throw new \InvalidArgumentException('Payload parameter key can not be empty');
+        }
+
+        return $this->payloadPrefix . $key;
     }
 }
