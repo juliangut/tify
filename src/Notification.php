@@ -23,7 +23,7 @@ class Notification
      * Default notification parameters.
      *
      * @see https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG
-                /Chapters/TheNotificationPayload.html
+     *          /Chapters/TheNotificationPayload.html
      * @see https://developers.google.com/cloud-messaging/http-server-ref#downstream-http-messages-json
      *
      * @var array
@@ -65,9 +65,9 @@ class Notification
     /**
      * Notification constructor.
      *
-     * @param \Jgut\Tify\Message                   $message
+     * @param \Jgut\Tify\Message                 $message
      * @param \Jgut\Tify\Receiver\ApnsReceiver[] $receivers
-     * @param array                                $parameters
+     * @param array                              $parameters
      *
      * @throws \InvalidArgumentException
      */

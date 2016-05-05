@@ -9,8 +9,6 @@
 
 namespace Jgut\Tify\Receiver;
 
-use Jgut\Tify\ParameterTrait;
-
 /**
  * Class AbstractReceiver
  */

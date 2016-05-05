@@ -88,7 +88,7 @@ class ApnsBuilder
      * Get service message from origin.
      *
      * @param \Jgut\Tify\Receiver\ApnsReceiver $receiver
-     * @param \Jgut\Tify\Notification            $notification
+     * @param \Jgut\Tify\Notification          $notification
      *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException

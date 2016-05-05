@@ -44,7 +44,7 @@ class Message
     ];
 
     /**
-     * Default message options.
+     * Default message parameters.
      *
      * @see self::$reserverRegex
      *
