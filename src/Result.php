@@ -49,7 +49,7 @@ class Result
      * @param string         $token
      * @param \DateTime|null $date
      * @param int            $status
-     * @param string         $statusMessage
+     * @param string|null    $statusMessage
      *
      * @throws \InvalidArgumentException
      */
@@ -171,7 +171,7 @@ class Result
     /**
      * Retrieve result status message.
      *
-     * @return string|null
+     * @return string
      */
     public function getStatusMessage()
     {

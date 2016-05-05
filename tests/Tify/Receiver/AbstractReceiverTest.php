@@ -16,9 +16,6 @@ use Jgut\Tify\Receiver\AbstractReceiver;
  */
 class AbstractReceiverTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \Jgut\Tify\Receiver\AbstractReceiver
-     */
     protected $receiver;
 
     public function setUp()

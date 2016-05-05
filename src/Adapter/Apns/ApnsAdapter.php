@@ -63,9 +63,9 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
     protected $feedbackClient;
 
     /**
-     * @param array                               $parameters
-     * @param bool                                $sandbox
-     * @param \Jgut\Tify\Adapter\Apns\ApnsBuilder $builder
+     * @param array                                    $parameters
+     * @param bool                                     $sandbox
+     * @param \Jgut\Tify\Adapter\Apns\ApnsBuilder|null $builder
      *
      * @throws \Jgut\Tify\Exception\AdapterException
      */
@@ -204,7 +204,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      *
-     * @return \ZendService\Apple\Apns\Message
+     * @return \Generator
      */
     protected function getPushMessages(Notification $notification)
     {

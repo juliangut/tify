@@ -24,9 +24,6 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
      */
     protected $message;
 
-    /**
-     * @var \Jgut\Tify\Notification
-     */
     protected $notification;
 
     public function setUp()

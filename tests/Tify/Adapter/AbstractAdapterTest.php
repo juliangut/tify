@@ -17,9 +17,6 @@ use Jgut\Tify\Tests\Mock\AdapterMock;
  */
 class AbstractAdapterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \Jgut\Tify\Adapter\AbstractAdapter
-     */
     protected $adapter;
 
     public function setUp()

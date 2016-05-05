@@ -16,9 +16,6 @@ use Jgut\Tify\ParameterTrait;
  */
 class ParameterTraitTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \Jgut\Tify\ParameterTrait
-     */
     protected $parameterBag;
 
     public function setUp()

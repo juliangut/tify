@@ -57,8 +57,8 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
     protected $pushClient;
 
     /**
-     * @param array                             $parameters
-     * @param \Jgut\Tify\Adapter\Gcm\GcmBuilder $builder
+     * @param array                                  $parameters
+     * @param \Jgut\Tify\Adapter\Gcm\GcmBuilder|null $builder
      *
      * @throws \Jgut\Tify\Exception\AdapterException
      */
@@ -139,7 +139,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      *
-     * @return \ZendService\Google\Gcm\Message
+     * @return \Generator
      */
     protected function getPushMessages(Notification $notification)
     {

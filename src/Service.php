@@ -20,12 +20,12 @@ use Jgut\Tify\Adapter\SendAdapter;
 class Service
 {
     /**
-     * @var \Jgut\Tify\Adapter\AbstractAdapter
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $adapters;
 
     /**
-     * @var \Jgut\Tify\Notification[]
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $notifications;
 

@@ -58,7 +58,7 @@ class Notification
     /**
      * Notification results.
      *
-     * @var \Jgut\Tify\Result[]
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $results;
 
