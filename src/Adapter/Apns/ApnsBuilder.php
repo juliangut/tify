@@ -90,8 +90,7 @@ class ApnsBuilder
      * @param \Jgut\Tify\Receiver\ApnsReceiver $receiver
      * @param \Jgut\Tify\Notification          $notification
      *
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws \ZendService\Apple\Exception\RuntimeException
      *
      * @return \ZendService\Apple\Apns\Message
      */

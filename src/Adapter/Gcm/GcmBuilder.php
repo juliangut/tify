@@ -51,8 +51,8 @@ class GcmBuilder
      * @param array                   $tokens
      * @param \Jgut\Tify\Notification $notification
      *
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws \ZendService\Google\Exception\InvalidArgumentException
+     * @throws \ZendService\Google\Exception\RuntimeException
      *
      * @return \Jgut\Tify\Adapter\Gcm\GcmMessage
      */

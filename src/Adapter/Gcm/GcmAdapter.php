@@ -78,7 +78,8 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
      * {@inheritdoc}
      *
      * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws \ZendService\Google\Exception\InvalidArgumentException
+     * @throws \ZendService\Google\Exception\RuntimeException
      */
     public function send(Notification $notification)
     {
@@ -136,8 +137,8 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
      *
      * @param \Jgut\Tify\Notification $notification
      *
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws \ZendService\Google\Exception\InvalidArgumentException
+     * @throws \ZendService\Google\Exception\RuntimeException
      *
      * @return \Generator
      */

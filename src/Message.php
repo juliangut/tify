@@ -87,6 +87,8 @@ class Message
      *
      * @param array $parameters
      * @param array $payload
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $parameters = [], array $payload = [])
     {
@@ -168,6 +170,8 @@ class Message
      *
      * @param array $data
      *
+     * @throws \InvalidArgumentException
+     *
      * @return $this
      */
     public function setPayloadData(array $data)
@@ -186,6 +190,8 @@ class Message
      *
      * @param string $key
      *
+     * @throws \InvalidArgumentException
+     *
      * @return bool
      */
     public function hasPayload($key)
@@ -198,6 +204,8 @@ class Message
      *
      * @param string $key
      * @param mixed  $default
+     *
+     * @throws \InvalidArgumentException
      *
      * @return mixed
      */
