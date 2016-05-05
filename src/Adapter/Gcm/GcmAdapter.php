@@ -153,7 +153,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
 
         $tokens = array_map(
             function ($recipient) {
-                /** @var \Jgut\Tify\Recipient\GcmRecipient $recipient */
+                /* @var \Jgut\Tify\Recipient\GcmRecipient $recipient */
                 return $recipient->getToken();
             },
             $recipients
