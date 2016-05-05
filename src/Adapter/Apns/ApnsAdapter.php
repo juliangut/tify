@@ -15,7 +15,6 @@ use Jgut\Tify\Adapter\SendAdapter;
 use Jgut\Tify\Exception\AdapterException;
 use Jgut\Tify\Exception\NotificationException;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Recipient\ApnsRecipient;
 use Jgut\Tify\Result;
 use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
@@ -103,7 +102,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
 
         /* @var \ZendService\Apple\Apns\Message $message */
         foreach ($this->getPushMessages($notification) as $message) {
-            $result = new Result($message->getToken(), new \DateTime('now', new \DateTimeZone('UTC')));
+            $result = new Result($message->getToken());
 
             try {
                 $pushResponse = $client->send($message);
@@ -129,6 +128,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
     /**
      * {@inheritdoc}
      *
+     * @throws \Jgut\Tify\Exception\AdapterException
      * @throws \Jgut\Tify\Exception\NotificationException
      */
     public function feedback()
@@ -179,6 +179,8 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
     /**
      * Get opened ServiceFeedbackClient
      *
+     * @throws \Jgut\Tify\Exception\AdapterException
+     *
      * @return \ZendService\Apple\Apns\Client\Feedback
      */
     protected function getFeedbackClient()
@@ -209,7 +211,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
         /* @var \Jgut\Tify\Recipient\ApnsRecipient[] $recipients */
         $recipients = array_filter(
             $notification->getRecipients(),
-            function (AbstractRecipient $recipient) {
+            function ($recipient) {
                 return $recipient instanceof ApnsRecipient;
             }
         );

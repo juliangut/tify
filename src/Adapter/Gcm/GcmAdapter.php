@@ -12,7 +12,6 @@ namespace Jgut\Tify\Adapter\Gcm;
 use Jgut\Tify\Adapter\AbstractAdapter;
 use Jgut\Tify\Adapter\SendAdapter;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Recipient\AbstractRecipient;
 use Jgut\Tify\Recipient\GcmRecipient;
 use Jgut\Tify\Result;
 use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
@@ -85,8 +84,8 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
     {
         $client = $this->getPushClient();
 
+        /* @var \ZendService\Google\Gcm\Message $message */
         foreach ($this->getPushMessages($notification) as $message) {
-            /* @var \ZendService\Google\Gcm\Message $message */
             $time = new \DateTime('now', new \DateTimeZone('UTC'));
 
             try {
@@ -95,7 +94,9 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
                 foreach ($message->getRegistrationIds() as $token) {
                     $result = new Result($token, $time);
 
-                    if (!array_key_exists($token, $pushResponses) || array_key_exists('error', $pushResponses[$token])) {
+                    if (!array_key_exists($token, $pushResponses)
+                        || array_key_exists('error', $pushResponses[$token])
+                    ) {
                         $result->setStatus(Result::STATUS_ERROR);
 
                         $errorCode = array_key_exists($token, $pushResponses)
@@ -145,13 +146,14 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
         /* @var \Jgut\Tify\Recipient\GcmRecipient[] $recipients */
         $recipients = array_filter(
             $notification->getRecipients(),
-            function (AbstractRecipient $recipient) {
+            function ($recipient) {
                 return $recipient instanceof GcmRecipient;
             }
         );
 
         $tokens = array_map(
-            function (AbstractRecipient $recipient) {
+            function ($recipient) {
+                /** @var \Jgut\Tify\Recipient\GcmRecipient $recipient */
                 return $recipient->getToken();
             },
             $recipients

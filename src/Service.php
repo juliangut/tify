@@ -31,6 +31,9 @@ class Service
 
     /**
      * Manager constructor.
+     *
+     * @param \Jgut\Tify\Adapter\AbstractAdapter[] $adapters
+     * @param \Jgut\Tify\Notification[]            $notifications
      */
     public function __construct(array $adapters = [], array $notifications = [])
     {
@@ -48,7 +51,7 @@ class Service
     /**
      * Retrieve registered adapters.
      *
-     * @return \Jgut\Tify\Notification[]
+     * @return \Jgut\Tify\Adapter\AbstractAdapter[]
      */
     public function getAdapters()
     {

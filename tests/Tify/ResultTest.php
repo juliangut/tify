@@ -23,10 +23,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->result = new Result(
-            '9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527',
-            new \DateTime
-        );
+        $this->result = new Result('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
     }
 
     public function testDefaults()

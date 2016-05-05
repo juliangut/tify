@@ -55,13 +55,17 @@ class Result
      */
     public function __construct(
         $token,
-        \DateTime $date,
+        \DateTime $date = null,
         $status = self::STATUS_SUCCESS,
         $statusMessage = null
     ) {
         $this->token = $token;
 
+        if ($date === null) {
+            $date = new \DateTime('now', new \DateTimeZone('UTC'));
+        }
         $this->setDate($date);
+
         $this->setStatus($status);
         $this->setStatusMessage($statusMessage);
     }
@@ -125,7 +129,7 @@ class Result
     }
 
     /**
-     * Check successfull status.
+     * Check successful status.
      *
      * @return bool
      */
@@ -135,7 +139,7 @@ class Result
     }
 
     /**
-     * Check errored status.
+     * Check error status.
      *
      * @return bool
      */
