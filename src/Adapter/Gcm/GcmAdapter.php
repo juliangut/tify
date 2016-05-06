@@ -21,6 +21,8 @@ use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
  */
 class GcmAdapter extends AbstractAdapter implements SendAdapter
 {
+    const RESULT_UNKNOWN = 'Unknown';
+
     /**
      * Status codes mapping.
      *
@@ -41,7 +43,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
         'InternalServerError' => 'Internal Server Error',
         'DeviceMessageRateExceeded' => 'Device Message Rate Exceeded',
         'TopicsMessageRateExceeded' => 'Topics Message Rate Exceeded',
-        'UnknownError' => 'Unknown Error',
+        self::RESULT_UNKNOWN => 'Unknown Error',
     ];
 
     /**
@@ -102,7 +104,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
 
                         $errorCode = array_key_exists($token, $pushResponses)
                             ? $pushResponses[$token]['error']
-                            : 'UnknownError';
+                            : self::RESULT_UNKNOWN;
                         $result->setStatusMessage(self::$statusCodes[$errorCode]);
                     }
 
