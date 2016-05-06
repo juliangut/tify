@@ -25,6 +25,7 @@ use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapter
 {
     const RESULT_OK = 0;
+    const RESULT_UNAVAILABLE = 2048;
 
     /**
      * Status codes mapping.
@@ -43,6 +44,8 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
         8 => 'Invalid Token',
         10 => 'Shutdown',
         255 => 'Unknown Error',
+        self::RESULT_UNAVAILABLE => 'Server Unavailable',
+
     ];
 
     /**
@@ -102,23 +105,28 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
 
         /* @var \ZendService\Apple\Apns\Message $message */
         foreach ($this->getPushMessages($notification) as $message) {
-            $result = new Result($message->getToken());
+            $pushResult = new Result($message->getToken());
 
             try {
                 $pushResponse = $client->send($message);
 
                 if ($pushResponse->getCode() !== static::RESULT_OK) {
-                    $result->setStatus(Result::STATUS_ERROR);
-                    $result->setStatusMessage(self::$statusCodes[$pushResponse->getCode()]);
+                    $pushResult->setStatus(Result::STATUS_ERROR);
+                    $pushResult->setStatusMessage(self::$statusCodes[$pushResponse->getCode()]);
                 }
             // @codeCoverageIgnoreStart
             } catch (ApnsRuntimeException $exception) {
-                $result->setStatus(Result::STATUS_ERROR);
-                $result->setStatusMessage($exception->getMessage());
+                $pushResult->setStatus(Result::STATUS_ERROR);
+
+                if (preg_match('/^Server is unavailable/', $exception->getMessage())) {
+                    $pushResult->setStatusMessage(self::$statusCodes[self::RESULT_UNAVAILABLE]);
+                } else {
+                    $pushResult->setStatusMessage($exception->getMessage());
+                }
             }
             // @codeCoverageIgnoreEnd
 
-            $notification->addResult($result);
+            $notification->addResult($pushResult);
         }
 
         $client->close();

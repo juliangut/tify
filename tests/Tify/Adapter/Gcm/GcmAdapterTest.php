@@ -15,6 +15,7 @@ use Jgut\Tify\Adapter\Gcm\GcmMessage;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\GcmReceiver;
+use ZendService\Google\Exception\RuntimeException;
 use ZendService\Google\Gcm\Client;
 use ZendService\Google\Gcm\Response;
 
@@ -66,5 +67,30 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
         $this->adapter->send($notification);
 
         self::assertCount(2, $notification->getResults());
+    }
+
+    public function testExceptionErrorCode()
+    {
+        $reflection = new \ReflectionClass(get_class($this->adapter));
+        $method = $reflection->getMethod('getErrorCodeFromException');
+        $method->setAccessible(true);
+
+        $exception = new RuntimeException('500 Internal Server Error');
+        self::assertEquals(GcmAdapter::RESULT_INTERNAL_SERVER_ERROR, $method->invoke($this->adapter, $exception));
+
+        $exception = new RuntimeException('503 Server Unavailable; Retry-After 200');
+        self::assertEquals(GcmAdapter::RESULT_SERVER_UNAVAILABLE, $method->invoke($this->adapter, $exception));
+
+        $exception = new RuntimeException('401 Forbidden; Authentication Error');
+        self::assertEquals(GcmAdapter::RESULT_AUTHENTICATION_ERROR, $method->invoke($this->adapter, $exception));
+
+        $exception = new RuntimeException('400 Bad Request; invalid message');
+        self::assertEquals(GcmAdapter::RESULT_INVALID_MESSAGE, $method->invoke($this->adapter, $exception));
+
+        $exception = new RuntimeException('Response body did not contain a valid JSON response');
+        self::assertEquals(GcmAdapter::RESULT_BAD_FORMATTED_RESPONSE, $method->invoke($this->adapter, $exception));
+
+        $exception = new RuntimeException('Unknown');
+        self::assertEquals(GcmAdapter::RESULT_UNKNOWN, $method->invoke($this->adapter, $exception));
     }
 }

@@ -21,6 +21,11 @@ use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
  */
 class GcmAdapter extends AbstractAdapter implements SendAdapter
 {
+    const RESULT_INTERNAL_SERVER_ERROR = 'InternalServerError';
+    const RESULT_SERVER_UNAVAILABLE = 'ServerUnavailable';
+    const RESULT_AUTHENTICATION_ERROR = 'AuthenticationError';
+    const RESULT_INVALID_MESSAGE = 'InvalidMessage';
+    const RESULT_BAD_FORMATTED_RESPONSE = 'BadFormattedResponse';
     const RESULT_UNKNOWN = 'Unknown';
 
     /**
@@ -43,6 +48,11 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
         'InternalServerError' => 'Internal Server Error',
         'DeviceMessageRateExceeded' => 'Device Message Rate Exceeded',
         'TopicsMessageRateExceeded' => 'Topics Message Rate Exceeded',
+        self::RESULT_INTERNAL_SERVER_ERROR => 'Internal Server Error',
+        self::RESULT_SERVER_UNAVAILABLE => 'Server Unavailable',
+        self::RESULT_AUTHENTICATION_ERROR => 'Authentication Error',
+        self::RESULT_INVALID_MESSAGE => 'Invalid message',
+        self::RESULT_BAD_FORMATTED_RESPONSE => 'Bad Formatted Response',
         self::RESULT_UNKNOWN => 'Unknown Error',
     ];
 
@@ -95,25 +105,27 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
                 $pushResponses = $client->send($message)->getResults();
 
                 foreach ($message->getRegistrationIds() as $token) {
-                    $result = new Result($token, $time);
+                    $pushResult = new Result($token, $time);
 
                     if (!array_key_exists($token, $pushResponses)
                         || array_key_exists('error', $pushResponses[$token])
                     ) {
-                        $result->setStatus(Result::STATUS_ERROR);
+                        $pushResult->setStatus(Result::STATUS_ERROR);
 
                         $errorCode = array_key_exists($token, $pushResponses)
                             ? $pushResponses[$token]['error']
                             : self::RESULT_UNKNOWN;
-                        $result->setStatusMessage(self::$statusCodes[$errorCode]);
+                        $pushResult->setStatusMessage(self::$statusCodes[$errorCode]);
                     }
 
-                    $notification->addResult($result);
+                    $notification->addResult($pushResult);
                 }
             // @codeCoverageIgnoreStart
             } catch (GcmRuntimeException $exception) {
+                $errorMessage = self::$statusCodes[$this->getErrorCodeFromException($exception)];
+
                 foreach ($message->getRegistrationIds() as $token) {
-                    $notification->addResult(new Result($token, $time, Result::STATUS_ERROR, $exception->getMessage()));
+                    $notification->addResult(new Result($token, $time, Result::STATUS_ERROR, $errorMessage));
                 }
             }
             // @codeCoverageIgnoreEnd
@@ -165,6 +177,40 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
         foreach (array_chunk($tokens, 100) as $tokensRange) {
             yield $this->builder->buildPushMessage($tokensRange, $notification);
         }
+    }
+
+    /**
+     * Extract error code from exception.
+     *
+     * @param  \ZendService\Google\Exception\RuntimeException $exception
+     *
+     * @return string
+     */
+    protected function getErrorCodeFromException(GcmRuntimeException $exception)
+    {
+        $message = $exception->getMessage();
+
+        if (preg_match('/^500 Internal Server Error/', $message)) {
+            return self::RESULT_INTERNAL_SERVER_ERROR;
+        }
+
+        if (preg_match('/^503 Server Unavailable/', $message)) {
+            return self::RESULT_SERVER_UNAVAILABLE;
+        }
+
+        if (preg_match('/^401 Forbidden/', $message)) {
+            return self::RESULT_AUTHENTICATION_ERROR;
+        }
+
+        if (preg_match('/^400 Bad Request/', $message)) {
+            return self::RESULT_INVALID_MESSAGE;
+        }
+
+        if (preg_match('/^Response body did not contain a valid JSON response$/', $message)) {
+            return self::RESULT_BAD_FORMATTED_RESPONSE;
+        }
+
+        return self::RESULT_UNKNOWN;
     }
 
     /**
