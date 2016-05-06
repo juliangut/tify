@@ -17,11 +17,10 @@
          stopOnFailure="true"
          stopOnSkipped="false"
          stopOnIncomplete="false"
-         syntaxCheck="false"
          verbose="true"
 >
     <testsuites>
-        <testsuite>
+        <testsuite name="default">
             <directory suffix="Test.php">tests/</directory>
         </testsuite>
     </testsuites>
