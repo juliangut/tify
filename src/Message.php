@@ -86,17 +86,14 @@ class Message
      * Constructor.
      *
      * @param array $parameters
-     * @param array $payload
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $parameters = [], array $payload = [])
+    public function __construct(array $parameters = [])
     {
         $this->setParameters(array_merge($this->defaultParameters, $parameters));
 
         $this->payload = new ArrayCollection;
-
-        $this->setPayloadData($payload);
     }
 
     /**

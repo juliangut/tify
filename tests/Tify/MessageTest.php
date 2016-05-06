@@ -38,6 +38,11 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         self::assertEmpty($this->message->getPayloadData());
     }
 
+    /**
+     * Parameters provider
+     *
+     * @return array
+     */
     public function defaultParametersProvider()
     {
         return [
@@ -57,21 +62,6 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('data_', $this->message->getPayloadPrefix());
         $this->message->setPayloadPrefix('');
         self::assertEquals('', $this->message->getPayloadPrefix());
-    }
-
-    public function testPayload()
-    {
-        $this->message->setPayload('first', true);
-        self::assertTrue($this->message->hasPayload('first'));
-        self::assertTrue($this->message->getPayload('first'));
-        self::assertCount(1, $this->message->getPayloadData());
-
-        $this->message->setPayloadData([
-            'second' => 'second',
-            'third' => 'third',
-        ]);
-        self::assertTrue($this->message->hasPayload('second'));
-        self::assertCount(2, $this->message->getPayloadData());
     }
 
     /**
@@ -98,9 +88,15 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->message->setPayload($parameter, 'value');
     }
 
+    /**
+     * Payload provider.
+     *
+     * @return array
+     */
     public function invalidGCMPayloadProvider()
     {
         return [
+            [''],
             ['google'],
             ['google_param'],
             ['gcm'],
@@ -114,5 +110,20 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             ['priority'],
             ['content_available'],
         ];
+    }
+
+    public function testPayload()
+    {
+        $this->message->setPayload('first', true);
+        self::assertTrue($this->message->hasPayload('first'));
+        self::assertTrue($this->message->getPayload('first'));
+        self::assertCount(1, $this->message->getPayloadData());
+
+        $this->message->setPayloadData([
+            'second' => 'second',
+            'third' => 'third',
+        ]);
+        self::assertTrue($this->message->hasPayload('second'));
+        self::assertCount(2, $this->message->getPayloadData());
     }
 }
