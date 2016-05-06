@@ -151,16 +151,13 @@ class Service
 
                 $adapter->send($notification);
 
-                $results[] = $notification->getResults();
+                foreach ($notification->getResults() as $result) {
+                    $results[] = $result;
+                }
             }
         }
 
-        $return = [];
-        array_walk_recursive($results, function ($current) use (&$return) {
-            $return[] = $current;
-        });
-
-        return $return;
+        return $results;
     }
 
     /**
@@ -181,14 +178,11 @@ class Service
         );
 
         foreach ($feedbackAdapters as $adapter) {
-            $results[] = $adapter->feedback();
+            foreach ($adapter->feedback() as $result) {
+                $results[] = $result;
+            }
         }
 
-        $return = [];
-        array_walk_recursive($results, function ($current) use (&$return) {
-            $return[] = $current;
-        });
-
-        return array_unique($return);
+        return array_unique($results);
     }
 }

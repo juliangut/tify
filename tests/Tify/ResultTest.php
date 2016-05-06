@@ -64,4 +64,21 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
         $this->result->setStatus('my_status');
     }
+
+    public function testSerializable()
+    {
+        $serialized = [
+            'token' => 'aaaaa',
+            'date' => new \DateTime,
+            'status' => Result::STATUS_ERROR,
+            'statusMessage' => 'Error',
+        ];
+
+        $this->result->setToken($serialized['token']);
+        $this->result->setDate($serialized['date']);
+        $this->result->setStatus($serialized['status']);
+        $this->result->setStatusMessage($serialized['statusMessage']);
+
+        self::assertEquals(json_encode($serialized), json_encode($this->result));
+    }
 }
