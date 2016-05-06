@@ -27,8 +27,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->service = new Service(
-            [$this->getMockForAbstractClass(AbstractAdapter::class, [], '', false)],
-            [$this->getMock(Notification::class, [], [], '', false)]
+            $this->getMockForAbstractClass(AbstractAdapter::class, [], '', false),
+            $this->getMock(Notification::class, [], [], '', false)
         );
     }
 

@@ -65,21 +65,27 @@ class Notification
     /**
      * Notification constructor.
      *
-     * @param \Jgut\Tify\Message                 $message
-     * @param \Jgut\Tify\Receiver\ApnsReceiver[] $receivers
-     * @param array                              $parameters
+     * @param \Jgut\Tify\Message                                                                $message
+     * @param \Jgut\Tify\Receiver\AbstractReceiver|\Jgut\Tify\Receiver\AbstractReceiver[]| null $receivers
+     * @param array                                                                             $parameters
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(Message $message, array $receivers = [], array $parameters = [])
+    public function __construct(Message $message, $receivers = null, array $parameters = [])
     {
+        $this->setParameters(array_merge($this->defaultParameters, $parameters));
+
         $this->message = $message;
 
-        foreach ($receivers as $receiver) {
-            $this->addReceiver($receiver);
-        }
+        if ($receivers !== null) {
+            if (!is_array($receivers)) {
+                $receivers = [$receivers];
+            }
 
-        $this->setParameters(array_merge($this->defaultParameters, $parameters));
+            foreach ($receivers as $receiver) {
+                $this->addReceiver($receiver);
+            }
+        }
 
         $this->results = new ArrayCollection;
     }

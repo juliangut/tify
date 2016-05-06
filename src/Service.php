@@ -32,19 +32,31 @@ class Service
     /**
      * Manager constructor.
      *
-     * @param \Jgut\Tify\Adapter\AbstractAdapter[] $adapters
-     * @param \Jgut\Tify\Notification[]            $notifications
+     * @param \Jgut\Tify\Adapter\AbstractAdapter|\Jgut\Tify\Adapter\AbstractAdapter[]|null $adapters
+     * @param \Jgut\Tify\Notification|\Jgut\Tify\Notification[]|null                       $notifications
      */
-    public function __construct(array $adapters = [], array $notifications = [])
+    public function __construct($adapters = null, $notifications = null)
     {
         $this->adapters = new ArrayCollection;
-        foreach ($adapters as $adapter) {
-            $this->addAdapter($adapter);
+        if ($adapters !== null) {
+            if (!is_array($adapters)) {
+                $adapters = [$adapters];
+            }
+
+            foreach ($adapters as $adapter) {
+                $this->addAdapter($adapter);
+            }
         }
 
         $this->notifications = new ArrayCollection;
-        foreach ($notifications as $notification) {
-            $this->addNotification($notification);
+        if ($notifications !== null) {
+            if (!is_array($notifications)) {
+                $notifications = [$notifications];
+            }
+
+            foreach ($notifications as $notification) {
+                $this->addNotification($notification);
+            }
         }
     }
 

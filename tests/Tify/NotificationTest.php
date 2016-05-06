@@ -33,7 +33,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
         $this->notification = $this->getMockForAbstractClass(
             Notification::class,
-            [$this->message, [$receiver]]
+            [$this->message, $receiver]
         );
     }
 
