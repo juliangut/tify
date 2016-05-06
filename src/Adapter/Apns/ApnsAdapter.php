@@ -45,7 +45,6 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
         10 => 'Shutdown',
         255 => 'Unknown Error',
         self::RESULT_UNAVAILABLE => 'Server Unavailable',
-
     ];
 
     /**
