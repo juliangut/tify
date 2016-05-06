@@ -24,6 +24,9 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
      */
     protected $message;
 
+    /**
+     * @var \Jgut\Tify\Notification
+     */
     protected $notification;
 
     public function setUp()
@@ -55,7 +58,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     {
         $receiver = $this->getMockForAbstractClass(AbstractReceiver::class, [], '', false);
         $this->notification->addReceiver($receiver);
-        self::assertCount(1, $this->notification->getReceivers());
+        self::assertCount(2, $this->notification->getReceivers());
 
         $this->notification->clearReceivers();
         self::assertCount(0, $this->notification->getReceivers());

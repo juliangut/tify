@@ -230,7 +230,7 @@ class Message
         foreach (self::$reservedKeyRegex as $reservedKeyRegex) {
             if (preg_match($reservedKeyRegex, $key)) {
                 throw new \InvalidArgumentException(sprintf(
-                    '"%s" can not be used as message payload key, starts or contains the reserved string "%s"',
+                    '"%s" can not be used as message payload key, starts or contains "%s"',
                     $key,
                     preg_replace('![/^$]!', '', $reservedKeyRegex)
                 ));

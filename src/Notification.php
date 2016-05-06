@@ -51,9 +51,9 @@ class Notification
     protected $message;
 
     /**
-     * @var \Jgut\Tify\Receiver\AbstractReceiver[]
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
-    protected $receivers = [];
+    protected $receivers;
 
     /**
      * Notification results.
@@ -77,6 +77,7 @@ class Notification
 
         $this->message = $message;
 
+        $this->receivers = new ArrayCollection;
         if ($receivers !== null) {
             if (!is_array($receivers)) {
                 $receivers = [$receivers];
@@ -123,7 +124,7 @@ class Notification
      */
     public function getReceivers()
     {
-        return array_values($this->receivers);
+        return $this->receivers->toArray();
     }
 
     /**
@@ -135,7 +136,7 @@ class Notification
      */
     public function addReceiver(AbstractReceiver $receiver)
     {
-        $this->receivers[$receiver->getToken()] = $receiver;
+        $this->receivers->add($receiver);
 
         return $this;
     }
@@ -147,7 +148,7 @@ class Notification
      */
     public function clearReceivers()
     {
-        $this->receivers = [];
+        $this->receivers->clear();
 
         return $this;
     }

@@ -30,7 +30,7 @@ require_once './vendor/autoload.php';
 
 ### Receiver
 
-Each of the individual devices that will receive push notification. Identified by a device `token` provided by push service (APNS or GCM).
+Each of the individual devices that will receive push notification. Identified by a device `token` provided by push notification service (APNS or GCM).
 
 ```php
 new \Jgut\Tify\Receiver\ApnsReceiver('device_token');
@@ -45,12 +45,12 @@ Messages compose the final information arriving to receivers. GCM and APNS messa
 
 In order for the message payload to be created one of the following message parameters must be present:
 
-* APNS
+* For APNS
   * `title`
   * `title_loc_key`
   * `body`
   * `loc_key`
-* GCM
+* For GCM
   * `title`
   * `title_loc_key`
   * `body`
@@ -66,9 +66,11 @@ This key/value payload data must comply with some limitations to be fully compat
 
 ### Notification
 
-Container to keep a message and its associated destination receivers.
+Is a container to keep a message and its associated destination receivers.
 
-Notifications hold some extra parameters used by the push notification services to control behaviour and/or be used in notification creation
+Notifications are the central unit of work, several notifications can be set into a Tify Service sharing the same adapters but sending different messages to different receivers.
+
+Notifications hold some extra parameters used by the push notification services to control behaviour and/or be used in notification creation.
 
 *Find APNS notification parameters [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-1.*
 
@@ -76,7 +78,7 @@ Notifications hold some extra parameters used by the push notification services 
 
 ### Adapter
 
-Adapters will be given notifications to actually send the messages to associated receivers using the corresponding notification service. Receivers will be automatically filtered for the correct service.
+Adapters will be given notifications to actually send the messages to associated receivers using the corresponding notification service. Receivers will be automatically filtered for the correct service by their type.
 
 For APNS adapter `certificate` parameter is mandatory, denoting the path to the service certificate (.pem file). In GCM `api_key` is the mandatory parameter denoting Google API key.
 
@@ -85,19 +87,19 @@ $apnsService = new \Jgut\Tify\Service\ApnsService(['certificate' => 'path_to_cer
 $gcmService = new \Jgut\Tify\Service\GcmService(['api_key' => 'google_api_key']);
 ```
 
-### Service
-
-For simplicity instead of handing notifications to adapters one by one 'Tify Service' can be used to send Notifications to its corresponding receivers using correct provided Adapters automatically merging notification Results into a single array.
-
 ### Result
 
-`push` service returns a list of Result objects in order to match non-equal returning data from APNS and GCM services. Provides one common interface to access services return data.
+Responses from APNS and GCM push services are very different from one another, Result is a response abstraction in order to provide a common interface to access this non-equal returning data from APNS and GCM services.
 
 This objects are composed of device token, date, status and status message (in case of error).
 
+### Service
+
+For simplicity instead of handing notifications to adapters one by one 'Tify Service' can be used to send Notifications to its corresponding receivers using correct provided Adapters, automatically merging notification Results into a single returned array.
+
 ## Usage
 
-Basic usage creating a message and sending it through GCM and APNS services.
+Basic usage creating a one message to be sent through different adapters.
 
 ```php
 use Jgut\Tify\Adapter\Apns\ApnsAdapter;
@@ -125,11 +127,49 @@ $receivers = [
     new ApnsReceiver('ddddddddddd'),
 ];
 
-$notifications = [
-    new Notification($message, $receivers)
+$service = new Service($adapters, new Notification($message, $receivers));
+
+$results = $service->send();
+```
+
+Sharing the same adapters to send different messages
+
+```php
+use Jgut\Tify\Adapter\Gcm\GcmAdapter;
+use Jgut\Tify\Message;
+use Jgut\Tify\Notification;
+use Jgut\Tify\Receiver\GcmReceiver;
+use Jgut\Tify\Service;
+
+$adapters = [
+    new GcmAdapter(['api_key' => '00000']),
+    new GcmAdapter(['api_key' => '11111'])
 ];
 
-$service = new Service($adapters, $notifications);
+$service = new Service($adapters);
+
+$service->addNotification(new Notification(
+    new Message([
+        'title' => 'title_one',
+        'body' => 'body_one',
+    ]),
+    [
+        new GcmReceiver('aaaaaaaaaaa'),
+        new GcmReceiver('bbbbbbbbbbb'),
+    ]
+));
+
+$service->addNotification(new Notification(
+    new Message([
+        'title' => 'title_two',
+        'body' => 'body_two',
+    ]),
+    [
+        new GcmReceiver('xxxxxxxxxxx'),
+        new GcmReceiver('zzzzzzzzzzz'),
+    ]
+));
+
 $results = $service->send();
 ```
 
