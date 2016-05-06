@@ -94,7 +94,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
      *
      * @throws \InvalidArgumentException
      * @throws \Jgut\Tify\Exception\AdapterException
-     * @throws \ZendService\Google\Exception\RuntimeException
+     * @throws \ZendService\Apple\Exception\RuntimeException
      */
     public function send(Notification $notification)
     {
