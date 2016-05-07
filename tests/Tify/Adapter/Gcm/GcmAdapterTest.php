@@ -64,9 +64,9 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
         $receiver->expects(self::any())->method('getToken')->will(self::returnValue('aaa'));
 
         $notification = new Notification($message, [$receiver]);
-        $this->adapter->send($notification);
+        $results = $this->adapter->push($notification);
 
-        self::assertCount(2, $notification->getResults());
+        self::assertCount(2, $results);
     }
 
     public function testExceptionErrorCode()

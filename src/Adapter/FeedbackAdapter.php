@@ -17,7 +17,7 @@ interface FeedbackAdapter
     /**
      * Request feedback information.
      *
-     * @return array
+     * @return \Jgut\Tify\Result[]
      */
     public function feedback();
 }

@@ -12,14 +12,16 @@ namespace Jgut\Tify\Adapter;
 use Jgut\Tify\Notification;
 
 /**
- * Interface SendAdapter
+ * Interface PushAdapter
  */
-interface SendAdapter
+interface PushAdapter
 {
     /**
-     * Send a notification.
+     * Push notification.
      *
      * @param \Jgut\Tify\Notification $notification
+     *
+     * @return \Jgut\Tify\Result[]
      */
-    public function send(Notification $notification);
+    public function push(Notification $notification);
 }

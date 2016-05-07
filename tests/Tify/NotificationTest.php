@@ -44,7 +44,6 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     {
         self::assertEquals($this->message, $this->notification->getMessage());
         self::assertCount(1, $this->notification->getReceivers());
-        self::assertCount(0, $this->notification->getResults());
     }
 
     public function testMessage()
@@ -62,15 +61,5 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
         $this->notification->clearReceivers();
         self::assertCount(0, $this->notification->getReceivers());
-    }
-
-    public function testResults()
-    {
-        $result = new Result('aaa', new \DateTime('now', new \DateTimeZone('UTC')));
-        $this->notification->addResult($result);
-        self::assertCount(1, $this->notification->getResults());
-
-        $this->notification->clearResults();
-        self::assertCount(0, $this->notification->getResults());
     }
 }

@@ -56,13 +56,6 @@ class Notification
     protected $receivers;
 
     /**
-     * Notification results.
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     */
-    protected $results;
-
-    /**
      * Notification constructor.
      *
      * @param \Jgut\Tify\Message                                                                $message
@@ -87,8 +80,6 @@ class Notification
                 $this->addReceiver($receiver);
             }
         }
-
-        $this->results = new ArrayCollection;
     }
 
     /**
@@ -149,38 +140,6 @@ class Notification
     public function clearReceivers()
     {
         $this->receivers->clear();
-
-        return $this;
-    }
-
-    /**
-     * Retrieve results.
-     *
-     * @return \Jgut\Tify\Result[]
-     */
-    public function getResults()
-    {
-        return $this->results->toArray();
-    }
-
-    /**
-     * Add push result.
-     *
-     * @param \Jgut\Tify\Result $result
-     */
-    public function addResult(Result $result)
-    {
-        $this->results->add($result);
-    }
-
-    /**
-     * Clear push results.
-     *
-     * @return $this
-     */
-    public function clearResults()
-    {
-        $this->results->clear();
 
         return $this;
     }

@@ -12,7 +12,7 @@ namespace Jgut\Tify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Adapter\AbstractAdapter;
 use Jgut\Tify\Adapter\FeedbackAdapter;
-use Jgut\Tify\Adapter\SendAdapter;
+use Jgut\Tify\Adapter\PushAdapter;
 
 /**
  * Notifications service.
@@ -135,29 +135,25 @@ class Service
      */
     public function push()
     {
-        $results = [];
+        $pushResults = [];
 
-        /** @var \Jgut\Tify\Adapter\SendAdapter[] $pushAdapters */
+        /** @var \Jgut\Tify\Adapter\PushAdapter[] $pushAdapters */
         $pushAdapters = array_filter(
             $this->adapters->toArray(),
             function (AbstractAdapter $adapter) {
-                return $adapter instanceof SendAdapter;
+                return $adapter instanceof PushAdapter;
             }
         );
 
         foreach ($pushAdapters as $adapter) {
             foreach ($this->notifications as $notification) {
-                $notification->clearResults();
-
-                $adapter->send($notification);
-
-                foreach ($notification->getResults() as $result) {
-                    $results[] = $result;
+                foreach ($adapter->push($notification) as $pushResult) {
+                    $pushResults[] = $pushResult;
                 }
             }
         }
 
-        return $results;
+        return $pushResults;
     }
 
     /**
@@ -167,7 +163,7 @@ class Service
      */
     public function feedback()
     {
-        $results = [];
+        $feedbackResults = [];
 
         /** @var \Jgut\Tify\Adapter\FeedbackAdapter[] $feedbackAdapters */
         $feedbackAdapters = array_filter(
@@ -178,11 +174,11 @@ class Service
         );
 
         foreach ($feedbackAdapters as $adapter) {
-            foreach ($adapter->feedback() as $result) {
-                $results[] = $result;
+            foreach ($adapter->feedback() as $feedbackResult) {
+                $feedbackResults[] = $feedbackResult;
             }
         }
 
-        return array_unique($results);
+        return array_unique($feedbackResults);
     }
 }

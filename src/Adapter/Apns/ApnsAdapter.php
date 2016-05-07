@@ -11,7 +11,7 @@ namespace Jgut\Tify\Adapter\Apns;
 
 use Jgut\Tify\Adapter\AbstractAdapter;
 use Jgut\Tify\Adapter\FeedbackAdapter;
-use Jgut\Tify\Adapter\SendAdapter;
+use Jgut\Tify\Adapter\PushAdapter;
 use Jgut\Tify\Exception\AdapterException;
 use Jgut\Tify\Exception\NotificationException;
 use Jgut\Tify\Notification;
@@ -22,7 +22,7 @@ use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 /**
  * Class ApnsAdapter
  */
-class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapter
+class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapter
 {
     const RESULT_OK = 0;
     const RESULT_UNAVAILABLE = 2048;
@@ -77,7 +77,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
 
         $certificatePath = $this->getParameter('certificate');
 
-        if ($certificatePath === null || !file_exists($certificatePath) || !is_readable($certificatePath)) {
+        if (!file_exists($certificatePath) || !is_readable($certificatePath)) {
             throw new AdapterException(
                 sprintf('Certificate file "%s" does not exist or is not readable', $certificatePath)
             );
@@ -98,9 +98,11 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
      * @throws \Jgut\Tify\Exception\AdapterException
      * @throws \ZendService\Apple\Exception\RuntimeException
      */
-    public function send(Notification $notification)
+    public function push(Notification $notification)
     {
         $client = $this->getPushClient();
+
+        $pushResults = [];
 
         /* @var \ZendService\Apple\Apns\Message $message */
         foreach ($this->getPushMessages($notification) as $message) {
@@ -125,22 +127,27 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
             }
             // @codeCoverageIgnoreEnd
 
-            $notification->addResult($pushResult);
+            $pushResults[] = $pushResult;
         }
 
         $client->close();
         $this->pushClient = null;
+
+        return $pushResults;
     }
 
     /**
      * {@inheritdoc}
      *
+     * @throws \InvalidArgumentException
      * @throws \Jgut\Tify\Exception\AdapterException
      * @throws \Jgut\Tify\Exception\NotificationException
      */
     public function feedback()
     {
         $client = $this->getFeedbackClient();
+
+        $feedbackResults = [];
 
         try {
             /* @var \ZendService\Apple\Apns\Response\Feedback[] $feedbackResponses */
@@ -151,16 +158,14 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
         }
         // @codeCoverageIgnoreEnd
 
-        $responses = [];
-
         foreach ($feedbackResponses as $response) {
-            $responses[] = $response->getToken();
+            $feedbackResults[] = new Result($response->getToken(), $response->getTime());
         }
 
         $client->close();
         $this->feedbackClient = null;
 
-        return $responses;
+        return $feedbackResults;
     }
 
     /**
@@ -204,7 +209,7 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
     }
 
     /**
-     * Get push service formatted messages.
+     * Get service formatted push messages.
      *
      * @param \Jgut\Tify\Notification $notification
      *
@@ -214,16 +219,10 @@ class ApnsAdapter extends AbstractAdapter implements SendAdapter, FeedbackAdapte
      */
     protected function getPushMessages(Notification $notification)
     {
-        /* @var \Jgut\Tify\Receiver\ApnsReceiver[] $receivers */
-        $receivers = array_filter(
-            $notification->getReceivers(),
-            function ($receiver) {
-                return $receiver instanceof ApnsReceiver;
+        foreach ($notification->getReceivers() as $receiver) {
+            if ($receiver instanceof ApnsReceiver) {
+                yield $this->builder->buildPushMessage($receiver, $notification);
             }
-        );
-
-        foreach ($receivers as $receiver) {
-            yield $this->builder->buildPushMessage($receiver, $notification);
         }
     }
 

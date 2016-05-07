@@ -74,9 +74,9 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
         $receiver = $this->getMock(ApnsReceiver::class, [], [], '', false);
 
         $notification = new Notification($message, [$receiver]);
-        $this->adapter->send($notification);
+        $results = $this->adapter->push($notification);
 
-        self::assertCount(1, $notification->getResults());
+        self::assertCount(1, $results);
     }
 
     public function testFeedback()

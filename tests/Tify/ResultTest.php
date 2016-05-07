@@ -26,6 +26,19 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $this->result = new Result('9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527');
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testConstructorDate()
+    {
+        $date = new \DateTime('2016-01-01 00:00:00+00:00');
+
+        $result = new Result('aaa', $date->getTimestamp());
+        self::assertEquals($date, $result->getDate());
+
+        new Result('aaa', 'not_a_date');
+    }
+
     public function testDefaults()
     {
         self::assertEquals(

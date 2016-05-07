@@ -66,11 +66,13 @@ This key/value payload data must comply with some limitations to be fully compat
 
 ### Notification
 
-Is a container to keep a message and its associated destination receivers.
+It's a container to keep a message and its associated destination receivers.
 
 Notifications are the central unit of work, several notifications can be set into a Tify Service sharing the same adapters but sending different messages to different receivers.
 
 Notifications hold some extra parameters used by the push notification services to control behaviour and/or be used in notification creation.
+
+By clearing receivers list or changing message a notification can be reused as many times as needed.
 
 *Find APNS notification parameters [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-1.*
 
@@ -99,6 +101,8 @@ For simplicity instead of handing notifications to adapters one by one 'Tify Ser
 
 ## Usage
 
+### Push
+
 Basic usage creating a one message to be sent through different adapters.
 
 ```php
@@ -112,7 +116,7 @@ use Jgut\Tify\Service;
 
 $adapters = [
     new GcmAdapter(['api_key' => '00000']),
-    new ApnsAdapter(['certificate' => 'path_to_certificate'])
+    new ApnsAdapter(['certificate' => 'path_to_certificate']),
 ];
 
 $message = new Message([
@@ -129,7 +133,7 @@ $receivers = [
 
 $service = new Service($adapters, new Notification($message, $receivers));
 
-$results = $service->send();
+$results = $service->push();
 ```
 
 Sharing the same adapters to send different messages
@@ -143,7 +147,7 @@ use Jgut\Tify\Service;
 
 $adapters = [
     new GcmAdapter(['api_key' => '00000']),
-    new GcmAdapter(['api_key' => '11111'])
+    new GcmAdapter(['api_key' => '11111']),
 ];
 
 $service = new Service($adapters);
@@ -170,8 +174,26 @@ $service->addNotification(new Notification(
     ]
 ));
 
-$results = $service->send();
+$results = $service->push();
 ```
+
+### Feedback
+
+```php
+use Jgut\Tify\Adapter\Gcm\ApnsAdapter;
+use Jgut\Tify\Service;
+
+$adapters = [
+    new ApnsAdapter(['certificate' => 'path_to_certificate_one']),
+    new ApnsAdapter(['certificate' => 'path_to_certificate_two']),
+];
+
+$service = new Service($adapters);
+
+$results = $service->feedback();
+```
+
+Feedback returns Result objects with token and time of expired device tokens.
 
 ## Contributing
 

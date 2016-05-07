@@ -53,15 +53,14 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testSend()
     {
-        $adapter = $this->getMock(GcmAdapter::class, [], [], '', false);
-        $adapter->expects(self::once())->method('send');
-        $this->service->addAdapter($adapter);
-
         $result = new Result('aaa', new \DateTime('now', new \DateTimeZone('UTC')));
+
+        $adapter = $this->getMock(GcmAdapter::class, [], [], '', false);
+        $adapter->expects(self::once())->method('push')->will(self::returnValue([$result]));
+        $this->service->addAdapter($adapter);
 
         $message = $this->getMock(Message::class, [], [], '', false);
         $notification = $this->getMock(Notification::class, [], [$message, []]);
-        $notification->expects(self::once())->method('getResults')->will(self::returnValue([$result]));
         $this->service->clearNotifications();
         $this->service->addNotification($notification);
 
@@ -72,10 +71,14 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testFeedback()
     {
+        $result = new Result('aaa', new \DateTime('now', new \DateTimeZone('UTC')));
+
         $adapter = $this->getMock(ApnsAdapter::class, [], [], '', false);
-        $adapter->expects(self::once())->method('feedback')->will(self::returnValue(['aaaa']));
+        $adapter->expects(self::once())->method('feedback')->will(self::returnValue([$result]));
         $this->service->addAdapter($adapter);
 
-        self::assertCount(1, $this->service->feedback());
+        $results = $this->service->feedback();
+        self::assertCount(1, $results);
+        self::assertEquals($result, $results[0]);
     }
 }

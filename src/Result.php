@@ -46,23 +46,30 @@ class Result implements \JsonSerializable
     protected $statusMessage;
 
     /**
-     * @param string         $token
-     * @param \DateTime|null $date
-     * @param int            $status
-     * @param string|null    $statusMessage
+     * @param string             $token
+     * @param int|\DateTime|null $date
+     * @param string             $status
+     * @param string|null        $statusMessage
      *
      * @throws \InvalidArgumentException
      */
     public function __construct(
         $token,
-        \DateTime $date = null,
+        $date = null,
         $status = self::STATUS_SUCCESS,
         $statusMessage = null
     ) {
         $this->token = $token;
 
+        if (is_int($date)) {
+            $date = (new \DateTime('now', new \DateTimeZone('UTC')))->setTimestamp($date);
+        }
         if ($date === null) {
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
+        }
+
+        if (!$date instanceof \DateTime) {
+            throw new \InvalidArgumentException('Wrong date value provided');
         }
         $this->setDate($date);
 

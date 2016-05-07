@@ -10,7 +10,7 @@
 namespace Jgut\Tify\Adapter\Gcm;
 
 use Jgut\Tify\Adapter\AbstractAdapter;
-use Jgut\Tify\Adapter\SendAdapter;
+use Jgut\Tify\Adapter\PushAdapter;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\GcmReceiver;
 use Jgut\Tify\Result;
@@ -19,7 +19,7 @@ use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 /**
  * Class GcmAdapter
  */
-class GcmAdapter extends AbstractAdapter implements SendAdapter
+class GcmAdapter extends AbstractAdapter implements PushAdapter
 {
     const RESULT_INTERNAL_SERVER_ERROR = 'InternalServerError';
     const RESULT_SERVER_UNAVAILABLE = 'ServerUnavailable';
@@ -76,7 +76,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
      */
     public function __construct(array $parameters = [], GcmBuilder $builder = null)
     {
-        parent::__construct($parameters);
+        parent::__construct($parameters, false);
 
         // @codeCoverageIgnoreStart
         if ($builder === null) {
@@ -93,19 +93,21 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
      * @throws \ZendService\Google\Exception\InvalidArgumentException
      * @throws \ZendService\Google\Exception\RuntimeException
      */
-    public function send(Notification $notification)
+    public function push(Notification $notification)
     {
         $client = $this->getPushClient();
 
+        $pushResults = [];
+
         /* @var \ZendService\Google\Gcm\Message $message */
         foreach ($this->getPushMessages($notification) as $message) {
-            $time = new \DateTime('now', new \DateTimeZone('UTC'));
+            $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
             try {
                 $pushResponses = $client->send($message)->getResults();
 
                 foreach ($message->getRegistrationIds() as $token) {
-                    $pushResult = new Result($token, $time);
+                    $pushResult = new Result($token, $date);
 
                     if (!array_key_exists($token, $pushResponses)
                         || array_key_exists('error', $pushResponses[$token])
@@ -118,18 +120,20 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
                         $pushResult->setStatusMessage(self::$statusCodes[$errorCode]);
                     }
 
-                    $notification->addResult($pushResult);
+                    $pushResults[] = $pushResult;
                 }
             // @codeCoverageIgnoreStart
             } catch (GcmRuntimeException $exception) {
                 $errorMessage = self::$statusCodes[$this->getErrorCodeFromException($exception)];
 
                 foreach ($message->getRegistrationIds() as $token) {
-                    $notification->addResult(new Result($token, $time, Result::STATUS_ERROR, $errorMessage));
+                    $pushResults[] = new Result($token, $date, Result::STATUS_ERROR, $errorMessage);
                 }
             }
             // @codeCoverageIgnoreEnd
         }
+
+        return $pushResults;
     }
 
     /**
@@ -147,7 +151,7 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
     }
 
     /**
-     * Get push service formatted messages.
+     * Get service formatted push messages.
      *
      * @param \Jgut\Tify\Notification $notification
      *
@@ -158,31 +162,22 @@ class GcmAdapter extends AbstractAdapter implements SendAdapter
      */
     protected function getPushMessages(Notification $notification)
     {
-        /* @var \Jgut\Tify\Receiver\GcmReceiver[] $receivers */
-        $receivers = array_filter(
-            $notification->getReceivers(),
-            function ($receiver) {
-                return $receiver instanceof GcmReceiver;
-            }
-        );
+        foreach (array_chunk($notification->getReceivers(), 100) as $receivers) {
+            $tokens = array_map(
+                function ($receiver) {
+                    return $receiver instanceof GcmReceiver ? $receiver->getToken() : null;
+                },
+                $receivers
+            );
 
-        $tokens = array_map(
-            function ($receiver) {
-                /* @var \Jgut\Tify\Receiver\GcmReceiver $receiver */
-                return $receiver->getToken();
-            },
-            $receivers
-        );
-
-        foreach (array_chunk($tokens, 100) as $tokensRange) {
-            yield $this->builder->buildPushMessage($tokensRange, $notification);
+            yield $this->builder->buildPushMessage(array_unique($tokens), $notification);
         }
     }
 
     /**
      * Extract error code from exception.
      *
-     * @param  \ZendService\Google\Exception\RuntimeException $exception
+     * @param \ZendService\Google\Exception\RuntimeException $exception
      *
      * @return string
      */
