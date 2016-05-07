@@ -170,7 +170,7 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
                 $receivers
             );
 
-            yield $this->builder->buildPushMessage(array_unique($tokens), $notification);
+            yield $this->builder->buildPushMessage(array_filter($tokens), $notification);
         }
     }
 
