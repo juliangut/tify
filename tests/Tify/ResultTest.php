@@ -80,15 +80,16 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
     public function testSerializable()
     {
+        $date = new \DateTime;
         $serialized = [
             'token' => 'aaaaa',
-            'date' => new \DateTime,
+            'date' => $date->format('c'),
             'status' => Result::STATUS_ERROR,
             'statusMessage' => 'Error',
         ];
 
         $this->result->setToken($serialized['token']);
-        $this->result->setDate($serialized['date']);
+        $this->result->setDate($date);
         $this->result->setStatus($serialized['status']);
         $this->result->setStatusMessage($serialized['statusMessage']);
 
