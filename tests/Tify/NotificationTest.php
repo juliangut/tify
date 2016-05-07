@@ -12,7 +12,6 @@ namespace Jgut\Tify\Tests\Notification;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\AbstractReceiver;
-use Jgut\Tify\Result;
 
 /**
  * Notification tests.
