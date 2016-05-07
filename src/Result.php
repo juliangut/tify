@@ -208,7 +208,7 @@ class Result implements \JsonSerializable
     {
         return [
             'token' => $this->token,
-            'date' => $this->date,
+            'date' => $this->date->format('c'),
             'status' => $this->status,
             'statusMessage' => $this->statusMessage,
         ];
