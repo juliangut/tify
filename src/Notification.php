@@ -76,9 +76,7 @@ class Notification
                 $receivers = [$receivers];
             }
 
-            foreach ($receivers as $receiver) {
-                $this->addReceiver($receiver);
-            }
+            $this->setReceivers($receivers);
         }
     }
 
@@ -116,6 +114,24 @@ class Notification
     public function getReceivers()
     {
         return $this->receivers->toArray();
+    }
+
+    /**
+     * Register receivers.
+     *
+     * @param array $receivers
+     *
+     * @return $this
+     */
+    public function setReceivers(array $receivers)
+    {
+        $this->receivers->clear();
+
+        foreach ($receivers as $receiver) {
+            $this->addReceiver($receiver);
+        }
+
+        return $this;
     }
 
     /**

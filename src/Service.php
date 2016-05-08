@@ -43,9 +43,7 @@ class Service
                 $adapters = [$adapters];
             }
 
-            foreach ($adapters as $adapter) {
-                $this->addAdapter($adapter);
-            }
+            $this->setAdapters($adapters);
         }
 
         $this->notifications = new ArrayCollection;
@@ -54,9 +52,7 @@ class Service
                 $notifications = [$notifications];
             }
 
-            foreach ($notifications as $notification) {
-                $this->addNotification($notification);
-            }
+            $this->setNotifications($notifications);
         }
     }
 
@@ -68,6 +64,24 @@ class Service
     public function getAdapters()
     {
         return $this->adapters->toArray();
+    }
+
+    /**
+     * Register adapters.
+     *
+     * @param array $adapters
+     *
+     * @return $this
+     */
+    public function setAdapters(array $adapters)
+    {
+        $this->adapters->clear();
+
+        foreach ($adapters as $adapter) {
+            $this->addAdapter($adapter);
+        }
+
+        return $this;
     }
 
     /**
@@ -102,6 +116,24 @@ class Service
     public function getNotifications()
     {
         return $this->notifications->toArray();
+    }
+
+    /**
+     * Register notifications.
+     *
+     * @param array $notifications
+     *
+     * @return $this
+     */
+    public function setNotifications(array $notifications)
+    {
+        $this->notifications->clear();
+
+        foreach ($notifications as $notification) {
+            $this->addNotification($notification);
+        }
+
+        return $this;
     }
 
     /**
