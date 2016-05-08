@@ -86,8 +86,6 @@ class Message
      * Constructor.
      *
      * @param array $parameters
-     *
-     * @throws \InvalidArgumentException
      */
     public function __construct(array $parameters = [])
     {
@@ -100,8 +98,6 @@ class Message
      * Convenience method to set message title.
      *
      * @param string $title
-     *
-     * @throws \InvalidArgumentException
      *
      * @return $this
      */
@@ -116,8 +112,6 @@ class Message
      * Convenience method to set message body.
      *
      * @param string $body
-     *
-     * @throws \InvalidArgumentException
      *
      * @return $this
      */
