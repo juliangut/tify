@@ -191,7 +191,7 @@ class Service
     /**
      * Get feedback from push services.
      *
-     * @return array
+     * @return \Jgut\Tify\Result[]
      */
     public function feedback()
     {
