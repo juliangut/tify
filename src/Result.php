@@ -62,7 +62,7 @@ class Result implements \JsonSerializable
         $this->token = $token;
 
         if (is_int($date)) {
-            $date = (new \DateTime('now', new \DateTimeZone('UTC')))->setTimestamp($date);
+            $date = \DateTime::createFromFormat('U', (string) $date);
         }
         if ($date === null) {
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
