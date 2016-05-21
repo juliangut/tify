@@ -211,6 +211,6 @@ class Service
             }
         }
 
-        return array_unique($feedbackResults);
+        return array_unique($feedbackResults, SORT_REGULAR);
     }
 }
