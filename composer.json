@@ -18,8 +18,11 @@
     }
   ],
   "support": {
+    "source": "https://github.com/juliangut/tify",
     "issues": "https://github.com/juliangut/tify/issues"
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": ">=5.5",
     "symfony/options-resolver": "^2.7|^3.0",
