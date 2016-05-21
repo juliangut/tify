@@ -1,6 +1,6 @@
 {
   "name": "juliangut/tify",
-  "description": "Push notification services abstraction",
+  "description": "Unified push notification services abstraction",
   "keywords": [
     "push",
     "notification",
