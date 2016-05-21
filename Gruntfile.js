@@ -2,7 +2,9 @@
 
 module.exports = function(grunt) {
   require('time-grunt')(grunt);
-  require('load-grunt-tasks')(grunt);
+  require('jit-grunt')(grunt);
+
+  grunt.loadNpmTasks('grunt-composer');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -48,11 +50,18 @@ module.exports = function(grunt) {
         dir: 'src'
       }
     },
-    climb: {
+    phpunit: {
       options: {
-        bin: 'vendor/bin/climb'
+        bin: 'vendor/bin/phpunit',
+        coverage: true
       },
       application: {
+        coverageHtml: 'build/coverage'
+      }
+    },
+    composer : {
+      options : {
+        cwd: '.'
       }
     },
     security_checker: {
@@ -63,20 +72,11 @@ module.exports = function(grunt) {
       application: {
         file: 'composer.lock'
       }
-    },
-    phpunit: {
-      options: {
-        bin: 'vendor/bin/phpunit',
-        coverage: true
-      },
-      application: {
-        coverageHtml: 'build/coverage'
-      }
     }
   });
 
   grunt.registerTask('qa', ['phplint', 'phpcs', 'phpmd', 'phpcpd']);
-  grunt.registerTask('security', ['climb', 'security_checker']);
+  grunt.registerTask('security', ['composer:outdated:direct', 'security_checker']);
   grunt.registerTask('test', ['phpunit']);
 
   grunt.registerTask('default', ['qa', 'test']);
