@@ -32,22 +32,22 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $message = $this->getMock(ServiceMessage::class, [], [], '', false);
+        $message = $this->getMockBuilder(ServiceMessage::class)->disableOriginalConstructor()->getMock();
         $message->expects(self::any())->method('getToken')->will(self::returnValue(['aaa']));
 
-        $pushResponse = $this->getMock(PushResponse::class, [], [], '', false);
+        $pushResponse = $this->getMockBuilder(PushResponse::class)->disableOriginalConstructor()->getMock();
         $pushResponse->expects(self::any())->method('getCode')->will(self::returnValue(8));
 
-        $pushClient = $this->getMock(MessageClient::class, [], [], '', false);
+        $pushClient = $this->getMockBuilder(MessageClient::class)->disableOriginalConstructor()->getMock();
         $pushClient->expects(self::any())->method('send')->will(self::returnValue($pushResponse));
 
-        $feedbackResponse = $this->getMock(FeedbackResponse::class, [], [], '', false);
+        $feedbackResponse = $this->getMockBuilder(FeedbackResponse::class)->disableOriginalConstructor()->getMock();
         $feedbackResponse->expects(self::any())->method('getToken')->will(self::returnValue('aaa'));
 
-        $feedbackClient = $this->getMock(FeedbackClient::class, [], [], '', false);
+        $feedbackClient = $this->getMockBuilder(FeedbackClient::class)->disableOriginalConstructor()->getMock();
         $feedbackClient->expects(self::any())->method('feedback')->will(self::returnValue([$feedbackResponse]));
 
-        $builder = $this->getMock(ApnsBuilder::class, [], [], '', false);
+        $builder = $this->getMockBuilder(ApnsBuilder::class)->disableOriginalConstructor()->getMock();
         $builder->expects(self::any())->method('buildPushClient')->will(self::returnValue($pushClient));
         $builder->expects(self::any())->method('buildFeedbackClient')->will(self::returnValue($feedbackClient));
         $builder->expects(self::any())->method('buildPushMessage')->will(self::returnValue($message));
@@ -69,9 +69,9 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testSend()
     {
-        $message = $this->getMock(Message::class, [], [], '', false);
+        $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();
 
-        $receiver = $this->getMock(ApnsReceiver::class, [], [], '', false);
+        $receiver = $this->getMockBuilder(ApnsReceiver::class)->disableOriginalConstructor()->getMock();
 
         $notification = new Notification($message, [$receiver]);
         $results = $this->adapter->push($notification);

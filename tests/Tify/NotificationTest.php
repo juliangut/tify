@@ -30,7 +30,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->message = $this->getMock(Message::class, [], [], '', false);
+        $this->message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();
         $receiver = $this->getMockForAbstractClass(AbstractReceiver::class, [], '', false);
 
         $this->notification = $this->getMockForAbstractClass(
@@ -47,7 +47,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     public function testMessage()
     {
-        $message = $this->getMock(Message::class, [], [], '', false);
+        $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();
         $this->notification->setMessage($message);
         self::assertEquals($message, $this->notification->getMessage());
     }

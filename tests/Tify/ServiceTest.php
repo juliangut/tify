@@ -28,7 +28,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->service = new Service(
             $this->getMockForAbstractClass(AbstractAdapter::class, [], '', false),
-            $this->getMock(Notification::class, [], [], '', false)
+            $this->getMockBuilder(Notification::class)->disableOriginalConstructor()->getMock()
         );
     }
 
@@ -37,14 +37,18 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $service = new Service;
 
         self::assertEmpty($service->getNotifications());
-        $service->addNotification($this->getMock(Notification::class, [], [], '', false));
+        $service->addNotification(
+            $this->getMockBuilder(Notification::class)->disableOriginalConstructor()->getMock()
+        );
         self::assertCount(1, $service->getNotifications());
 
         $service->clearNotifications();
         self::assertCount(0, $service->getNotifications());
 
         self::assertEmpty($service->getAdapters());
-        $service->addAdapter($this->getMock(GcmAdapter::class, [], [], '', false));
+        $service->addAdapter(
+            $this->getMockBuilder(GcmAdapter::class)->disableOriginalConstructor()->getMock()
+        );
         self::assertCount(1, $service->getAdapters());
 
         $service->clearAdapters();
@@ -55,12 +59,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $result = new Result('aaa', new \DateTime('now', new \DateTimeZone('UTC')));
 
-        $adapter = $this->getMock(GcmAdapter::class, [], [], '', false);
+        $adapter = $this->getMockBuilder(GcmAdapter::class)->disableOriginalConstructor()->getMock();
         $adapter->expects(self::once())->method('push')->will(self::returnValue([$result]));
         $this->service->addAdapter($adapter);
 
-        $message = $this->getMock(Message::class, [], [], '', false);
-        $notification = $this->getMock(Notification::class, [], [$message, []]);
+        $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();
+        $notification = $this->getMockBuilder(Notification::class)->disableOriginalConstructor()->getMock();
         $this->service->clearNotifications();
         $this->service->addNotification($notification);
 
@@ -73,7 +77,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $result = new Result('aaa', new \DateTime('now', new \DateTimeZone('UTC')));
 
-        $adapter = $this->getMock(ApnsAdapter::class, [], [], '', false);
+        $adapter = $this->getMockBuilder(ApnsAdapter::class)->disableOriginalConstructor()->getMock();
         $adapter->expects(self::once())->method('feedback')->will(self::returnValue([$result]));
         $this->service->addAdapter($adapter);
 

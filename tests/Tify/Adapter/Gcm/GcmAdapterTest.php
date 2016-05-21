@@ -31,17 +31,17 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $message = $this->getMock(GcmMessage::class, [], [], '', false);
+        $message = $this->getMockBuilder(GcmMessage::class)->disableOriginalConstructor()->getMock();
         $message->expects(self::any())->method('getRegistrationIds')->will(self::returnValue(['aaa', 'bbb']));
 
-        $response = $this->getMock(Response::class, [], [], '', false);
+        $response = $this->getMockBuilder(Response::class)->disableOriginalConstructor()->getMock();
         $response->expects(self::any())->method('getResults')
             ->will(self::returnValue(['aaa' => [], 'bbb' => ['error' => 'NotRegistered']]));
 
-        $client = $this->getMock(Client::class, [], [], '', false);
+        $client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
         $client->expects(self::any())->method('send')->will(self::returnValue($response));
 
-        $builder = $this->getMock(GcmBuilder::class, [], [], '', false);
+        $builder = $this->getMockBuilder(GcmBuilder::class)->disableOriginalConstructor()->getMock();
         $builder->expects(self::any())->method('buildPushClient')->will(self::returnValue($client));
         $builder->expects(self::any())->method('buildPushMessage')->will(self::returnValue($message));
 
@@ -58,9 +58,9 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testSend()
     {
-        $message = $this->getMock(Message::class, [], [], '', false);
+        $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();
 
-        $receiver = $this->getMock(GcmReceiver::class, [], [], '', false);
+        $receiver = $this->getMockBuilder(GcmReceiver::class)->disableOriginalConstructor()->getMock();
         $receiver->expects(self::any())->method('getToken')->will(self::returnValue('aaa'));
 
         $notification = new Notification($message, [$receiver]);

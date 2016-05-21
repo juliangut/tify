@@ -34,7 +34,7 @@ class Result implements \JsonSerializable
     /**
      * Result status.
      *
-     * @var int
+     * @var string
      */
     protected $status;
 
@@ -128,7 +128,7 @@ class Result implements \JsonSerializable
     /**
      * Retrieve result status.
      *
-     * @return int
+     * @return string
      */
     public function getStatus()
     {
