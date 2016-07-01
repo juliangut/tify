@@ -19,6 +19,7 @@ use ZendService\Apple\Apns\Client\Message as MessageClient;
 use ZendService\Apple\Apns\Message as ServiceMessage;
 use ZendService\Apple\Apns\Response\Feedback as FeedbackResponse;
 use ZendService\Apple\Apns\Response\Message as PushResponse;
+use ZendService\Apple\Exception\RuntimeException;
 
 /**
  * Apns adapter tests.
@@ -82,5 +83,18 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
     public function testFeedback()
     {
         self::assertCount(1, $this->adapter->feedback());
+    }
+
+    public function testExceptionErrorCode()
+    {
+        $reflection = new \ReflectionClass(get_class($this->adapter));
+        $method = $reflection->getMethod('getErrorCodeFromException');
+        $method->setAccessible(true);
+
+        $exception = new RuntimeException('Server is unavailable; please retry later');
+        self::assertEquals(ApnsAdapter::RESPONSE_UNAVAILABLE, $method->invoke($this->adapter, $exception));
+
+        $exception = new RuntimeException('Unknown');
+        self::assertEquals(ApnsAdapter::RESPONSE_UNKNOWN_ERROR, $method->invoke($this->adapter, $exception));
     }
 }

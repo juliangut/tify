@@ -93,7 +93,19 @@ $gcmService = new \Jgut\Tify\Service\GcmService(['api_key' => 'google_api_key'])
 
 Responses from APNS and GCM push services are very different from one another, Result is a response abstraction in order to provide a common interface to access this non-equal returning data from APNS and GCM services.
 
-This objects are composed of device token, date, status and status message (in case of error).
+This objects are composed of device token, date, status code (a status categorization) and status message (which corresponds to the original APNS or GCM response status).
+
+#### Status Codes
+
+* `STATUS_SUCCESS`, push was successful
+* `STATUS_INVALID_DEVICE`, device token provided is invalid
+* `STATUS_INVALID_MESSAGE`, message was not properly composed
+* `STATUS_RATE_ERROR`, only for GCM
+* `STATUS_AUTH_ERROR`, only for GCM
+* `STATUS_SERVER_ERROR`
+* `STATUS_UNKNOWN_ERROR`
+
+Among all the result statuses, `STATUS_INVALID_DEVICE` is the most interesting because it is a signal that you should probably remove that token from your database.
 
 ### Service
 

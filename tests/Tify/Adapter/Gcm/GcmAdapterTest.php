@@ -15,6 +15,7 @@ use Jgut\Tify\Adapter\Gcm\GcmMessage;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\GcmReceiver;
+use Jgut\Tify\Result;
 use ZendService\Google\Exception\RuntimeException;
 use ZendService\Google\Gcm\Client;
 use ZendService\Google\Gcm\Response;
@@ -32,7 +33,7 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $message = $this->getMockBuilder(GcmMessage::class)->disableOriginalConstructor()->getMock();
-        $message->expects(self::any())->method('getRegistrationIds')->will(self::returnValue(['aaa', 'bbb']));
+        $message->expects(self::any())->method('getRegistrationIds')->will(self::returnValue(['aaa', 'bbb', 'ccc']));
 
         $response = $this->getMockBuilder(Response::class)->disableOriginalConstructor()->getMock();
         $response->expects(self::any())->method('getResults')
@@ -64,9 +65,19 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
         $receiver->expects(self::any())->method('getToken')->will(self::returnValue('aaa'));
 
         $notification = new Notification($message, [$receiver]);
+        /* @var Result[] $results */
         $results = $this->adapter->push($notification);
 
-        self::assertCount(2, $results);
+        self::assertCount(3, $results);
+
+        self::assertEquals('aaa', $results[0]->getToken());
+        self::assertTrue($results[0]->isSuccess());
+
+        self::assertEquals('bbb', $results[1]->getToken());
+        self::assertTrue($results[1]->isError());
+
+        self::assertEquals('ccc', $results[2]->getToken());
+        self::assertTrue($results[2]->isError());
     }
 
     public function testExceptionErrorCode()
@@ -76,21 +87,21 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $exception = new RuntimeException('500 Internal Server Error');
-        self::assertEquals(GcmAdapter::RESULT_INTERNAL_SERVER_ERROR, $method->invoke($this->adapter, $exception));
+        self::assertEquals(GcmAdapter::RESPONSE_INTERNAL_SERVER_ERROR, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('503 Server Unavailable; Retry-After 200');
-        self::assertEquals(GcmAdapter::RESULT_SERVER_UNAVAILABLE, $method->invoke($this->adapter, $exception));
+        self::assertEquals(GcmAdapter::RESPONSE_SERVER_UNAVAILABLE, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('401 Forbidden; Authentication Error');
-        self::assertEquals(GcmAdapter::RESULT_AUTHENTICATION_ERROR, $method->invoke($this->adapter, $exception));
+        self::assertEquals(GcmAdapter::RESPONSE_AUTHENTICATION_ERROR, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('400 Bad Request; invalid message');
-        self::assertEquals(GcmAdapter::RESULT_INVALID_MESSAGE, $method->invoke($this->adapter, $exception));
+        self::assertEquals(GcmAdapter::RESPONSE_INVALID_MESSAGE, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('Response body did not contain a valid JSON response');
-        self::assertEquals(GcmAdapter::RESULT_BAD_FORMATTED_RESPONSE, $method->invoke($this->adapter, $exception));
+        self::assertEquals(GcmAdapter::RESPONSE_BADLY_FORMATTED_RESPONSE, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('Unknown');
-        self::assertEquals(GcmAdapter::RESULT_UNKNOWN, $method->invoke($this->adapter, $exception));
+        self::assertEquals(GcmAdapter::RESPONSE_UNKNOWN_ERROR, $method->invoke($this->adapter, $exception));
     }
 }

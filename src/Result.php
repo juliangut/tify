@@ -15,7 +15,12 @@ namespace Jgut\Tify;
 class Result implements \JsonSerializable
 {
     const STATUS_SUCCESS = 'success';
-    const STATUS_ERROR = 'error';
+    const STATUS_INVALID_DEVICE = 'invalidDevice';
+    const STATUS_INVALID_MESSAGE = 'invalidMessage';
+    const STATUS_RATE_ERROR = 'rateError';
+    const STATUS_AUTH_ERROR = 'authError';
+    const STATUS_SERVER_ERROR = 'serverError';
+    const STATUS_UNKNOWN_ERROR = 'unknownError';
 
     /**
      * Device token.
@@ -152,7 +157,7 @@ class Result implements \JsonSerializable
      */
     public function isError()
     {
-        return $this->status === static::STATUS_ERROR;
+        return $this->status !== static::STATUS_SUCCESS;
     }
 
     /**
@@ -166,7 +171,8 @@ class Result implements \JsonSerializable
      */
     public function setStatus($status)
     {
-        if (!in_array($status, [static::STATUS_SUCCESS, static::STATUS_ERROR])) {
+        $ref = new \ReflectionClass(self::class);
+        if (!in_array($status, $ref->getConstants())) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a valid status', $status));
         }
 

@@ -24,8 +24,17 @@ use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
  */
 class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapter
 {
-    const RESULT_OK = 0;
-    const RESULT_UNAVAILABLE = 2048;
+    const RESPONSE_OK = 0;
+    const RESPONSE_PROCESSING_ERROR = 1;
+    const RESPONSE_MISSING_DEVICE_TOKEN = 2;
+    const RESPONSE_MISSING_TOPIC = 3;
+    const RESPONSE_MISSING_PAYLOAD = 4;
+    const RESPONSE_INVALID_TOKEN_SIZE = 5;
+    const RESPONSE_INVALID_TOPIC_SIZE = 6;
+    const RESPONSE_INVALID_PAYLOAD_SIZE = 7;
+    const RESPONSE_INVALID_TOKEN = 8;
+    const RESPONSE_UNKNOWN_ERROR = 255;
+    const RESPONSE_UNAVAILABLE = 2048;
 
     /**
      * Status codes mapping.
@@ -33,18 +42,44 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
      * @var array
      */
     protected static $statusCodes = [
-        0 => 'OK',
-        1 => 'Processing Error',
-        2 => 'Missing Device Token',
-        3 => 'Missing Topic',
-        4 => 'Missing Payload',
-        5 => 'Invalid Token Size',
-        6 => 'Invalid Topic Size',
-        7 => 'Invalid Payload Size',
-        8 => 'Invalid Token',
-        10 => 'Shutdown',
-        255 => 'Unknown Error',
-        self::RESULT_UNAVAILABLE => 'Server Unavailable',
+        self::RESPONSE_OK => Result::STATUS_SUCCESS,
+
+        self::RESPONSE_MISSING_DEVICE_TOKEN => Result::STATUS_INVALID_MESSAGE,
+        self::RESPONSE_MISSING_TOPIC => Result::STATUS_INVALID_MESSAGE,
+        self::RESPONSE_MISSING_PAYLOAD => Result::STATUS_INVALID_MESSAGE,
+        self::RESPONSE_INVALID_TOKEN_SIZE => Result::STATUS_INVALID_MESSAGE,
+        self::RESPONSE_INVALID_TOPIC_SIZE => Result::STATUS_INVALID_MESSAGE,
+        self::RESPONSE_INVALID_PAYLOAD_SIZE => Result::STATUS_INVALID_MESSAGE,
+
+        self::RESPONSE_INVALID_TOKEN => Result::STATUS_INVALID_DEVICE,
+
+        self::RESPONSE_PROCESSING_ERROR => Result::STATUS_SERVER_ERROR,
+        self::RESPONSE_UNAVAILABLE => Result::STATUS_SERVER_ERROR,
+
+        self::RESPONSE_UNKNOWN_ERROR => Result::STATUS_UNKNOWN_ERROR,
+    ];
+
+    /**
+     * Status messages mapping.
+     *
+     * @var array
+     */
+    protected static $statusMessages = [
+        self::RESPONSE_OK => 'OK',
+
+        self::RESPONSE_MISSING_DEVICE_TOKEN => 'Missing Device Token',
+        self::RESPONSE_MISSING_TOPIC => 'Missing Topic',
+        self::RESPONSE_MISSING_PAYLOAD => 'Missing Payload',
+        self::RESPONSE_INVALID_TOKEN_SIZE => 'Invalid Token Size',
+        self::RESPONSE_INVALID_TOPIC_SIZE => 'Invalid Topic Size',
+        self::RESPONSE_INVALID_PAYLOAD_SIZE => 'Invalid Payload Size',
+
+        self::RESPONSE_INVALID_TOKEN => 'Invalid Token',
+
+        self::RESPONSE_PROCESSING_ERROR => 'Processing Error',
+        self::RESPONSE_UNAVAILABLE => 'Server Unavailable',
+
+        self::RESPONSE_UNKNOWN_ERROR => 'Unknown Error',
     ];
 
     /**
@@ -106,28 +141,20 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
 
         /* @var \ZendService\Apple\Apns\Message $message */
         foreach ($this->getPushMessages($notification) as $message) {
-            $pushResult = new Result($message->getToken());
-
             try {
-                $pushResponse = $client->send($message);
-
-                if ($pushResponse->getCode() !== static::RESULT_OK) {
-                    $pushResult->setStatus(Result::STATUS_ERROR);
-                    $pushResult->setStatusMessage(self::$statusCodes[$pushResponse->getCode()]);
-                }
+                $statusCode = $client->send($message)->getCode();
             // @codeCoverageIgnoreStart
             } catch (ApnsRuntimeException $exception) {
-                $pushResult->setStatus(Result::STATUS_ERROR);
-
-                if (preg_match('/^Server is unavailable/', $exception->getMessage())) {
-                    $pushResult->setStatusMessage(self::$statusCodes[self::RESULT_UNAVAILABLE]);
-                } else {
-                    $pushResult->setStatusMessage($exception->getMessage());
-                }
+                $statusCode = $this->getErrorCodeFromException($exception);
             }
             // @codeCoverageIgnoreEnd
 
-            $pushResults[] = $pushResult;
+            $pushResults[] = new Result(
+                $message->getToken(),
+                new \DateTime('now', new \DateTimeZone('UTC')),
+                self::$statusCodes[$statusCode],
+                self::$statusMessages[$statusCode]
+            );
         }
 
         $client->close();
@@ -224,6 +251,24 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
                 yield $this->builder->buildPushMessage($receiver, $notification);
             }
         }
+    }
+
+    /**
+     * Extract error code from exception.
+     *
+     * @param \ZendService\Apple\Exception\RuntimeException $exception
+     *
+     * @return string
+     */
+    protected function getErrorCodeFromException(ApnsRuntimeException $exception)
+    {
+        $message = $exception->getMessage();
+
+        if (preg_match('/^Server is unavailable/', $message)) {
+            return self::RESPONSE_UNAVAILABLE;
+        }
+
+        return self::RESPONSE_UNKNOWN_ERROR;
     }
 
     /**

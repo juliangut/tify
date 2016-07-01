@@ -21,6 +21,8 @@ use ZendService\Google\Gcm\Message;
  */
 class GcmMessage extends Message
 {
+    const DEFAULT_TTL = '2419200'; // 4 weeks
+
     /**
      * @var array
      */
@@ -111,7 +113,7 @@ class GcmMessage extends Message
         if ($this->delayWhileIdle) {
             $json['delay_while_idle'] = $this->delayWhileIdle;
         }
-        if ($this->timeToLive !== 2419200) {
+        if ($this->timeToLive !== self::DEFAULT_TTL) {
             $json['time_to_live'] = $this->timeToLive;
         }
         if ($this->restrictedPackageName) {

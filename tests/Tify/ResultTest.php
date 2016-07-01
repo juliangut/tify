@@ -67,15 +67,15 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $this->result->setDate($date);
         self::assertEquals($date, $this->result->getDate());
 
-        $this->result->setStatus(Result::STATUS_ERROR);
-        self::assertEquals(Result::STATUS_ERROR, $this->result->getStatus());
+        $this->result->setStatus(Result::STATUS_INVALID_DEVICE);
+        self::assertEquals(Result::STATUS_INVALID_DEVICE, $this->result->getStatus());
         self::assertFalse($this->result->isSuccess());
         self::assertTrue($this->result->isError());
 
         $this->result->setStatusMessage('Error');
         self::assertEquals('Error', $this->result->getStatusMessage());
 
-        $this->result->setStatus('my_status');
+        $this->result->setStatus('fake_status');
     }
 
     public function testSerializable()
@@ -84,8 +84,8 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $serialized = [
             'token' => 'aaaaa',
             'date' => $date->format('c'),
-            'status' => Result::STATUS_ERROR,
-            'statusMessage' => 'Error',
+            'status' => Result::STATUS_UNKNOWN_ERROR,
+            'statusMessage' => 'Unknown Error',
         ];
 
         $this->result->setToken($serialized['token']);

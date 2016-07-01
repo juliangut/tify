@@ -19,6 +19,8 @@ class Notification
 {
     use ParameterTrait;
 
+    const DEFAULT_TTL = '2419200'; // 4 weeks
+
     /**
      * Default notification parameters.
      *
@@ -40,7 +42,7 @@ class Notification
         // GCM
         'collapse_key' => null,
         'delay_while_idle' => null,
-        'time_to_live' => 2419200,
+        'time_to_live' => self::DEFAULT_TTL,
         'restricted_package_name' => null,
         'dry_run' => null,
     ];
