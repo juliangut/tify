@@ -184,7 +184,7 @@ class Result implements \JsonSerializable
     /**
      * Retrieve result status message.
      *
-     * @return string
+     * @return string|null
      */
     public function getStatusMessage()
     {

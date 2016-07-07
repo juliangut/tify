@@ -151,7 +151,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
 
             $pushResults[] = new Result(
                 $message->getToken(),
-                new \DateTime('now', new \DateTimeZone('UTC')),
+                null,
                 self::$statusCodes[$statusCode],
                 self::$statusMessages[$statusCode]
             );
