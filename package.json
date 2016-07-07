@@ -1,7 +1,7 @@
 {
-  "name": "pushat",
-  "description": "Push notification services abstraction",
-  "version": "0.1.0",
+  "name": "tify",
+  "description": "Unified push notification services abstraction",
+  "version": "1.0.0",
   "keywords": [
     "push",
     "notification",
@@ -9,7 +9,7 @@
     "APNS",
     "abstraction"
   ],
-  "homepage": "http://github.com/juliangut/pushat",
+  "homepage": "http://github.com/juliangut/tify",
   "license": "BSD-3-Clause",
   "author": {
     "name": "Julián Gutiérrez",
@@ -18,19 +18,17 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-composer": "^0.4.5",
-    "grunt-phpcpd": "~0.1.3",
-    "grunt-phpcs": "~0.2.3",
-    "grunt-phplint": "~0.0.5",
-    "grunt-phpmd": "~0.1.1",
-    "grunt-phpunit": "~0.3.5",
-    "grunt-security-checker": "^0.1.0",
-    "jit-grunt": "^0.10.0",
-    "time-grunt": "~1.2.2"
+    "gulp": "^3.9.0",
+    "gulp-composer": "^0.4.0",
+    "gulp-phpcpd": "^1.0.0",
+    "gulp-phpcs": "^1.1.0",
+    "gulp-phplint": "~0.1.0",
+    "gulp-phpmd": "^2.0.0",
+    "gulp-phpunit": "~0.14.0",
+    "run-sequence": "^1.2.1"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:juliangut/pushat.git"
+    "url": "git@github.com:juliangut/tify.git"
   }
 }
