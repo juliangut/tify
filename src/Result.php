@@ -184,7 +184,7 @@ class Result implements \JsonSerializable
     /**
      * Retrieve result status message.
      *
-     * @return string|null
+     * @return string
      */
     public function getStatusMessage()
     {
@@ -208,7 +208,7 @@ class Result implements \JsonSerializable
     /**
      * {@inheritdoc}
      *
-     * @return array
+     * @return string[]
      */
     public function jsonSerialize()
     {

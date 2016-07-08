@@ -258,7 +258,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
      *
      * @param \ZendService\Apple\Exception\RuntimeException $exception
      *
-     * @return string
+     * @return int
      */
     protected function getErrorCodeFromException(ApnsRuntimeException $exception)
     {

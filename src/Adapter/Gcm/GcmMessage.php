@@ -21,7 +21,7 @@ use ZendService\Google\Gcm\Message;
  */
 class GcmMessage extends Message
 {
-    const DEFAULT_TTL = '2419200'; // 4 weeks
+    const DEFAULT_TTL = 2419200; // 4 weeks
 
     /**
      * @var array
