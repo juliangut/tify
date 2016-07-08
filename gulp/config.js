@@ -4,6 +4,6 @@ module.exports = {
   port: 9000,
   src: 'src',
   tests: 'tests',
-  dist: 'dist',
+  dist: 'build',
   public: 'public'
 };
