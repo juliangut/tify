@@ -31,7 +31,7 @@ class Message
      *
      * @var array
      */
-    static protected $validParameters = [
+    protected static $validParameters = [
         // Common
         'title',
         'body',
@@ -59,7 +59,7 @@ class Message
      *
      * @var array
      */
-    static protected $parameterMap = [
+    protected static $parameterMap = [
         'title-loc-key'  => 'title_loc_key',
         'title-loc-args' => 'title_loc_args',
         'loc-key'        => 'body_loc_key',

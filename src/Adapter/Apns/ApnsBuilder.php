@@ -160,7 +160,7 @@ class ApnsBuilder
             'loc-key',
             'loc-args',
             'action-loc-key',
-            'launch-image'
+            'launch-image',
         ];
 
         foreach ($alertParams as $parameter) {
