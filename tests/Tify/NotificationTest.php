@@ -45,6 +45,14 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         self::assertCount(1, $this->notification->getReceivers());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidParameter()
+    {
+        $this->notification->setParameter('made-up-parameter', true);
+    }
+
     public function testMessage()
     {
         $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();

@@ -10,6 +10,7 @@
 namespace Jgut\Tify\Adapter\Apns;
 
 use Jgut\Tify\Exception\AdapterException;
+use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\ApnsReceiver;
 use ZendService\Apple\Apns\Client\AbstractClient;
@@ -107,14 +108,14 @@ class ApnsBuilder
                 time()
             )
         );
-        $badge = (int) $notification->getParameter('badge') === 0 ? null : (int) $notification->getParameter('badge');
+        $badge = $notification->getParameter('badge') === null ? null : (int) $notification->getParameter('badge');
 
         $pushMessage = (new ServiceMessage())
             ->setId($messageId)
             ->setToken($receiver->getToken())
             ->setBadge($badge)
             ->setSound($notification->getParameter('sound'))
-            ->setContentAvailable($notification->getParameter('content_available'))
+            ->setContentAvailable((int) $notification->getParameter('content-available'))
             ->setCategory($notification->getParameter('category'))
             ->setCustom($message->getPayloadData());
 
@@ -126,21 +127,48 @@ class ApnsBuilder
             $pushMessage->setExpire($notification->getParameter('expire'));
         }
 
-        if ($message->getParameter('title') !== null || $message->getParameter('body') !== null
-            || $message->getParameter('title_loc_key') !== null || $message->getParameter('loc_key') !== null
-        ) {
+        if ($this->shouldHaveAlert($message)) {
             $pushMessage->setAlert(new ServiceMessageAlert(
                 $message->getParameter('body'),
-                $message->getParameter('action_loc_key'),
-                $message->getParameter('loc_key'),
-                $message->getParameter('loc_args'),
-                $message->getParameter('launch_image'),
+                $message->getParameter('action-loc-key'),
+                $message->getParameter('loc-key'),
+                $message->getParameter('loc-args'),
+                $message->getParameter('launch-image'),
                 $message->getParameter('title'),
-                $message->getParameter('title_loc_key'),
-                $message->getParameter('title_loc_args')
+                $message->getParameter('title-loc-key'),
+                $message->getParameter('title-loc-args')
             ));
         }
 
         return $pushMessage;
+    }
+
+    /**
+     * Message should have alert dictionary.
+     *
+     * @param \Jgut\Tify\Message $message
+     *
+     * @return bool
+     */
+    private function shouldHaveAlert(Message $message)
+    {
+        static $alertParams = [
+            'title',
+            'body',
+            'title-loc-key',
+            'title-loc-args',
+            'loc-key',
+            'loc-args',
+            'action-loc-key',
+            'launch-image'
+        ];
+
+        foreach ($alertParams as $parameter) {
+            if ($message->hasParameter($parameter)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

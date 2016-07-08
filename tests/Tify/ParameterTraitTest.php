@@ -25,6 +25,7 @@ class ParameterTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaults()
     {
+        self::assertFalse($this->parameterBag->hasParameter('any_parameter'));
         self::assertNull($this->parameterBag->getParameter('any_parameter'));
         self::assertEmpty($this->parameterBag->getParameters());
     }

@@ -26,42 +26,33 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->message = new Message;
     }
 
-    /**
-     * @dataProvider defaultParametersProvider
-     */
-    public function testDefaults($parameter)
+    public function testDefaults()
     {
-        self::assertTrue($this->message->hasParameter($parameter));
-        self::assertNull($this->message->getParameter($parameter));
-
         self::assertNull($this->message->getPayload('any_parameter'));
         self::assertEmpty($this->message->getPayloadData());
-    }
-
-    /**
-     * Parameters provider
-     *
-     * @return array
-     */
-    public function defaultParametersProvider()
-    {
-        return [
-            ['title'],
-            ['body'],
-        ];
     }
 
     public function testMutators()
     {
         $this->message->setTitle('message title');
+        self::assertTrue($this->message->hasParameter('title'));
         self::assertEquals('message title', $this->message->getParameter('title'));
 
         $this->message->setBody('message body');
+        self::assertTrue($this->message->hasParameter('body'));
         self::assertEquals('message body', $this->message->getParameter('body'));
 
         self::assertEquals('data_', $this->message->getPayloadPrefix());
         $this->message->setPayloadPrefix('');
         self::assertEquals('', $this->message->getPayloadPrefix());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidParameter()
+    {
+        $this->message->setParameter('made-up-parameter', true);
     }
 
     /**

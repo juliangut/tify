@@ -16,35 +16,54 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Message
 {
-    use ParameterTrait;
+    use ParameterTrait {
+        ParameterTrait::hasParameter as hasDefinedParameter;
+        ParameterTrait::getParameter as getDefinedParameter;
+        ParameterTrait::setParameter as setDefinedParameter;
+    }
 
     /**
-     * Default message parameters.
+     * Valid message parameters.
+     *
+     * @see https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG
+     *          /Chapters/TheNotificationPayload.html
+     * @see https://developers.google.com/cloud-messaging/http-server-ref#downstream-http-messages-json
      *
      * @var array
      */
-    protected $defaultParameters = [
-        'title' => null,
-        'body' => null,
+    static protected $validParameters = [
+        // Common
+        'title',
+        'body',
+
+        // Common mapped
+        'title_loc_key',
+        'title_loc_args',
+        'body_loc_key',
+        'body_loc_args',
 
         // APNS
-        //'launch_image' => null,
-        //'action_loc_key' => null,
-        //'title_loc_key' => null,
-        //'title_loc_args' => null,
-        //'loc_key' => null,
-        //'loc_args' => null,
+        'action-loc-key',
+        'launch-image',
 
         // GCM
-        //'icon' => null,
-        //'sound' => 'default',
-        //'tag' => null,
-        //'color' => '#rrggbb',
-        //'click_action' => null,
-        //'title_loc_key' => null,
-        //'title_loc_args' => null,
-        //'body_loc_key' => null,
-        //'body_loc_args' => null,
+        'icon',
+        'sound',
+        'tag',
+        'color',
+        'click_action',
+    ];
+
+    /**
+     * Parameter key map
+     *
+     * @var array
+     */
+    static protected $parameterMap = [
+        'title-loc-key'  => 'title_loc_key',
+        'title-loc-args' => 'title_loc_args',
+        'loc-key'        => 'body_loc_key',
+        'loc-args'       => 'body_loc_args',
     ];
 
     /**
@@ -52,7 +71,7 @@ class Message
      *
      * @var array
      */
-    protected static $reservedKeyRegex = [
+    protected static $reservedPayloadRegex = [
         // APNS
         '/^apc$/',
 
@@ -89,7 +108,7 @@ class Message
      */
     public function __construct(array $parameters = [])
     {
-        $this->setParameters(array_merge($this->defaultParameters, $parameters));
+        $this->setParameters($parameters);
 
         $this->payload = new ArrayCollection;
     }
@@ -120,6 +139,47 @@ class Message
         $this->setParameter('body', $body);
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasParameter($parameter)
+    {
+        return $this->hasDefinedParameter($this->getMappedParameter($parameter));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameter($parameter, $default = null)
+    {
+        return $this->getDefinedParameter($this->getMappedParameter($parameter), $default);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setParameter($parameter, $value)
+    {
+        $parameter = $this->getMappedParameter($parameter);
+
+        if (!in_array($parameter, static::$validParameters)) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid message parameter', $parameter));
+        }
+
+        return $this->setDefinedParameter($parameter, $value);
+    }
+
+    private function getMappedParameter($parameter)
+    {
+        if (array_key_exists($parameter, static::$parameterMap)) {
+            return static::$parameterMap[$parameter];
+        }
+
+        return $parameter;
     }
 
     /**
@@ -221,12 +281,12 @@ class Message
     {
         $key = $this->composePayloadKey($key);
 
-        foreach (self::$reservedKeyRegex as $reservedKeyRegex) {
-            if (preg_match($reservedKeyRegex, $key)) {
+        foreach (self::$reservedPayloadRegex as $keyRegex) {
+            if (preg_match($keyRegex, $key)) {
                 throw new \InvalidArgumentException(sprintf(
-                    '"%s" can not be used as message payload key, starts or contains "%s"',
+                    '"%s" can not be used as message payload key, starts with or contains "%s"',
                     $key,
-                    preg_replace('![/^$]!', '', $reservedKeyRegex)
+                    preg_replace('![/^$]!', '', $keyRegex)
                 ));
             }
         }
@@ -247,12 +307,12 @@ class Message
      */
     protected function composePayloadKey($key)
     {
-        $key = trim($key);
+        $key = $this->payloadPrefix . trim($key);
 
         if ($key === '') {
-            throw new \InvalidArgumentException('Payload parameter key can not be empty');
+            throw new \InvalidArgumentException('Message payload parameter can not be empty');
         }
 
-        return $this->payloadPrefix . $key;
+        return $key;
     }
 }

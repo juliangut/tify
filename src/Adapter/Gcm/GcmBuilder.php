@@ -9,6 +9,7 @@
 
 namespace Jgut\Tify\Adapter\Gcm;
 
+use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Zend\Http\Client\Adapter\Socket;
 use Zend\Http\Client as HttpClient;
@@ -71,12 +72,42 @@ class GcmBuilder
             ->setDryRun($notification->getParameter('dry_run'))
             ->setData($message->getPayloadData());
 
-        if ($message->getParameter('title') !== null || $message->getParameter('body') !== null
-            || $message->getParameter('title_loc_key') !== null || $message->getParameter('body_loc_key') !== null
-        ) {
+        if ($this->shouldHaveNotification($message)) {
             $pushMessage->setNotificationPayload($message->getParameters());
         }
 
         return $pushMessage;
+    }
+
+    /**
+     * Message should have notification data.
+     *
+     * @param \Jgut\Tify\Message $message
+     *
+     * @return bool
+     */
+    private function shouldHaveNotification(Message $message)
+    {
+        static $notificationParams = [
+            'title',
+            'body',
+            'icon',
+            'sound',
+            'tag',
+            'color',
+            'click_action',
+            'title_loc_key',
+            'title_loc_args',
+            'body_loc_key',
+            'body_loc_args',
+        ];
+
+        foreach ($notificationParams as $parameter) {
+            if ($message->hasParameter($parameter)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

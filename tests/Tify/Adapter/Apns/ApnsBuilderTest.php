@@ -61,10 +61,9 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
         $receiver = new ApnsReceiver(
             '9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527'
         );
-
-        $message = new Message(['title_loc_key' => 'MESSAGE_TITLE']);
-
+        $message = new Message();
         $urlArgs = ['arg1' => 'val1'];
+
         $notification = new Notification($message, [$receiver], ['url-args' => $urlArgs, 'expire' => 600]);
 
         $pushMessage = $this->builder->buildPushMessage($receiver, $notification);
@@ -72,6 +71,21 @@ class ApnsBuilderTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(ApnsMessage::class, $pushMessage);
         self::assertEquals($urlArgs, $pushMessage->getUrlArgs());
         self::assertEquals(600, $pushMessage->getExpire());
+        self::assertNull($pushMessage->getAlert());
+    }
+
+    public function testAlertPushMessage()
+    {
+        $receiver = new ApnsReceiver(
+            '9a4ecb987ef59c88b12035278b86f26d448835939a4ecb987ef59c88b1203527'
+        );
+        $message = new Message(['title-loc-key' => 'MESSAGE_TITLE']);
+
+        $notification = new Notification($message, [$receiver]);
+
+        $pushMessage = $this->builder->buildPushMessage($receiver, $notification);
+
+        self::assertInstanceOf(ApnsMessage::class, $pushMessage);
         self::assertEquals('MESSAGE_TITLE', $pushMessage->getAlert()->getTitleLocKey());
     }
 }

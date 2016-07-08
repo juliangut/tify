@@ -39,7 +39,7 @@ class GcmBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testPushMessage()
     {
-        $message = new Message(['title_loc_key' => 'MESSAGE_TITLE']);
+        $message = new Message();
 
         $notification = new Notification($message, [], ['collapse_key' => 'my_key']);
 
@@ -47,6 +47,17 @@ class GcmBuilderTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(GcmMessage::class, $pushMessage);
         self::assertEquals('my_key', $pushMessage->getCollapseKey());
+    }
+
+    public function testNotificationPushMessage()
+    {
+        $message = new Message(['title_loc_key' => 'MESSAGE_TITLE']);
+
+        $notification = new Notification($message, []);
+
+        $pushMessage = $this->builder->buildPushMessage(['my_token'], $notification);
+
+        self::assertInstanceOf(GcmMessage::class, $pushMessage);
         self::assertEquals('MESSAGE_TITLE', $pushMessage->getNotificationPayload()['title_loc_key']);
     }
 }

@@ -10,6 +10,7 @@
 namespace Jgut\Tify;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Jgut\Tify\Adapter\Gcm\GcmMessage;
 use Jgut\Tify\Receiver\AbstractReceiver;
 
 /**
@@ -17,12 +18,14 @@ use Jgut\Tify\Receiver\AbstractReceiver;
  */
 class Notification
 {
-    use ParameterTrait;
-
-    const DEFAULT_TTL = '2419200'; // 4 weeks
+    use ParameterTrait {
+        ParameterTrait::setParameter as setDefinedParameter;
+    }
 
     /**
      * Default notification parameters.
+     *
+     * For an iOS silent notification leave "badge" and "sound" to null and set "content-available" to true
      *
      * @see https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG
      *          /Chapters/TheNotificationPayload.html
@@ -34,7 +37,7 @@ class Notification
         // APNS
         'badge' => null,
         'sound' => null,
-        'content_available' => null,
+        'content-available' => true, // Awake inactive apps in background
         'category' => null,
         'url-args' => null,
         'expire' => null,
@@ -42,7 +45,7 @@ class Notification
         // GCM
         'collapse_key' => null,
         'delay_while_idle' => null,
-        'time_to_live' => self::DEFAULT_TTL,
+        'time_to_live' => GcmMessage::DEFAULT_TTL, // 4 weeks
         'restricted_package_name' => null,
         'dry_run' => null,
     ];
@@ -80,6 +83,20 @@ class Notification
 
             $this->setReceivers($receivers);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setParameter($parameter, $value)
+    {
+        if (!array_key_exists($parameter, $this->defaultParameters)) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid notification parameter', $parameter));
+        }
+
+        return $this->setDefinedParameter($parameter, $value);
     }
 
     /**

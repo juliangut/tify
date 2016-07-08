@@ -38,7 +38,9 @@ trait ParameterTrait
      */
     public function getParameters()
     {
-        $this->initializeParameters();
+        if (!$this->parameters instanceof ArrayCollection) {
+            return [];
+        }
 
         return $this->parameters->toArray();
     }
@@ -59,7 +61,7 @@ trait ParameterTrait
         }
 
         foreach ($parameters as $parameter => $value) {
-            $this->parameters->set(trim($parameter), $value);
+            $this->setParameter(trim($parameter), $value);
         }
 
         return $this;
@@ -74,7 +76,9 @@ trait ParameterTrait
      */
     public function hasParameter($parameter)
     {
-        $this->initializeParameters();
+        if (!$this->parameters instanceof ArrayCollection) {
+            return false;
+        }
 
         return $this->parameters->containsKey($parameter);
     }
@@ -89,7 +93,9 @@ trait ParameterTrait
      */
     public function getParameter($parameter, $default = null)
     {
-        $this->initializeParameters();
+        if (!$this->parameters instanceof ArrayCollection) {
+            return $default;
+        }
 
         return $this->parameters->containsKey($parameter) ? $this->parameters->get($parameter) : $default;
     }
