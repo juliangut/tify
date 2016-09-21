@@ -37,7 +37,7 @@ class Notification
         // APNS
         'badge' => null,
         'sound' => null,
-        'content-available' => true, // Awake inactive apps in background
+        'content-available' => null, // true|1 for silence notifications on iOS
         'category' => null,
         'url-args' => null,
         'expire' => null,

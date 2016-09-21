@@ -115,9 +115,12 @@ class ApnsBuilder
             ->setToken($receiver->getToken())
             ->setBadge($badge)
             ->setSound($notification->getParameter('sound'))
-            ->setContentAvailable((int) $notification->getParameter('content-available'))
             ->setCategory($notification->getParameter('category'))
             ->setCustom($message->getPayloadData());
+
+        if ($notification->getParameter('content-available') !== null) {
+            $pushMessage->setContentAvailable((int) $notification->getParameter('content-available'));
+        }
 
         if (is_array($notification->getParameter('url-args'))) {
             $pushMessage->setUrlArgs($notification->getParameter('url-args'));
