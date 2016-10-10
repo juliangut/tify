@@ -1,18 +1,19 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Receiver;
 
 /**
- * Class AbstractReceiver
+ * Abstract receiver class.
  */
-abstract class AbstractReceiver
+abstract class AbstractReceiver implements Receiver
 {
     /**
      * Receiver token.
@@ -32,19 +33,15 @@ abstract class AbstractReceiver
     }
 
     /**
-     * Get token.
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    final public function getToken()
+    public function getToken()
     {
         return $this->token;
     }
 
     /**
-     * Set token.
-     *
-     * @param string $token
+     * {@inheritdoc}
      */
     abstract public function setToken($token);
 }

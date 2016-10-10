@@ -1,23 +1,31 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Jgut\Tify\Adapter\Gcm\GcmMessage;
-use Jgut\Tify\Receiver\AbstractReceiver;
+use Jgut\Tify\Receiver\Receiver;
 
 /**
  * Notification handler.
  */
 class Notification
 {
+    const TTL_NONE = 0;
+    const TTL_IMMEDIATE = 3600; // 1 hour
+    const TTL_SHORT = 86400; // 1 day
+    const TTL_NORMAL = 604800; // 1 week
+    const TTL_EXTENDED = 1209600; // 2 week
+    const TTL_LONG = 1814400; // 3 week
+    const TTL_EXTRA_LONG = 2419200; // 4 weeks
+
     use ParameterTrait {
         ParameterTrait::setParameter as setDefinedParameter;
     }
@@ -25,7 +33,7 @@ class Notification
     /**
      * Default notification parameters.
      *
-     * For an iOS silent notification leave "badge" and "sound" to null and set "content-available" to true
+     * For an iOS silent notification leave "badge", "sound" and "content-available" to null.
      *
      * @see https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG
      *          /Chapters/TheNotificationPayload.html
@@ -37,35 +45,39 @@ class Notification
         // APNS
         'badge' => null,
         'sound' => null,
-        'content-available' => null, // true|1 for silence notifications on iOS
+        'content-available' => null, // 1 for silence notifications on iOS
         'category' => null,
         'url-args' => null,
-        'expire' => null,
+        'expire' => self::TTL_EXTENDED,
 
         // GCM
         'collapse_key' => null,
-        'delay_while_idle' => null,
-        'time_to_live' => GcmMessage::DEFAULT_TTL, // 4 weeks
+        'delay_while_idle' => false,
+        'time_to_live' => self::TTL_EXTENDED,
         'restricted_package_name' => null,
-        'dry_run' => null,
+        'dry_run' => false, // Best using sandbox at adapter level
     ];
 
     /**
-     * @var \Jgut\Tify\Message
+     * Notification's message.
+     *
+     * @var Message
      */
     protected $message;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * Notification list of receivers.
+     *
+     * @var Receiver[]
      */
     protected $receivers;
 
     /**
      * Notification constructor.
      *
-     * @param \Jgut\Tify\Message                                                                $message
-     * @param \Jgut\Tify\Receiver\AbstractReceiver|\Jgut\Tify\Receiver\AbstractReceiver[]| null $receivers
-     * @param array                                                                             $parameters
+     * @param Message             $message
+     * @param Receiver|Receiver[] $receivers
+     * @param array               $parameters
      *
      * @throws \InvalidArgumentException
      */
@@ -102,7 +114,7 @@ class Notification
     /**
      * Get message.
      *
-     * @return \Jgut\Tify\Message
+     * @return Message
      */
     public function getMessage()
     {
@@ -112,7 +124,7 @@ class Notification
     /**
      * Set message.
      *
-     * @param \Jgut\Tify\Message $message
+     * @param Message $message
      *
      * @throws \InvalidArgumentException
      *
@@ -128,7 +140,7 @@ class Notification
     /**
      * Retrieve list of receivers.
      *
-     * @return \Jgut\Tify\Receiver\AbstractReceiver[]
+     * @return Receiver[]
      */
     public function getReceivers()
     {
@@ -156,11 +168,11 @@ class Notification
     /**
      * Add receiver.
      *
-     * @param \Jgut\Tify\Receiver\AbstractReceiver $receiver
+     * @param Receiver $receiver
      *
      * @return $this
      */
-    public function addReceiver(AbstractReceiver $receiver)
+    public function addReceiver(Receiver $receiver)
     {
         $this->receivers->add($receiver);
 

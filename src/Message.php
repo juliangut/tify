@@ -1,10 +1,11 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify;
@@ -42,11 +43,11 @@ class Message
         'body_loc_key',
         'body_loc_args',
 
-        // APNS
+        // APNS specific
         'action-loc-key',
         'launch-image',
 
-        // GCM
+        // GCM specific
         'icon',
         'sound',
         'tag',
@@ -55,7 +56,7 @@ class Message
     ];
 
     /**
-     * Parameter key map
+     * Parameter key map.
      *
      * @var array
      */
@@ -88,7 +89,7 @@ class Message
     ];
 
     /**
-     * Payload prefix
+     * Payload prefix.
      *
      * @var string
      */
@@ -97,7 +98,7 @@ class Message
     /**
      * Message payload.
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var ArrayCollection
      */
     protected $payload;
 
@@ -105,6 +106,8 @@ class Message
      * Constructor.
      *
      * @param array $parameters
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $parameters = [])
     {
@@ -117,6 +120,8 @@ class Message
      * Convenience method to set message title.
      *
      * @param string $title
+     *
+     * @throws \InvalidArgumentException
      *
      * @return $this
      */
@@ -131,6 +136,8 @@ class Message
      * Convenience method to set message body.
      *
      * @param string $body
+     *
+     * @throws \InvalidArgumentException
      *
      * @return $this
      */
@@ -173,6 +180,13 @@ class Message
         return $this->setDefinedParameter($parameter, $value);
     }
 
+    /**
+     * Get normalized service parameter.
+     *
+     * @param string $parameter
+     *
+     * @return string
+     */
     private function getMappedParameter($parameter)
     {
         if (array_key_exists($parameter, static::$parameterMap)) {
@@ -281,7 +295,7 @@ class Message
     {
         $key = $this->composePayloadKey($key);
 
-        foreach (self::$reservedPayloadRegex as $keyRegex) {
+        foreach (static::$reservedPayloadRegex as $keyRegex) {
             if (preg_match($keyRegex, $key)) {
                 throw new \InvalidArgumentException(sprintf(
                     '"%s" can not be used as message payload key, starts with or contains "%s"',

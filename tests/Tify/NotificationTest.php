@@ -1,10 +1,11 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Tests\Notification;
@@ -19,18 +20,23 @@ use Jgut\Tify\Receiver\AbstractReceiver;
 class NotificationTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Message
+     * @var Message
      */
     protected $message;
 
     /**
-     * @var \Jgut\Tify\Notification
+     * @var Notification
      */
     protected $notification;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
-        $this->message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();
+        $this->message = $this->getMockBuilder(Message::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $receiver = $this->getMockForAbstractClass(AbstractReceiver::class, [], '', false);
 
         $this->notification = $this->getMockForAbstractClass(
@@ -55,7 +61,10 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     public function testMessage()
     {
-        $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();
+        /* @var Message $message */
+        $message = $this->getMockBuilder(Message::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->notification->setMessage($message);
         self::assertEquals($message, $this->notification->getMessage());
     }

@@ -3,10 +3,12 @@
 [![License](https://img.shields.io/github/license/juliangut/tify.svg?style=flat-square)](https://github.com/juliangut/tify/blob/master/LICENSE)
 
 [![Build status](https://img.shields.io/travis/juliangut/tify.svg?style=flat-square)](https://travis-ci.org/juliangut/tify)
-[![Style](https://styleci.io/repos/47275107/shield)](https://styleci.io/repos/47275107)
+[![Style Check](https://styleci.io/repos/47275107/shield)](https://styleci.io/repos/47275107)
 [![Code Quality](https://img.shields.io/scrutinizer/g/juliangut/tify.svg?style=flat-square)](https://scrutinizer-ci.com/g/juliangut/tify)
 [![Code Coverage](https://img.shields.io/coveralls/juliangut/tify.svg?style=flat-square)](https://coveralls.io/github/juliangut/tify)
+
 [![Total Downloads](https://img.shields.io/packagist/dt/juliangut/tify.svg?style=flat-square)](https://packagist.org/packages/juliangut/tify)
+[![Monthly Downloads](https://img.shields.io/packagist/dm/juliangut/tify.svg?style=flat-square)](https://packagist.org/packages/juliangut/tify)
 
 # Tify
 
@@ -45,20 +47,12 @@ Messages compose the final information arriving to receivers. GCM and APNS messa
 
 In order for the message payload to be created one of the following message parameters must be present:
 
-* For APNS
-  * `title`
-  * `title_loc_key`
-  * `body`
-  * `loc_key`
-* For GCM
-  * `title`
-  * `title_loc_key`
-  * `body`
-  * `body_loc_key`
+* For APNS: `title`, `title-loc-key`, `title-loc-args`, `body`, `loc-key`, `loc-args`, `action-loc-key`, `launch-image`
+* For GCM: `title`, `title_loc_key`, `title_loc_args`, `body`, `body_loc_key`, `body_loc_args`, `icon`, `sound`, `tag`, `color`
 
 Messages can hold any number of custom payload data that will compose additional data sent to the destination receivers.
 
-This key/value payload data must comply with some limitations to be fully compatible with different services at once, for this a prefix (`data_` by default) is automatically added to the key. This prefix can be changed or removed if needed, but be aware that payload data should not be a reserved word (`aps`, `from` or any word starting with `google` or `gcm`) or any GCM notification parameters.
+This key/value payload data must comply with some limitations to be fully compatible with different services at once, for this a prefix (`data_` by default) is automatically added to the key. This prefix can be changed or removed if needed, but be aware that payload data should not be a reserved word (`apns`, `from` or any word starting with `google` or `gcm`) or any GCM notification parameters.
 
 *Find APNS message parameters [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-2.*
 
@@ -70,7 +64,9 @@ It's a container to keep a message and its associated destination receivers.
 
 Notifications are the central unit of work, several notifications can be set into a Tify Service sharing the same adapters but sending different messages to different receivers.
 
-Notifications hold some extra parameters used by the push notification services to control behaviour and/or be used in notification creation.
+Notifications hold some extra parameters used by the notification services to control behaviour and/or be used in notification creation.
+
+Be aware notification TTL (expire in APNS) is normalized in both services to "2 weeks" instead of the default 4 weeks for GCM and none at all for APNS. There are some convenience constants in Notification class for common TTL.
 
 By clearing receivers list or changing message a notification can be reused as many times as needed.
 
@@ -85,8 +81,8 @@ Adapters will be given notifications to actually send the messages to associated
 For APNS adapter `certificate` parameter is mandatory, denoting the path to the service certificate (.pem file). In GCM `api_key` is the mandatory parameter denoting Google API key.
 
 ```php
-$apnsService = new \Jgut\Tify\Service\ApnsService(['certificate' => 'path_to_certificate.pem']);
-$gcmService = new \Jgut\Tify\Service\GcmService(['api_key' => 'google_api_key']);
+$apnsAdapter = new \Jgut\Tify\Adapter\ApnsAdapter(['certificate' => 'path_to_certificate.pem']);
+$gcmAdapter = new \Jgut\Tify\Adapter\GcmAdapter(['api_key' => 'google_api_key']);
 ```
 
 ### Result
@@ -100,8 +96,8 @@ This objects are composed of device token, date, status code (a status categoriz
 * `STATUS_SUCCESS`, push was successful
 * `STATUS_INVALID_DEVICE`, device token provided is invalid
 * `STATUS_INVALID_MESSAGE`, message was not properly composed
-* `STATUS_RATE_ERROR`, only for GCM
-* `STATUS_AUTH_ERROR`, only for GCM
+* `STATUS_RATE_ERROR`, (only for GCM)
+* `STATUS_AUTH_ERROR`, (only for GCM)
 * `STATUS_SERVER_ERROR`
 * `STATUS_UNKNOWN_ERROR`
 
@@ -109,7 +105,7 @@ Among all the result statuses, `STATUS_INVALID_DEVICE` is the most interesting b
 
 ### Service
 
-For simplicity instead of handing notifications to adapters one by one 'Tify Service' can be used to send Notifications to its corresponding receivers using correct provided Adapters, automatically merging notification Results into a single returned array.
+For simplicity instead of handing notifications to adapters one by one 'Tify Service' can be used to send Notifications to its corresponding receivers using correct Adapter, automatically merging notification Results into a single returned array.
 
 ## Usage
 
@@ -118,8 +114,8 @@ For simplicity instead of handing notifications to adapters one by one 'Tify Ser
 Basic usage creating a one message to be sent through different adapters.
 
 ```php
-use Jgut\Tify\Adapter\Apns\ApnsAdapter;
-use Jgut\Tify\Adapter\Gcm\GcmAdapter;
+use Jgut\Tify\Adapter\ApnsAdapter;
+use Jgut\Tify\Adapter\GcmAdapter;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\ApnsReceiver;
@@ -151,7 +147,7 @@ $results = $service->push();
 Sharing the same adapters to send different messages
 
 ```php
-use Jgut\Tify\Adapter\Gcm\GcmAdapter;
+use Jgut\Tify\Adapter\GcmAdapter;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\GcmReceiver;
@@ -192,7 +188,7 @@ $results = $service->push();
 ### Feedback
 
 ```php
-use Jgut\Tify\Adapter\Gcm\ApnsAdapter;
+use Jgut\Tify\Adapter\ApnsAdapter;
 use Jgut\Tify\Service;
 
 $adapters = [

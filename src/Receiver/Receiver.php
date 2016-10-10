@@ -8,17 +8,24 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Adapter;
+namespace Jgut\Tify\Receiver;
 
 /**
- * Feedback adapter interface.
+ * Receiver device interface.
  */
-interface FeedbackAdapter extends Adapter
+interface Receiver
 {
     /**
-     * Request feedback information.
+     * Get token.
      *
-     * @return \Jgut\Tify\Result[]
+     * @return string
      */
-    public function feedback();
+    public function getToken();
+
+    /**
+     * Set token.
+     *
+     * @param string $token
+     */
+    public function setToken($token);
 }

@@ -1,10 +1,11 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Tests\Message;
@@ -17,10 +18,13 @@ use Jgut\Tify\Message;
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Message
+     * @var Message
      */
     protected $message;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $this->message = new Message;

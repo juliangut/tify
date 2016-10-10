@@ -1,35 +1,46 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Tests;
 
 use Jgut\Tify\Adapter\AbstractAdapter;
-use Jgut\Tify\Adapter\Apns\ApnsAdapter;
-use Jgut\Tify\Adapter\Gcm\GcmAdapter;
-use Jgut\Tify\Message;
+use Jgut\Tify\Adapter\ApnsAdapter;
+use Jgut\Tify\Adapter\GcmAdapter;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Result;
 use Jgut\Tify\Service;
 
+/**
+ * Notification service tests.
+ */
 class ServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Service
+     * @var Service
      */
     protected $service;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
-        $this->service = new Service(
-            $this->getMockForAbstractClass(AbstractAdapter::class, [], '', false),
-            $this->getMockBuilder(Notification::class)->disableOriginalConstructor()->getMock()
-        );
+        /* @var AbstractAdapter $adapter */
+        $adapter = $this->getMockForAbstractClass(AbstractAdapter::class, [], '', false);
+
+        /* @var Notification $notification */
+        $notification = $this->getMockBuilder(Notification::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->service = new Service($adapter, $notification);
     }
 
     public function testAccesorsMutators()
@@ -37,18 +48,24 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $service = new Service;
 
         self::assertEmpty($service->getNotifications());
-        $service->addNotification(
-            $this->getMockBuilder(Notification::class)->disableOriginalConstructor()->getMock()
-        );
+
+        /* @var Notification $notification */
+        $notification = $this->getMockBuilder(Notification::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $service->addNotification($notification);
         self::assertCount(1, $service->getNotifications());
 
         $service->clearNotifications();
         self::assertCount(0, $service->getNotifications());
 
         self::assertEmpty($service->getAdapters());
-        $service->addAdapter(
-            $this->getMockBuilder(GcmAdapter::class)->disableOriginalConstructor()->getMock()
-        );
+
+        /* @var GcmAdapter $adapter */
+        $adapter = $this->getMockBuilder(GcmAdapter::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $service->addAdapter($adapter);
         self::assertCount(1, $service->getAdapters());
 
         $service->clearAdapters();
@@ -59,12 +76,19 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $result = new Result('aaa', new \DateTime('now', new \DateTimeZone('UTC')));
 
-        $adapter = $this->getMockBuilder(GcmAdapter::class)->disableOriginalConstructor()->getMock();
-        $adapter->expects(self::once())->method('push')->will(self::returnValue([$result]));
+        $adapter = $this->getMockBuilder(GcmAdapter::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $adapter->expects(self::once())
+            ->method('push')
+            ->will(self::returnValue([$result]));
+        /* @var GcmAdapter $adapter */
         $this->service->addAdapter($adapter);
 
-        $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();
-        $notification = $this->getMockBuilder(Notification::class)->disableOriginalConstructor()->getMock();
+        /* @var Notification $notification */
+        $notification = $this->getMockBuilder(Notification::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->service->clearNotifications();
         $this->service->addNotification($notification);
 
@@ -77,8 +101,13 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $result = new Result('aaa', new \DateTime('now', new \DateTimeZone('UTC')));
 
-        $adapter = $this->getMockBuilder(ApnsAdapter::class)->disableOriginalConstructor()->getMock();
-        $adapter->expects(self::once())->method('feedback')->will(self::returnValue([$result]));
+        $adapter = $this->getMockBuilder(ApnsAdapter::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $adapter->expects(self::once())
+            ->method('feedback')
+            ->will(self::returnValue([$result]));
+        /* @var GcmAdapter $adapter */
         $this->service->addAdapter($adapter);
 
         $results = $this->service->feedback();

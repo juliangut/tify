@@ -1,27 +1,34 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Tests\Adapter;
 
 use Jgut\Tify\Adapter\AbstractAdapter;
-use Jgut\Tify\Tests\Mock\AdapterMock;
+use Jgut\Tify\Tests\Stubs\AdapterStub;
 
 /**
- * Abstract adapter tests.
+ * Abstract service adapter tests.
  */
 class AbstractAdapterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var AdapterStub
+     */
     protected $adapter;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
-        $this->adapter = $this->getMockForAbstractClass(AbstractAdapter::class, [], '', false);
+        $this->adapter = new AdapterStub(['param1' => 'value1']);
     }
 
     /**
@@ -39,7 +46,7 @@ class AbstractAdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingParameter()
     {
-        $this->getMockForAbstractClass(AdapterMock::class);
+        $this->getMockForAbstractClass(AdapterStub::class);
     }
 
     public function testDefaults()

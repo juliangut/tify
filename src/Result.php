@@ -1,10 +1,11 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify;
@@ -51,33 +52,21 @@ class Result implements \JsonSerializable
     protected $statusMessage;
 
     /**
-     * @param string             $token
-     * @param int|\DateTime|null $date
-     * @param string             $status
-     * @param string|null        $statusMessage
+     * @param string    $token
+     * @param \DateTime $date
+     * @param string    $status
+     * @param string    $statusMessage
      *
      * @throws \InvalidArgumentException
      */
     public function __construct(
         $token,
-        $date = null,
+        \DateTime $date,
         $status = self::STATUS_SUCCESS,
         $statusMessage = null
     ) {
         $this->token = $token;
-
-        if (is_int($date)) {
-            $date = \DateTime::createFromFormat('U', (string) $date);
-        }
-        if ($date === null) {
-            $date = new \DateTime('now', new \DateTimeZone('UTC'));
-        }
-
-        if (!$date instanceof \DateTime) {
-            throw new \InvalidArgumentException('Wrong date value provided');
-        }
         $this->setDate($date);
-
         $this->setStatus($status);
         $this->setStatusMessage($statusMessage);
     }
@@ -171,7 +160,7 @@ class Result implements \JsonSerializable
      */
     public function setStatus($status)
     {
-        $ref = new \ReflectionClass(self::class);
+        $ref = new \ReflectionClass(static::class);
         if (!in_array($status, $ref->getConstants())) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a valid status', $status));
         }
@@ -194,7 +183,7 @@ class Result implements \JsonSerializable
     /**
      * Check successful status message.
      *
-     * @param string|null $statusMessage
+     * @param string $statusMessage
      *
      * @return $this
      */

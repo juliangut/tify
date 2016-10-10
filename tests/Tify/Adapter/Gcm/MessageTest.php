@@ -1,29 +1,33 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Tests\Adapter\Gcm;
 
-use Jgut\Tify\Adapter\Gcm\GcmMessage;
+use Jgut\Tify\Adapter\Gcm\Message;
 
 /**
- * Custom Gcm message tests.
+ * Custom GCM message tests.
  */
-class GcmMessageTest extends \PHPUnit_Framework_TestCase
+class MessageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Adapter\Gcm\GcmMessage
+     * @var Message
      */
     protected $message;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
-        $this->message = new GcmMessage();
+        $this->message = new Message;
     }
 
     public function testMutatorsAccessors()

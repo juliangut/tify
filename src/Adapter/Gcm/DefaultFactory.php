@@ -1,35 +1,51 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Adapter\Gcm;
 
-use Jgut\Tify\Message;
+use Jgut\Tify\Message as NotificationMessage;
 use Jgut\Tify\Notification;
 use Zend\Http\Client\Adapter\Socket;
 use Zend\Http\Client as HttpClient;
-use ZendService\Google\Gcm\Client;
+use ZendService\Google\Gcm\Client as PushClient;
 
 /**
- * Class GcmBuilder
+ * GCM default service factory.
  */
-class GcmBuilder
+class DefaultFactory implements Factory
 {
     /**
-     * Get opened push service client.
+     * Notification parameters list.
      *
-     * @param string $apiKey
-     *
-     * @return \ZendService\Google\Gcm\Client
+     * @var array
+     */
+    protected static $notificationParams = [
+        'title',
+        'body',
+        'icon',
+        'sound',
+        'tag',
+        'color',
+        'click_action',
+        'title_loc_key',
+        'title_loc_args',
+        'body_loc_key',
+        'body_loc_args',
+    ];
+
+    /**
+     * {@inheritdoc}
      */
     public function buildPushClient($apiKey)
     {
-        $client = new Client;
+        $client = new PushClient;
         $client->setApiKey($apiKey);
 
         $httpClient = new HttpClient(
@@ -47,21 +63,16 @@ class GcmBuilder
     }
 
     /**
-     * Get configured service message.
-     *
-     * @param array                   $tokens
-     * @param \Jgut\Tify\Notification $notification
+     * {@inheritdoc}
      *
      * @throws \ZendService\Google\Exception\InvalidArgumentException
      * @throws \ZendService\Google\Exception\RuntimeException
-     *
-     * @return \Jgut\Tify\Adapter\Gcm\GcmMessage
      */
     public function buildPushMessage(array $tokens, Notification $notification)
     {
         $message = $notification->getMessage();
 
-        $pushMessage = new GcmMessage();
+        $pushMessage = new Message;
 
         $pushMessage
             ->setRegistrationIds($tokens)
@@ -72,7 +83,7 @@ class GcmBuilder
             ->setDryRun($notification->getParameter('dry_run'))
             ->setData($message->getPayloadData());
 
-        if ($this->shouldHaveNotification($message)) {
+        if ($this->shouldHavePayload($message)) {
             $pushMessage->setNotificationPayload($message->getParameters());
         }
 
@@ -82,32 +93,20 @@ class GcmBuilder
     /**
      * Message should have notification data.
      *
-     * @param \Jgut\Tify\Message $message
+     * @param NotificationMessage $message
      *
      * @return bool
      */
-    private function shouldHaveNotification(Message $message)
+    private function shouldHavePayload(NotificationMessage $message)
     {
-        static $notificationParams = [
-            'title',
-            'body',
-            'icon',
-            'sound',
-            'tag',
-            'color',
-            'click_action',
-            'title_loc_key',
-            'title_loc_args',
-            'body_loc_key',
-            'body_loc_args',
-        ];
+        $shouldHavePayload = false;
 
-        foreach ($notificationParams as $parameter) {
+        foreach (static::$notificationParams as $parameter) {
             if ($message->hasParameter($parameter)) {
-                return true;
+                $shouldHavePayload = true;
             }
         }
 
-        return false;
+        return $shouldHavePayload;
     }
 }

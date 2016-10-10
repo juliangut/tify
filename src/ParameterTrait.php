@@ -1,10 +1,11 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify;
@@ -12,12 +13,14 @@ namespace Jgut\Tify;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Parameter handling
+ * Parameter handling.
  */
 trait ParameterTrait
 {
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * List of parameters.
+     *
+     * @var ArrayCollection
      */
     protected $parameters;
 

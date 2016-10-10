@@ -1,10 +1,11 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Adapter;
@@ -16,9 +17,9 @@ use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class AbstractService.
+ * Abstract service class.
  */
-abstract class AbstractAdapter
+abstract class AbstractAdapter implements Adapter
 {
     use ParameterTrait;
 
@@ -35,11 +36,11 @@ abstract class AbstractAdapter
      * @param array $parameters
      * @param bool  $sandbox
      *
-     * @throws \Jgut\Tify\Exception\AdapterException
+     * @throws AdapterException
      */
     public function __construct(array $parameters = [], $sandbox = false)
     {
-        $parametersResolver = new OptionsResolver();
+        $parametersResolver = new OptionsResolver;
 
         $parametersResolver->setDefined($this->getDefinedParameters());
         $parametersResolver->setDefaults($this->getDefaultParameters());
@@ -48,7 +49,7 @@ abstract class AbstractAdapter
         try {
             $this->parameters = new ArrayCollection($parametersResolver->resolve($parameters));
         } catch (MissingOptionsException $exception) {
-            throw new AdapterException(sprintf('Missing parameters on "%s"', self::class));
+            throw new AdapterException(sprintf('Missing parameters on "%s"', static::class));
         } catch (\Exception $exception) {
             throw new AdapterException('Invalid parameter provided');
         }
@@ -57,23 +58,19 @@ abstract class AbstractAdapter
     }
 
     /**
-     * Retrieve if sandbox.
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function isSandbox()
     {
-        return (bool) $this->sandbox;
+        return $this->sandbox;
     }
 
     /**
-     * Set Sandbox.
-     *
-     * @param bool $sandbox
+     * {@inheritdoc}
      *
      * @return $this
      */
-    public function setSandbox($sandbox)
+    public function setSandbox($sandbox = true)
     {
         $this->sandbox = (bool) $sandbox;
 

@@ -1,10 +1,11 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Adapter\Gcm;
@@ -12,18 +13,18 @@ namespace Jgut\Tify\Adapter\Gcm;
 use Zend\Json\Json;
 use ZendService\Google\Exception\InvalidArgumentException;
 use ZendService\Google\Exception\RuntimeException;
-use ZendService\Google\Gcm\Message;
+use ZendService\Google\Gcm\Message as ServiceMessage;
 
 /**
- * Custom GCM service message.
- *
- * Implements notification payload parameters.
+ * Notification payload custom GCM service message.
  */
-class GcmMessage extends Message
+class Message extends ServiceMessage
 {
     const DEFAULT_TTL = 2419200; // 4 weeks
 
     /**
+     * Notification data payload.
+     *
      * @var array
      */
     protected $notificationPayload = [];
@@ -107,18 +108,23 @@ class GcmMessage extends Message
         if (count($this->registrationIds)) {
             $json['registration_ids'] = $this->registrationIds;
         }
+
         if ($this->collapseKey) {
             $json['collapse_key'] = $this->collapseKey;
         }
+
         if ($this->delayWhileIdle) {
             $json['delay_while_idle'] = $this->delayWhileIdle;
         }
-        if ($this->timeToLive !== self::DEFAULT_TTL) {
+
+        if ($this->timeToLive !== static::DEFAULT_TTL) {
             $json['time_to_live'] = $this->timeToLive;
         }
+
         if ($this->restrictedPackageName) {
             $json['restricted_package_name'] = $this->restrictedPackageName;
         }
+
         if ($this->dryRun) {
             $json['dry_run'] = $this->dryRun;
         }
@@ -140,6 +146,7 @@ class GcmMessage extends Message
         if (count($this->data)) {
             $payload['data'] = $this->data;
         }
+
         if (count($this->notificationPayload)) {
             $payload['notification'] = $this->notificationPayload;
         }

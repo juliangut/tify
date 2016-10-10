@@ -1,16 +1,17 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Jgut\Tify\Adapter\AbstractAdapter;
+use Jgut\Tify\Adapter\Adapter;
 use Jgut\Tify\Adapter\FeedbackAdapter;
 use Jgut\Tify\Adapter\PushAdapter;
 
@@ -20,20 +21,24 @@ use Jgut\Tify\Adapter\PushAdapter;
 class Service
 {
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * Registered adapters.
+     *
+     * @var Adapter[]
      */
     protected $adapters;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * Registered notifications.
+     *
+     * @var Notification[]
      */
     protected $notifications;
 
     /**
      * Manager constructor.
      *
-     * @param \Jgut\Tify\Adapter\AbstractAdapter|\Jgut\Tify\Adapter\AbstractAdapter[]|null $adapters
-     * @param \Jgut\Tify\Notification|\Jgut\Tify\Notification[]|null                       $notifications
+     * @param Adapter|Adapter[]           $adapters
+     * @param Notification|Notification[] $notifications
      */
     public function __construct($adapters = null, $notifications = null)
     {
@@ -43,7 +48,7 @@ class Service
                 $adapters = [$adapters];
             }
 
-            $this->setAdapters($adapters);
+            $this->setAdapters((array) $adapters);
         }
 
         $this->notifications = new ArrayCollection;
@@ -52,14 +57,14 @@ class Service
                 $notifications = [$notifications];
             }
 
-            $this->setNotifications($notifications);
+            $this->setNotifications((array) $notifications);
         }
     }
 
     /**
      * Retrieve registered adapters.
      *
-     * @return \Jgut\Tify\Adapter\AbstractAdapter[]
+     * @return Adapter[]
      */
     public function getAdapters()
     {
@@ -69,7 +74,7 @@ class Service
     /**
      * Register adapters.
      *
-     * @param array $adapters
+     * @param Adapter[] $adapters
      *
      * @return $this
      */
@@ -87,11 +92,11 @@ class Service
     /**
      * Register adapter.
      *
-     * @param \Jgut\Tify\Adapter\AbstractAdapter $adapter
+     * @param Adapter $adapter
      *
      * @return $this
      */
-    public function addAdapter(AbstractAdapter $adapter)
+    public function addAdapter(Adapter $adapter)
     {
         $this->adapters->add($adapter);
 
@@ -111,7 +116,7 @@ class Service
     /**
      * Retrieve registered notifications.
      *
-     * @return \Jgut\Tify\Notification[]
+     * @return Notification[]
      */
     public function getNotifications()
     {
@@ -139,7 +144,7 @@ class Service
     /**
      * Register notification.
      *
-     * @param \Jgut\Tify\Notification $notification
+     * @param Notification $notification
      *
      * @return $this
      */
@@ -163,16 +168,16 @@ class Service
     /**
      * Push notifications.
      *
-     * @return \Jgut\Tify\Result[]
+     * @return Result[]
      */
     public function push()
     {
         $pushResults = [];
 
-        /** @var \Jgut\Tify\Adapter\PushAdapter[] $pushAdapters */
+        /* @var PushAdapter[] $pushAdapters */
         $pushAdapters = array_filter(
             $this->adapters->toArray(),
-            function (AbstractAdapter $adapter) {
+            function (Adapter $adapter) {
                 return $adapter instanceof PushAdapter;
             }
         );
@@ -191,16 +196,16 @@ class Service
     /**
      * Get feedback from push services.
      *
-     * @return \Jgut\Tify\Result[]
+     * @return Result[]
      */
     public function feedback()
     {
         $feedbackResults = [];
 
-        /** @var \Jgut\Tify\Adapter\FeedbackAdapter[] $feedbackAdapters */
+        /* @var FeedbackAdapter[] $feedbackAdapters */
         $feedbackAdapters = array_filter(
             $this->adapters->toArray(),
-            function (AbstractAdapter $adapter) {
+            function (Adapter $adapter) {
                 return $adapter instanceof FeedbackAdapter;
             }
         );

@@ -1,7 +1,7 @@
 !.gitignore
-composer.phar
-vendor/
 composer.lock
+vendor/
 node_modules/
+.yo-rc.json
+.php_cs.cache
 build/
-.vagrant/

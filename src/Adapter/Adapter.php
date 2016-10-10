@@ -11,14 +11,21 @@
 namespace Jgut\Tify\Adapter;
 
 /**
- * Feedback adapter interface.
+ * Service adapter interface.
  */
-interface FeedbackAdapter extends Adapter
+interface Adapter
 {
     /**
-     * Request feedback information.
+     * Retrieve if sandbox.
      *
-     * @return \Jgut\Tify\Result[]
+     * @return bool
      */
-    public function feedback();
+    public function isSandbox();
+
+    /**
+     * Set Sandbox.
+     *
+     * @param bool $sandbox
+     */
+    public function setSandbox($sandbox = true);
 }

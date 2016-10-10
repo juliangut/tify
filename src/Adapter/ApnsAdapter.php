@@ -1,17 +1,17 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Adapter\Apns;
+namespace Jgut\Tify\Adapter;
 
-use Jgut\Tify\Adapter\AbstractAdapter;
-use Jgut\Tify\Adapter\FeedbackAdapter;
-use Jgut\Tify\Adapter\PushAdapter;
+use Jgut\Tify\Adapter\Apns\DefaultFactory;
+use Jgut\Tify\Adapter\Apns\Factory;
 use Jgut\Tify\Exception\AdapterException;
 use Jgut\Tify\Exception\NotificationException;
 use Jgut\Tify\Notification;
@@ -20,7 +20,7 @@ use Jgut\Tify\Result;
 use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 
 /**
- * Class ApnsAdapter
+ * APNS service adapter.
  */
 class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapter
 {
@@ -83,35 +83,40 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
     ];
 
     /**
-     * APNS service builder.
+     * APNS service factory.
      *
-     * @var \Jgut\Tify\Adapter\Apns\ApnsBuilder
+     * @var Factory
      */
-    protected $builder;
+    protected $factory;
 
     /**
+     * Push service client.
+     *
      * @var \ZendService\Apple\Apns\Client\Message
      */
     protected $pushClient;
 
     /**
+     * Feedback service client.
+     *
      * @var \ZendService\Apple\Apns\Client\Feedback
      */
     protected $feedbackClient;
 
     /**
-     * @param array                                    $parameters
-     * @param bool                                     $sandbox
-     * @param \Jgut\Tify\Adapter\Apns\ApnsBuilder|null $builder
+     * APNS service adapter constructor.
      *
-     * @throws \Jgut\Tify\Exception\AdapterException
+     * @param array   $parameters
+     * @param Factory $factory
+     * @param bool    $sandbox
+     *
+     * @throws AdapterException
      */
-    public function __construct(array $parameters = [], $sandbox = false, ApnsBuilder $builder = null)
+    public function __construct(array $parameters = [], $sandbox = false, Factory $factory = null)
     {
         parent::__construct($parameters, $sandbox);
 
         $certificatePath = $this->getParameter('certificate');
-
         if (!file_exists($certificatePath) || !is_readable($certificatePath)) {
             throw new AdapterException(
                 sprintf('Certificate file "%s" does not exist or is not readable', $certificatePath)
@@ -119,11 +124,12 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
         }
 
         // @codeCoverageIgnoreStart
-        if ($builder === null) {
-            $builder = new ApnsBuilder;
+        if ($factory === null) {
+            $factory = new DefaultFactory;
         }
         // @codeCoverageIgnoreEnd
-        $this->builder = $builder;
+
+        $this->factory = $factory;
     }
 
     /**
@@ -139,10 +145,11 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
 
         $pushResults = [];
 
-        /* @var \ZendService\Apple\Apns\Message $message */
-        foreach ($this->getPushMessages($notification) as $message) {
+        $date = new \DateTime('now', new \DateTimeZone('UTC'));
+
+        foreach ($this->getPushMessage($notification) as $pushMessage) {
             try {
-                $statusCode = $client->send($message)->getCode();
+                $statusCode = $client->send($pushMessage)->getCode();
             // @codeCoverageIgnoreStart
             } catch (ApnsRuntimeException $exception) {
                 $statusCode = $this->getErrorCodeFromException($exception);
@@ -150,8 +157,8 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
             // @codeCoverageIgnoreEnd
 
             $pushResults[] = new Result(
-                $message->getToken(),
-                null,
+                $pushMessage->getToken(),
+                $date,
                 self::$statusCodes[$statusCode],
                 self::$statusMessages[$statusCode]
             );
@@ -186,7 +193,10 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
         // @codeCoverageIgnoreEnd
 
         foreach ($feedbackResponses as $response) {
-            $feedbackResults[] = new Result($response->getToken(), $response->getTime());
+            $feedbackResults[] = new Result(
+                $response->getToken(),
+                \DateTime::createFromFormat('U', $response->getTime())
+            );
         }
 
         $client->close();
@@ -196,16 +206,16 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
     }
 
     /**
-     * Get opened ServiceClient
+     * Get opened push service client.
      *
-     * @throws \Jgut\Tify\Exception\AdapterException
+     * @throws AdapterException
      *
      * @return \ZendService\Apple\Apns\Client\Message
      */
     protected function getPushClient()
     {
         if ($this->pushClient === null) {
-            $this->pushClient = $this->builder->buildPushClient(
+            $this->pushClient = $this->factory->buildPushClient(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
                 $this->sandbox
@@ -216,16 +226,16 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
     }
 
     /**
-     * Get opened ServiceFeedbackClient
+     * Get opened feedback service client.
      *
-     * @throws \Jgut\Tify\Exception\AdapterException
+     * @throws AdapterException
      *
      * @return \ZendService\Apple\Apns\Client\Feedback
      */
     protected function getFeedbackClient()
     {
         if ($this->feedbackClient === null) {
-            $this->feedbackClient = $this->builder->buildFeedbackClient(
+            $this->feedbackClient = $this->factory->buildFeedbackClient(
                 $this->getParameter('certificate'),
                 $this->getParameter('pass_phrase'),
                 $this->sandbox
@@ -236,19 +246,19 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
     }
 
     /**
-     * Get service formatted push messages.
+     * Get service formatted push message.
      *
-     * @param \Jgut\Tify\Notification $notification
+     * @param Notification $notification
      *
      * @throws \ZendService\Apple\Exception\RuntimeException
      *
-     * @return \Generator
+     * @return \Generator<\ZendService\Apple\Apns\Message>
      */
-    protected function getPushMessages(Notification $notification)
+    protected function getPushMessage(Notification $notification)
     {
         foreach ($notification->getReceivers() as $receiver) {
             if ($receiver instanceof ApnsReceiver) {
-                yield $this->builder->buildPushMessage($receiver, $notification);
+                yield $this->factory->buildPushMessage($receiver, $notification);
             }
         }
     }
@@ -256,7 +266,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
     /**
      * Extract error code from exception.
      *
-     * @param \ZendService\Apple\Exception\RuntimeException $exception
+     * @param ApnsRuntimeException $exception
      *
      * @return int
      */
@@ -265,10 +275,10 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
         $message = $exception->getMessage();
 
         if (preg_match('/^Server is unavailable/', $message)) {
-            return self::RESPONSE_UNAVAILABLE;
+            return static::RESPONSE_UNAVAILABLE;
         }
 
-        return self::RESPONSE_UNKNOWN_ERROR;
+        return static::RESPONSE_UNKNOWN_ERROR;
     }
 
     /**
@@ -295,5 +305,21 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
     protected function getRequiredParameters()
     {
         return ['certificate'];
+    }
+
+    /**
+     * Disconnect clients.
+     *
+     * @codeCoverageIgnore
+     */
+    public function __destruct()
+    {
+        if ($this->pushClient !== null && $this->pushClient->isConnected()) {
+            $this->pushClient->close();
+        }
+
+        if ($this->feedbackClient !== null && $this->feedbackClient->isConnected()) {
+            $this->feedbackClient->close();
+        }
     }
 }

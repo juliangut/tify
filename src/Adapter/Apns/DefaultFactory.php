@@ -1,10 +1,11 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Adapter\Apns;
@@ -15,41 +16,49 @@ use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\ApnsReceiver;
 use ZendService\Apple\Apns\Client\AbstractClient;
 use ZendService\Apple\Apns\Client\Feedback as FeedbackClient;
-use ZendService\Apple\Apns\Client\Message as MessageClient;
+use ZendService\Apple\Apns\Client\Message as PushClient;
 use ZendService\Apple\Apns\Message\Alert as ServiceMessageAlert;
 use ZendService\Apple\Apns\Message as ServiceMessage;
 
 /**
- * Class ApnsBuilder
+ * APNS default service factory.
  */
-class ApnsBuilder
+class DefaultFactory implements Factory
 {
     /**
-     * Get opened push service client.
+     * Alert parameters list.
      *
-     * @param string $certificate
-     * @param string $passPhrase
-     * @param bool   $sandbox
+     * @var array
+     */
+    protected static $alertParams = [
+        'title',
+        'body',
+        'title-loc-key',
+        'title-loc-args',
+        'loc-key',
+        'loc-args',
+        'action-loc-key',
+        'launch-image',
+    ];
+
+    /**
+     * {@inheritdoc}
      *
-     * @throws \Jgut\Tify\Exception\AdapterException
+     * @throws AdapterException
      *
-     * @return \ZendService\Apple\Apns\Client\Message
+     * @return PushClient
      */
     public function buildPushClient($certificate, $passPhrase = '', $sandbox = false)
     {
-        return $this->buildClient(new MessageClient, $certificate, $passPhrase, $sandbox);
+        return $this->buildClient(new PushClient, $certificate, $passPhrase, $sandbox);
     }
 
     /**
-     * Get opened feedback service client.
+     * {@inheritdoc}
      *
-     * @param string $certificate
-     * @param string $passPhrase
-     * @param bool   $sandbox
+     * @throws AdapterException
      *
-     * @throws \Jgut\Tify\Exception\AdapterException
-     *
-     * @return \ZendService\Apple\Apns\Client\Feedback
+     * @return FeedbackClient
      */
     public function buildFeedbackClient($certificate, $passPhrase = '', $sandbox = false)
     {
@@ -59,14 +68,14 @@ class ApnsBuilder
     /**
      * Get opened client.
      *
-     * @param \ZendService\Apple\Apns\Client\AbstractClient $client
-     * @param string                                        $certificate
-     * @param string                                        $passPhrase
-     * @param bool                                          $sandbox
+     * @param AbstractClient $client
+     * @param string         $certificate
+     * @param string         $passPhrase
+     * @param bool           $sandbox
      *
-     * @throws \Jgut\Tify\Exception\AdapterException
+     * @throws AdapterException
      *
-     * @return \ZendService\Apple\Apns\Client\AbstractClient
+     * @return AbstractClient|PushClient|FeedbackClient
      *
      * @codeCoverageIgnore
      */
@@ -86,14 +95,9 @@ class ApnsBuilder
     }
 
     /**
-     * Get service message from origin.
-     *
-     * @param \Jgut\Tify\Receiver\ApnsReceiver $receiver
-     * @param \Jgut\Tify\Notification          $notification
+     * {@inheritdoc}
      *
      * @throws \ZendService\Apple\Exception\RuntimeException
-     *
-     * @return \ZendService\Apple\Apns\Message
      */
     public function buildPushMessage(ApnsReceiver $receiver, Notification $notification)
     {
@@ -110,7 +114,7 @@ class ApnsBuilder
         );
         $badge = $notification->getParameter('badge') === null ? null : (int) $notification->getParameter('badge');
 
-        $pushMessage = (new ServiceMessage())
+        $pushMessage = (new ServiceMessage)
             ->setId($messageId)
             ->setToken($receiver->getToken())
             ->setBadge($badge)
@@ -149,29 +153,22 @@ class ApnsBuilder
     /**
      * Message should have alert dictionary.
      *
-     * @param \Jgut\Tify\Message $message
+     * @param Message $message
      *
      * @return bool
      */
     private function shouldHaveAlert(Message $message)
     {
-        static $alertParams = [
-            'title',
-            'body',
-            'title-loc-key',
-            'title-loc-args',
-            'loc-key',
-            'loc-args',
-            'action-loc-key',
-            'launch-image',
-        ];
+        $shouldHaveAlert = false;
 
-        foreach ($alertParams as $parameter) {
+        foreach (static::$alertParams as $parameter) {
             if ($message->hasParameter($parameter)) {
-                return true;
+                $shouldHaveAlert = true;
+
+                break;
             }
         }
 
-        return false;
+        return $shouldHaveAlert;
     }
 }

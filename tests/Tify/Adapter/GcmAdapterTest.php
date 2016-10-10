@@ -1,17 +1,18 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
 namespace Jgut\Tify\Tests\Adapter\Gcm;
 
-use Jgut\Tify\Adapter\Gcm\GcmAdapter;
-use Jgut\Tify\Adapter\Gcm\GcmBuilder;
-use Jgut\Tify\Adapter\Gcm\GcmMessage;
+use Jgut\Tify\Adapter\Gcm\DefaultFactory;
+use Jgut\Tify\Adapter\Gcm\Message as GcmMessage;
+use Jgut\Tify\Adapter\GcmAdapter;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\GcmReceiver;
@@ -21,48 +22,73 @@ use ZendService\Google\Gcm\Client;
 use ZendService\Google\Gcm\Response;
 
 /**
- * Gcm adapter tests.
+ * GCM service adapter tests.
  */
 class GcmAdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Jgut\Tify\Adapter\Gcm\GcmAdapter
+     * @var GcmAdapter
      */
     protected $adapter;
 
     public function setUp()
     {
-        $message = $this->getMockBuilder(GcmMessage::class)->disableOriginalConstructor()->getMock();
-        $message->expects(self::any())->method('getRegistrationIds')->will(self::returnValue(['aaa', 'bbb', 'ccc']));
-
-        $response = $this->getMockBuilder(Response::class)->disableOriginalConstructor()->getMock();
-        $response->expects(self::any())->method('getResults')
+        $response = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $response->expects(self::any())
+            ->method('getResults')
             ->will(self::returnValue(['aaa' => [], 'bbb' => ['error' => 'NotRegistered']]));
 
-        $client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
-        $client->expects(self::any())->method('send')->will(self::returnValue($response));
+        $client = $this->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $client->expects(self::any())
+            ->method('send')
+            ->will(self::returnValue($response));
 
-        $builder = $this->getMockBuilder(GcmBuilder::class)->disableOriginalConstructor()->getMock();
-        $builder->expects(self::any())->method('buildPushClient')->will(self::returnValue($client));
-        $builder->expects(self::any())->method('buildPushMessage')->will(self::returnValue($message));
+        $message = $this->getMockBuilder(GcmMessage::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $message->expects(self::any())
+            ->method('getRegistrationIds')
+            ->will(self::returnValue(['aaa', 'bbb', 'ccc']));
 
-        $this->adapter = new GcmAdapter(['api_key' => 'aaa'], $builder);
+        $factory = $this->getMockBuilder(DefaultFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factory->expects(self::any())
+            ->method('buildPushClient')
+            ->will(self::returnValue($client));
+        $factory->expects(self::any())
+            ->method('buildPushMessage')
+            ->will(self::returnValue($message));
+
+        $this->adapter = new GcmAdapter(['api_key' => 'aaa'], true, $factory);
     }
 
     /**
      * @expectedException \Jgut\Tify\Exception\AdapterException
+     * @expectedExceptionMessageRegExp /^Missing parameters on/
      */
     public function testInvalidApiKey()
     {
-        new GcmAdapter();
+        new GcmAdapter;
     }
 
     public function testSend()
     {
-        $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()->getMock();
+        $message = $this->getMockBuilder(Message::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        /* @var Message $message */
 
-        $receiver = $this->getMockBuilder(GcmReceiver::class)->disableOriginalConstructor()->getMock();
-        $receiver->expects(self::any())->method('getToken')->will(self::returnValue('aaa'));
+        $receiver = $this->getMockBuilder(GcmReceiver::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $receiver->expects(self::any())
+            ->method('getToken')
+            ->will(self::returnValue('aaa'));
 
         $notification = new Notification($message, [$receiver]);
         /* @var Result[] $results */

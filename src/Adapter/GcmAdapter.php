@@ -1,23 +1,24 @@
 <?php
-/**
- * Push notification services abstraction (http://github.com/juliangut/tify)
+
+/*
+ * Unified push notification services abstraction (http://github.com/juliangut/tify).
  *
- * @link https://github.com/juliangut/tify for the canonical source repository
- *
- * @license https://github.com/juliangut/tify/blob/master/LICENSE
+ * @license BSD-3-Clause
+ * @link https://github.com/juliangut/tify
+ * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Adapter\Gcm;
+namespace Jgut\Tify\Adapter;
 
-use Jgut\Tify\Adapter\AbstractAdapter;
-use Jgut\Tify\Adapter\PushAdapter;
+use Jgut\Tify\Adapter\Gcm\DefaultFactory;
+use Jgut\Tify\Adapter\Gcm\Factory;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\GcmReceiver;
 use Jgut\Tify\Result;
 use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 
 /**
- * Class GcmAdapter
+ * GCM service adapter.
  */
 class GcmAdapter extends AbstractAdapter implements PushAdapter
 {
@@ -107,33 +108,39 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
     ];
 
     /**
-     * GCM service builder.
+     * GCM service factory.
      *
-     * @var \Jgut\Tify\Adapter\Gcm\GcmBuilder
+     * @var Factory
      */
-    protected $builder;
+    protected $factory;
 
     /**
+     * Push service client.
+     *
      * @var \ZendService\Google\Gcm\Client
      */
     protected $pushClient;
 
     /**
-     * @param array                                  $parameters
-     * @param \Jgut\Tify\Adapter\Gcm\GcmBuilder|null $builder
+     * GCM service adapter constructor.
+     *
+     * @param array   $parameters
+     * @param bool    $sandbox
+     * @param Factory $factory
      *
      * @throws \Jgut\Tify\Exception\AdapterException
      */
-    public function __construct(array $parameters = [], GcmBuilder $builder = null)
+    public function __construct(array $parameters = [], $sandbox = false, Factory $factory = null)
     {
-        parent::__construct($parameters, false);
+        parent::__construct($parameters, $sandbox);
 
         // @codeCoverageIgnoreStart
-        if ($builder === null) {
-            $builder = new GcmBuilder;
+        if ($factory === null) {
+            $factory = new DefaultFactory;
         }
         // @codeCoverageIgnoreEnd
-        $this->builder = $builder;
+
+        $this->factory = $factory;
     }
 
     /**
@@ -149,14 +156,13 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
 
         $pushResults = [];
 
-        /* @var \ZendService\Google\Gcm\Message $message */
-        foreach ($this->getPushMessages($notification) as $message) {
+        foreach ($this->getPushMessage($notification) as $pushMessage) {
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
             try {
-                $pushResponses = $client->send($message)->getResults();
+                $pushResponses = $client->send($pushMessage)->getResults();
 
-                foreach ($message->getRegistrationIds() as $token) {
+                foreach ($pushMessage->getRegistrationIds() as $token) {
                     $statusCode = self::RESPONSE_OK;
 
                     if (!array_key_exists($token, $pushResponses)) {
@@ -176,7 +182,7 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
             } catch (GcmRuntimeException $exception) {
                 $statusCode = $this->getErrorCodeFromException($exception);
 
-                foreach ($message->getRegistrationIds() as $token) {
+                foreach ($pushMessage->getRegistrationIds() as $token) {
                     $pushResults[] = new Result(
                         $token,
                         $date,
@@ -192,30 +198,30 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
     }
 
     /**
-     * Get opened client.
+     * Get opened push client.
      *
      * @return \ZendService\Google\Gcm\Client
      */
     protected function getPushClient()
     {
         if ($this->pushClient === null) {
-            $this->pushClient = $this->builder->buildPushClient($this->getParameter('api_key'));
+            $this->pushClient = $this->factory->buildPushClient($this->getParameter('api_key'));
         }
 
         return $this->pushClient;
     }
 
     /**
-     * Get service formatted push messages.
+     * Get service formatted push message.
      *
-     * @param \Jgut\Tify\Notification $notification
+     * @param Notification $notification
      *
      * @throws \ZendService\Google\Exception\InvalidArgumentException
      * @throws \ZendService\Google\Exception\RuntimeException
      *
-     * @return \Generator
+     * @return \Generator<\ZendService\Google\Gcm\Message>
      */
-    protected function getPushMessages(Notification $notification)
+    protected function getPushMessage(Notification $notification)
     {
         foreach (array_chunk($notification->getReceivers(), 100) as $receivers) {
             $tokens = array_map(
@@ -225,14 +231,20 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
                 $receivers
             );
 
-            yield $this->builder->buildPushMessage(array_filter($tokens), $notification);
+            $pushMessage = $this->factory->buildPushMessage(array_filter($tokens), $notification);
+
+            if ($this->isSandbox()) {
+                $pushMessage->setDryRun(true);
+            }
+
+            yield $pushMessage;
         }
     }
 
     /**
      * Extract error code from exception.
      *
-     * @param \ZendService\Google\Exception\RuntimeException $exception
+     * @param GcmRuntimeException $exception
      *
      * @return string
      */
@@ -241,26 +253,26 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
         $message = $exception->getMessage();
 
         if (preg_match('/^500 Internal Server Error/', $message)) {
-            return self::RESPONSE_INTERNAL_SERVER_ERROR;
+            return static::RESPONSE_INTERNAL_SERVER_ERROR;
         }
 
         if (preg_match('/^503 Server Unavailable/', $message)) {
-            return self::RESPONSE_SERVER_UNAVAILABLE;
+            return static::RESPONSE_SERVER_UNAVAILABLE;
         }
 
         if (preg_match('/^400 Bad Request/', $message)) {
-            return self::RESPONSE_INVALID_MESSAGE;
+            return static::RESPONSE_INVALID_MESSAGE;
         }
 
         if (preg_match('/^401 Forbidden/', $message)) {
-            return self::RESPONSE_AUTHENTICATION_ERROR;
+            return static::RESPONSE_AUTHENTICATION_ERROR;
         }
 
         if (preg_match('/^Response body did not contain a valid JSON response$/', $message)) {
-            return self::RESPONSE_BADLY_FORMATTED_RESPONSE;
+            return static::RESPONSE_BADLY_FORMATTED_RESPONSE;
         }
 
-        return self::RESPONSE_UNKNOWN_ERROR;
+        return static::RESPONSE_UNKNOWN_ERROR;
     }
 
     /**
