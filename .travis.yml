@@ -2,6 +2,10 @@ language: php
 
 sudo: false
 
+env:
+  - DISABLE_XDEBUG=true
+  - COMPOSER_FLAGS="--prefer-source --no-interaction --no-scripts --no-progress"
+
 matrix:
   fast_finish: true
   include:
@@ -15,11 +19,6 @@ matrix:
   allow_failures:
     - php: nightly
     - php: hhvm
-
-env:
-  global:
-    - DISABLE_XDEBUG=true
-    - COMPOSER_FLAGS="--prefer-source --no-interaction --no-scripts --no-progress"
 
 before_install:
   - if [[ $DISABLE_XDEBUG = true && -f "~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini" ]]; then phpenv config-rm xdebug.ini ; fi
