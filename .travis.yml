@@ -6,8 +6,7 @@ git:
   depth: 3
 
 env:
-  matrix:
-    - COMPOSER_FLAGS="--prefer-source --no-interaction --no-scripts --no-progress"
+  - COMPOSER_FLAGS="--prefer-source --no-interaction --no-scripts --no-progress"
 
 matrix:
   fast_finish: true
