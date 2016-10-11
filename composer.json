@@ -57,7 +57,7 @@
     "preferred-install": "dist"
   },
   "scripts": {
-    "phplint": "php -l src test",
+    "phplint": "php -l src & php -l tests",
     "phpcs": "phpcs --standard=PSR2 src tests",
     "phpcs-lint": "php-cs-fixer fix --dry-run --verbose",
     "phpcpd": "phpcpd src",
