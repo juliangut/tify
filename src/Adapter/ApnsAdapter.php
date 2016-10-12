@@ -24,6 +24,9 @@ use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
  */
 class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapter
 {
+    const PARAMETER_CERTIFICATE = 'certificate';
+    const PARAMETER_PASS_PHRASE = 'pass_phrase';
+
     const RESPONSE_OK = 0;
     const RESPONSE_PROCESSING_ERROR = 1;
     const RESPONSE_MISSING_DEVICE_TOKEN = 2;
@@ -41,7 +44,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
      *
      * @var array
      */
-    protected static $statusCodes = [
+    protected static $statusCodeMap = [
         self::RESPONSE_OK => Result::STATUS_SUCCESS,
 
         self::RESPONSE_MISSING_DEVICE_TOKEN => Result::STATUS_INVALID_MESSAGE,
@@ -64,7 +67,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
      *
      * @var array
      */
-    protected static $statusMessages = [
+    protected static $statusMessageMap = [
         self::RESPONSE_OK => 'OK',
 
         self::RESPONSE_MISSING_DEVICE_TOKEN => 'Missing Device Token',
@@ -116,7 +119,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
     {
         parent::__construct($parameters, $sandbox);
 
-        $certificatePath = $this->getParameter('certificate');
+        $certificatePath = $this->getParameter(static::PARAMETER_CERTIFICATE);
         if (!file_exists($certificatePath) || !is_readable($certificatePath)) {
             throw new AdapterException(
                 sprintf('Certificate file "%s" does not exist or is not readable', $certificatePath)
@@ -159,8 +162,8 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
             $pushResults[] = new Result(
                 $pushMessage->getToken(),
                 $date,
-                self::$statusCodes[$statusCode],
-                self::$statusMessages[$statusCode]
+                self::$statusCodeMap[$statusCode],
+                self::$statusMessageMap[$statusCode]
             );
         }
 
@@ -216,8 +219,8 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
     {
         if ($this->pushClient === null) {
             $this->pushClient = $this->factory->buildPushClient(
-                $this->getParameter('certificate'),
-                $this->getParameter('pass_phrase'),
+                $this->getParameter(static::PARAMETER_CERTIFICATE),
+                $this->getParameter(static::PARAMETER_PASS_PHRASE),
                 $this->sandbox
             );
         }
@@ -286,7 +289,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
      */
     protected function getDefinedParameters()
     {
-        return ['certificate', 'pass_phrase'];
+        return [static::PARAMETER_CERTIFICATE, static::PARAMETER_PASS_PHRASE];
     }
 
     /**
@@ -295,7 +298,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
     protected function getDefaultParameters()
     {
         return [
-            'pass_phrase' => null,
+            static::PARAMETER_PASS_PHRASE => null,
         ];
     }
 
@@ -304,7 +307,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
      */
     protected function getRequiredParameters()
     {
-        return ['certificate'];
+        return [static::PARAMETER_CERTIFICATE];
     }
 
     /**

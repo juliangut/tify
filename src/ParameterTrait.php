@@ -18,6 +18,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 trait ParameterTrait
 {
     /**
+     * Parameter alias key map.
+     *
+     * @var array
+     */
+    protected $parameterAliasMap = [];
+
+    /**
      * List of parameters.
      *
      * @var ArrayCollection
@@ -64,7 +71,7 @@ trait ParameterTrait
         }
 
         foreach ($parameters as $parameter => $value) {
-            $this->setParameter(trim($parameter), $value);
+            $this->setParameter($parameter, $value);
         }
 
         return $this;
@@ -83,7 +90,7 @@ trait ParameterTrait
             return false;
         }
 
-        return $this->parameters->containsKey($parameter);
+        return $this->parameters->containsKey($this->getMappedParameter($parameter));
     }
 
     /**
@@ -100,6 +107,8 @@ trait ParameterTrait
             return $default;
         }
 
+        $parameter = $this->getMappedParameter($parameter);
+
         return $this->parameters->containsKey($parameter) ? $this->parameters->get($parameter) : $default;
     }
 
@@ -115,8 +124,26 @@ trait ParameterTrait
     {
         $this->initializeParameters();
 
-        $this->parameters->set(trim($parameter), $value);
+        $this->parameters->set($this->getMappedParameter($parameter), $value);
 
         return $this;
+    }
+
+    /**
+     * Get normalized service parameter.
+     *
+     * @param string $parameter
+     *
+     * @return string
+     */
+    protected function getMappedParameter($parameter)
+    {
+        $parameter = trim($parameter);
+
+        if (array_key_exists($parameter, $this->parameterAliasMap)) {
+            return $this->parameterAliasMap[$parameter];
+        }
+
+        return $parameter;
     }
 }

@@ -74,7 +74,7 @@ class DefaultFactoryTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(ApnsMessage::class, $pushMessage);
         self::assertEquals($urlArgs, $pushMessage->getUrlArgs());
-        self::assertEquals(600, $pushMessage->getExpire());
+        self::assertEquals(time() + 600, $pushMessage->getExpire());
         self::assertNull($pushMessage->getAlert());
     }
 

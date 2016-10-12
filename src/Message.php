@@ -18,54 +18,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Message
 {
     use ParameterTrait {
-        ParameterTrait::hasParameter as hasDefinedParameter;
-        ParameterTrait::getParameter as getDefinedParameter;
-        ParameterTrait::setParameter as setDefinedParameter;
+        ParameterTrait::setParameter as innerSetParameter;
     }
 
-    /**
-     * Valid message parameters.
-     *
-     * @see https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG
-     *          /Chapters/TheNotificationPayload.html
-     * @see https://developers.google.com/cloud-messaging/http-server-ref#downstream-http-messages-json
-     *
-     * @var array
-     */
-    protected static $validParameters = [
-        // Common
-        'title',
-        'body',
-
-        // Common mapped
-        'title_loc_key',
-        'title_loc_args',
-        'body_loc_key',
-        'body_loc_args',
-
-        // APNS specific
-        'action-loc-key',
-        'launch-image',
-
-        // GCM specific
-        'icon',
-        'sound',
-        'tag',
-        'color',
-        'click_action',
-    ];
-
-    /**
-     * Parameter key map.
-     *
-     * @var array
-     */
-    protected static $parameterMap = [
-        'title-loc-key'  => 'title_loc_key',
-        'title-loc-args' => 'title_loc_args',
-        'loc-key'        => 'body_loc_key',
-        'loc-args'       => 'body_loc_args',
-    ];
+    const PARAMETER_TITLE = 'title';
+    const PARAMETER_BODY = 'body';
+    const PARAMETER_TITLE_LOC_KEY = 'title_loc_key';
+    const PARAMETER_TITLE_LOC_ARGS = 'title_loc_args';
+    const PARAMETER_BODY_LOC_KEY = 'body_loc_key';
+    const PARAMETER_BODY_LOC_ARGS = 'body_loc_args';
+    const PARAMETER_ACTION_LOC_KEY = 'action-loc-key';
+    const PARAMETER_LAUNCH_IMAGE = 'launch-image';
+    const PARAMETER_ICON = 'icon';
+    const PARAMETER_SOUND = 'sound';
+    const PARAMETER_TAG = 'tag';
+    const PARAMETER_COLOR = 'color';
+    const PARAMETER_CLICK_ACTION = 'click_action';
 
     /**
      * Reserved payload keys.
@@ -111,6 +79,13 @@ class Message
      */
     public function __construct(array $parameters = [])
     {
+        $this->parameterAliasMap = [
+            'title-loc-key' => static::PARAMETER_TITLE_LOC_KEY,
+            'title-loc-args' => static::PARAMETER_TITLE_LOC_ARGS,
+            'loc-key' => static::PARAMETER_BODY_LOC_KEY,
+            'loc-args' => static::PARAMETER_BODY_LOC_ARGS,
+        ];
+
         $this->setParameters($parameters);
 
         $this->payload = new ArrayCollection;
@@ -127,7 +102,7 @@ class Message
      */
     public function setTitle($title)
     {
-        $this->setParameter('title', $title);
+        $this->setParameter(static::PARAMETER_TITLE, $title);
 
         return $this;
     }
@@ -143,25 +118,9 @@ class Message
      */
     public function setBody($body)
     {
-        $this->setParameter('body', $body);
+        $this->setParameter(static::PARAMETER_BODY, $body);
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasParameter($parameter)
-    {
-        return $this->hasDefinedParameter($this->getMappedParameter($parameter));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParameter($parameter, $default = null)
-    {
-        return $this->getDefinedParameter($this->getMappedParameter($parameter), $default);
     }
 
     /**
@@ -173,27 +132,12 @@ class Message
     {
         $parameter = $this->getMappedParameter($parameter);
 
-        if (!in_array($parameter, static::$validParameters)) {
+        $self = new \ReflectionClass(static::class);
+        if (!in_array($parameter, $self->getConstants())) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a valid message parameter', $parameter));
         }
 
-        return $this->setDefinedParameter($parameter, $value);
-    }
-
-    /**
-     * Get normalized service parameter.
-     *
-     * @param string $parameter
-     *
-     * @return string
-     */
-    private function getMappedParameter($parameter)
-    {
-        if (array_key_exists($parameter, static::$parameterMap)) {
-            return static::$parameterMap[$parameter];
-        }
-
-        return $parameter;
+        return $this->innerSetParameter($parameter, $value);
     }
 
     /**

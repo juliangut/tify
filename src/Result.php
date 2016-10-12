@@ -160,8 +160,8 @@ class Result implements \JsonSerializable
      */
     public function setStatus($status)
     {
-        $ref = new \ReflectionClass(static::class);
-        if (!in_array($status, $ref->getConstants())) {
+        $self = new \ReflectionClass(static::class);
+        if (!in_array($status, $self->getConstants())) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a valid status', $status));
         }
 

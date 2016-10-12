@@ -45,14 +45,14 @@ new \Jgut\Tify\Receiver\GcmReceiver('device_token');
 
 Messages compose the final information arriving to receivers. GCM and APNS messages hold different information according to each service specification.
 
+*There are defined constants to identify each possible parameter*
+
 In order for the message payload to be created one of the following message parameters must be present:
 
-* For APNS: `title`, `title-loc-key`, `title-loc-args`, `body`, `loc-key`, `loc-args`, `action-loc-key`, `launch-image`
-* For GCM: `title`, `title_loc_key`, `title_loc_args`, `body`, `body_loc_key`, `body_loc_args`, `icon`, `sound`, `tag`, `color`
+* For APNS: `Message::PARAMETER_TITLE`, `Message::PARAMETER_TITLE_LOC_KEY`, `Message::PARAMETER_TITLE_LOC_ARGS`, `Message::PARAMETER_BODY`, `Message::PARAMETER_BODY_LOC_KEY`, `Message::PARAMETER_BODY_LOC_ARGS`, `Message::PARAMETER_ACTION_LOC_KEY`, `Message::PARAMETER_LAUNCH_IMAGE`
+* For GCM: `Message::PARAMETER_TITLE`, `Message::PARAMETER_TITLE_LOC_KEY`, `Message::PARAMETER_TITLE_LOC_ARGS`, `Message::PARAMETER_BODY`, `Message::PARAMETER_BODY_LOC_KEY`, `Message::PARAMETER_BODY_LOC_ARGS`, `Message::PARAMETER_ICON`, `Message::PARAMETER_SOUND`, `Message::PARAMETER_TAG`, `Message::PARAMETER_COLOR`
 
-Messages can hold any number of custom payload data that will compose additional data sent to the destination receivers.
-
-This key/value payload data must comply with some limitations to be fully compatible with different services at once, for this a prefix (`data_` by default) is automatically added to the key. This prefix can be changed or removed if needed, but be aware that payload data should not be a reserved word (`apns`, `from` or any word starting with `google` or `gcm`) or any GCM notification parameters.
+Messages can hold any number of custom payload data that will compose additional data sent to the destination receivers. This key/value payload data must comply with some limitations to be fully compatible with different services at once, for this a prefix (`data_` by default) is automatically added to the key. This prefix can be changed or removed if needed, but be aware that payload data should not be a reserved word (`apns`, `from` or any word starting with `google` or `gcm`) or any GCM notification parameter name.
 
 *Find APNS message parameters [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-2.*
 
@@ -66,9 +66,11 @@ Notifications are the central unit of work, several notifications can be set int
 
 Notifications hold some extra parameters used by the notification services to control behaviour and/or be used in notification creation.
 
-Be aware notification TTL (expire in APNS) is normalized in both services to "2 weeks" instead of the default 4 weeks for GCM and none at all for APNS. There are some convenience constants in Notification class for common TTL.
+*There are defined constants to identify each possible parameter*
 
-By clearing receivers list or changing message a notification can be reused as many times as needed.
+`Notification::TTL` parameter is used instead of GCM `time_to_live` and APNS `expire` to unify this parameters, it must be an integer. This parameter is normalized in both services to "2 weeks" (1209600 seconds) instead of the default 4 weeks for GCM and none at all for APNS.
+
+*There are some convenience constants in Notification class for common TTL values*
 
 *Find APNS notification parameters [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-1.*
 
@@ -78,11 +80,16 @@ By clearing receivers list or changing message a notification can be reused as m
 
 Adapters will be given notifications to actually send the messages to associated receivers using the corresponding notification service. Receivers will be automatically filtered for the correct service by their type.
 
-For APNS adapter `certificate` parameter is mandatory, denoting the path to the service certificate (.pem file). In GCM `api_key` is the mandatory parameter denoting Google API key.
+For APNS adapter `certificate` parameter is mandatory, denoting the path to the service certificate (.pem file) and `pass_phrase` parameter might be needed.
+
+For GCM adapter `api_key` is the mandatory parameter denoting Google API key.
 
 ```php
-$apnsAdapter = new \Jgut\Tify\Adapter\ApnsAdapter(['certificate' => 'path_to_certificate.pem']);
-$gcmAdapter = new \Jgut\Tify\Adapter\GcmAdapter(['api_key' => 'google_api_key']);
+use Jgut\Tify\Adapter\ApnsAdapter;
+use Jgut\Tify\Adapter\GcmAdapter;
+
+$apnsAdapter = new ApnsAdapter([ApnsAdapter::PARAMETER_CERTIFICATE => 'path_to_certificate.pem']);
+$gcmAdapter = new GcmAdapter([GcmAdapter::PARAMETER_API_KEY => 'google_api_key']);
 ```
 
 ### Result
@@ -101,7 +108,7 @@ This objects are composed of device token, date, status code (a status categoriz
 * `STATUS_SERVER_ERROR`
 * `STATUS_UNKNOWN_ERROR`
 
-Among all the result statuses, `STATUS_INVALID_DEVICE` is the most interesting because it is a signal that you should probably remove that token from your database.
+Among all result statuses `STATUS_INVALID_DEVICE` is the most interesting because it is a signal that you should probably remove that token from your database.
 
 ### Service
 
@@ -123,23 +130,26 @@ use Jgut\Tify\Receiver\GcmReceiver;
 use Jgut\Tify\Service;
 
 $adapters = [
-    new GcmAdapter(['api_key' => '00000']),
-    new ApnsAdapter(['certificate' => 'path_to_certificate']),
+    new GcmAdapter([GcmAdapter::PARAMETER_API_KEY => '00000']),
+    new ApnsAdapter([ApnsAdapter::PARAMETER_CERTIFICATE => 'path_to_certificate']),
 ];
 
 $message = new Message([
-    'title' => 'title',
-    'body' => 'body',
+    Message::PARAMETER_TITLE => 'title',
+    Message::PARAMETER_BODY => 'body',
 ]);
 
 $receivers = [
     new GcmReceiver('aaaaaaaaaaa'),
     new GcmReceiver('bbbbbbbbbbb'),
-    new ApnsReceiver('ccccccccccc'),
-    new ApnsReceiver('ddddddddddd'),
+    new ApnsReceiver('xxxxxxxxxxx'),
+    new ApnsReceiver('zzzzzzzzzzz'),
 ];
 
-$service = new Service($adapters, new Notification($message, $receivers));
+$notification = new Notification($message, $receivers);
+$notification->setParameter(Notification::PARAMETER_TTL, Notification::TTL_EXTRA_LONG);
+
+$service = new Service($adapters, $notification);
 
 $results = $service->push();
 ```
@@ -147,38 +157,44 @@ $results = $service->push();
 Sharing the same adapters to send different messages
 
 ```php
+use Jgut\Tify\Adapter\ApnsAdapter;
 use Jgut\Tify\Adapter\GcmAdapter;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
+use Jgut\Tify\Receiver\ApnsReceiver;
 use Jgut\Tify\Receiver\GcmReceiver;
 use Jgut\Tify\Service;
 
 $adapters = [
-    new GcmAdapter(['api_key' => '00000']),
-    new GcmAdapter(['api_key' => '11111']),
+    new GcmAdapter([GcmAdapter::PARAMETER_API_KEY => '00000']),
+    new ApnsAdapter([ApnsAdapter::PARAMETER_CERTIFICATE => 'path_to_certificate']),
 ];
 
 $service = new Service($adapters);
 
 $service->addNotification(new Notification(
     new Message([
-        'title' => 'title_one',
-        'body' => 'body_one',
+        Message::PARAMETER_TITLE => 'title_one',
+        Message::PARAMETER_BODY => 'body_one',
     ]),
     [
         new GcmReceiver('aaaaaaaaaaa'),
-        new GcmReceiver('bbbbbbbbbbb'),
+        new ApnsReceiver('xxxxxxxxxxx'),
+    ],
+    [
+        Notification::PARAMETER_CONTENT_AVAILABLE => 1,
+        Notification::PARAMETER_DELAY_WHILE_IDLE => true,
     ]
 ));
 
 $service->addNotification(new Notification(
     new Message([
-        'title' => 'title_two',
-        'body' => 'body_two',
+        Message::PARAMETER_TITLE => 'title_two',
+        Message::PARAMETER_BODY => 'body_two',
     ]),
     [
-        new GcmReceiver('xxxxxxxxxxx'),
-        new GcmReceiver('zzzzzzzzzzz'),
+        new GcmReceiver('bbbbbbbbbbb'),
+        new ApnsReceiver('zzzzzzzzzzz'),
     ]
 ));
 
@@ -187,13 +203,15 @@ $results = $service->push();
 
 ### Feedback
 
+Feedback returns Result objects with token and time of expired device tokens. Feedback service is only available for Apple APNS.
+
 ```php
 use Jgut\Tify\Adapter\ApnsAdapter;
 use Jgut\Tify\Service;
 
 $adapters = [
-    new ApnsAdapter(['certificate' => 'path_to_certificate_one']),
-    new ApnsAdapter(['certificate' => 'path_to_certificate_two']),
+    new ApnsAdapter([ApnsAdapter::PARAMETER_CERTIFICATE => 'path_to_certificate_one']),
+    new ApnsAdapter([ApnsAdapter::PARAMETER_CERTIFICATE => 'path_to_certificate_two']),
 ];
 
 $service = new Service($adapters);
@@ -201,7 +219,17 @@ $service = new Service($adapters);
 $results = $service->feedback();
 ```
 
-Feedback returns Result objects with token and time of expired device tokens.
+You should pay attention to results with `STATUS_INVALID_DEVICE` status in order to invalidate those tokens.
+
+Feedback service for GCM can be mimicked by sending a test Notification (parameter `dry_run` to true), this will NOT send the message to receivers but will return responses according to what would have happened if the messages were sent, so you can scan results for `STATUS_INVALID_DEVICE` status codes.
+
+## Update 1.x to 2.x
+
+Interfaces for Adapters and Receivers have been introduced, you should implement this interfaces instead of extend abstract classes, although it can still be done.
+
+Notification's TTL is now controlled by `Notificaton::PARAMETER_TTL` instead of separated GCM and APNS parameters. You can still use `time_to_live` and `expire` as they are aliases of `Notificaton::PARAMETER_TTL`.
+
+GCM adapter now supports "sandboxing" the same way APNS adapter did before. When setting sandbox constructor attribute to true the Notification sent to GCM will have `Notification::PARAMETER_DRY_RUN` parameter set to true regardless its previous value to ensure the message is not sent to receivers.
 
 ## Contributing
 

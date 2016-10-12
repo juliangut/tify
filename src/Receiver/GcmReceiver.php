@@ -22,11 +22,13 @@ class GcmReceiver extends AbstractReceiver
      */
     public function setToken($token)
     {
-        if (trim($token) === '') {
+        $token = trim($token);
+
+        if ($token === '') {
             throw new \InvalidArgumentException('GCM token can not be empty');
         }
 
-        $this->token = trim($token);
+        $this->token = $token;
 
         return $this;
     }

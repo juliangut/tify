@@ -22,6 +22,8 @@ use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
  */
 class GcmAdapter extends AbstractAdapter implements PushAdapter
 {
+    const PARAMETER_API_KEY = 'api_key';
+
     const RESPONSE_OK = 'OK';
     const RESPONSE_MISSING_REGISTRATION = 'MissingRegistration';
     const RESPONSE_INVALID_REGISTRATION = 'InvalidRegistration';
@@ -46,7 +48,7 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
      *
      * @var array
      */
-    protected static $statusCodes = [
+    protected static $statusCodeMap = [
         self::RESPONSE_OK => Result::STATUS_SUCCESS,
 
         self::RESPONSE_MISSING_REGISTRATION => Result::STATUS_INVALID_MESSAGE,
@@ -80,7 +82,7 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
      *
      * @var array
      */
-    protected static $statusMessages = [
+    protected static $statusMessageMap = [
         self::RESPONSE_OK => 'OK',
 
         self::RESPONSE_MISSING_REGISTRATION => 'Missing Registration Token',
@@ -174,8 +176,8 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
                     $pushResults[] = new Result(
                         $token,
                         $date,
-                        self::$statusCodes[$statusCode],
-                        self::$statusMessages[$statusCode]
+                        self::$statusCodeMap[$statusCode],
+                        self::$statusMessageMap[$statusCode]
                     );
                 }
             // @codeCoverageIgnoreStart
@@ -186,8 +188,8 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
                     $pushResults[] = new Result(
                         $token,
                         $date,
-                        self::$statusCodes[$statusCode],
-                        self::$statusMessages[$statusCode]
+                        self::$statusCodeMap[$statusCode],
+                        self::$statusMessageMap[$statusCode]
                     );
                 }
             }
@@ -205,7 +207,7 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
     protected function getPushClient()
     {
         if ($this->pushClient === null) {
-            $this->pushClient = $this->factory->buildPushClient($this->getParameter('api_key'));
+            $this->pushClient = $this->factory->buildPushClient($this->getParameter(static::PARAMETER_API_KEY));
         }
 
         return $this->pushClient;
@@ -280,7 +282,7 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
      */
     protected function getDefinedParameters()
     {
-        return ['api_key'];
+        return [static::PARAMETER_API_KEY];
     }
 
     /**
@@ -288,6 +290,6 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
      */
     protected function getRequiredParameters()
     {
-        return ['api_key'];
+        return [static::PARAMETER_API_KEY];
     }
 }

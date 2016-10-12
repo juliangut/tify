@@ -18,6 +18,21 @@ use Jgut\Tify\Receiver\Receiver;
  */
 class Notification
 {
+    use ParameterTrait {
+        ParameterTrait::setParameter as innerSetParameter;
+    }
+
+    const PARAMETER_TTL = 'ttl';
+    const PARAMETER_BADGE = 'badge';
+    const PARAMETER_SOUND = 'sound';
+    const PARAMETER_CONTENT_AVAILABLE = 'content-available';
+    const PARAMETER_CATEGORY = 'category';
+    const PARAMETER_URL_ARGS = 'url-args';
+    const PARAMETER_COLLAPSE_KEY = 'collapse_key';
+    const PARAMETER_DELAY_WHILE_IDLE = 'delay_while_idle';
+    const PARAMETER_RESTRICTED_PACKAGE_NAME = 'restricted_package_name';
+    const PARAMETER_DRY_RUN = 'dry_run';
+
     const TTL_NONE = 0;
     const TTL_IMMEDIATE = 3600; // 1 hour
     const TTL_SHORT = 86400; // 1 day
@@ -25,10 +40,6 @@ class Notification
     const TTL_EXTENDED = 1209600; // 2 week
     const TTL_LONG = 1814400; // 3 week
     const TTL_EXTRA_LONG = 2419200; // 4 weeks
-
-    use ParameterTrait {
-        ParameterTrait::setParameter as setDefinedParameter;
-    }
 
     /**
      * Default notification parameters.
@@ -42,20 +53,16 @@ class Notification
      * @var array
      */
     protected $defaultParameters = [
-        // APNS
-        'badge' => null,
-        'sound' => null,
-        'content-available' => null, // 1 for silence notifications on iOS
-        'category' => null,
-        'url-args' => null,
-        'expire' => self::TTL_EXTENDED,
-
-        // GCM
-        'collapse_key' => null,
-        'delay_while_idle' => false,
-        'time_to_live' => self::TTL_EXTENDED,
-        'restricted_package_name' => null,
-        'dry_run' => false, // Best using sandbox at adapter level
+        self::PARAMETER_TTL => self::TTL_EXTENDED,
+        self::PARAMETER_BADGE => null,
+        self::PARAMETER_SOUND => null,
+        self::PARAMETER_CONTENT_AVAILABLE => null, // 1 for silence notifications on iOS
+        self::PARAMETER_CATEGORY => null,
+        self::PARAMETER_URL_ARGS => null,
+        self::PARAMETER_COLLAPSE_KEY => null,
+        self::PARAMETER_DELAY_WHILE_IDLE => false,
+        self::PARAMETER_RESTRICTED_PACKAGE_NAME => null,
+        self::PARAMETER_DRY_RUN => false, // It's better to use "sandbox" at adapter level
     ];
 
     /**
@@ -83,6 +90,11 @@ class Notification
      */
     public function __construct(Message $message, $receivers = null, array $parameters = [])
     {
+        $this->parameterAliasMap = [
+            'expire' => static::PARAMETER_TTL,
+            'time_to_live' => static::PARAMETER_TTL,
+        ];
+
         $this->setParameters(array_merge($this->defaultParameters, $parameters));
 
         $this->message = $message;
@@ -104,11 +116,13 @@ class Notification
      */
     public function setParameter($parameter, $value)
     {
+        $parameter = $this->getMappedParameter($parameter);
+
         if (!array_key_exists($parameter, $this->defaultParameters)) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a valid notification parameter', $parameter));
         }
 
-        return $this->setDefinedParameter($parameter, $value);
+        return $this->innerSetParameter($parameter, $value);
     }
 
     /**

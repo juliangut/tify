@@ -27,17 +27,17 @@ class DefaultFactory implements Factory
      * @var array
      */
     protected static $notificationParams = [
-        'title',
-        'body',
-        'icon',
-        'sound',
-        'tag',
-        'color',
-        'click_action',
-        'title_loc_key',
-        'title_loc_args',
-        'body_loc_key',
-        'body_loc_args',
+        NotificationMessage::PARAMETER_TITLE,
+        NotificationMessage::PARAMETER_BODY,
+        NotificationMessage::PARAMETER_ICON,
+        NotificationMessage::PARAMETER_SOUND,
+        NotificationMessage::PARAMETER_TAG,
+        NotificationMessage::PARAMETER_COLOR,
+        NotificationMessage::PARAMETER_CLICK_ACTION,
+        NotificationMessage::PARAMETER_TITLE_LOC_KEY,
+        NotificationMessage::PARAMETER_TITLE_LOC_ARGS,
+        NotificationMessage::PARAMETER_BODY_LOC_KEY,
+        NotificationMessage::PARAMETER_BODY_LOC_ARGS,
     ];
 
     /**
@@ -73,14 +73,13 @@ class DefaultFactory implements Factory
         $message = $notification->getMessage();
 
         $pushMessage = new Message;
-
         $pushMessage
             ->setRegistrationIds($tokens)
-            ->setCollapseKey($notification->getParameter('collapse_key'))
-            ->setDelayWhileIdle($notification->getParameter('delay_while_idle'))
-            ->setTimeToLive($notification->getParameter('time_to_live'))
-            ->setRestrictedPackageName($notification->getParameter('restricted_package_name'))
-            ->setDryRun($notification->getParameter('dry_run'))
+            ->setCollapseKey($notification->getParameter(Notification::PARAMETER_COLLAPSE_KEY))
+            ->setDelayWhileIdle($notification->getParameter(Notification::PARAMETER_DELAY_WHILE_IDLE))
+            ->setTimeToLive($notification->getParameter(Notification::PARAMETER_TTL))
+            ->setRestrictedPackageName($notification->getParameter(Notification::PARAMETER_RESTRICTED_PACKAGE_NAME))
+            ->setDryRun($notification->getParameter(Notification::PARAMETER_DRY_RUN))
             ->setData($message->getPayloadData());
 
         if ($this->shouldHavePayload($message)) {
@@ -104,6 +103,8 @@ class DefaultFactory implements Factory
         foreach (static::$notificationParams as $parameter) {
             if ($message->hasParameter($parameter)) {
                 $shouldHavePayload = true;
+
+                break;
             }
         }
 

@@ -11,7 +11,7 @@
 namespace Jgut\Tify\Adapter\Apns;
 
 use Jgut\Tify\Exception\AdapterException;
-use Jgut\Tify\Message;
+use Jgut\Tify\Message as NotificationMessage;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\ApnsReceiver;
 use ZendService\Apple\Apns\Client\AbstractClient;
@@ -31,14 +31,14 @@ class DefaultFactory implements Factory
      * @var array
      */
     protected static $alertParams = [
-        'title',
-        'body',
-        'title-loc-key',
-        'title-loc-args',
-        'loc-key',
-        'loc-args',
-        'action-loc-key',
-        'launch-image',
+        NotificationMessage::PARAMETER_TITLE,
+        NotificationMessage::PARAMETER_BODY,
+        NotificationMessage::PARAMETER_TITLE_LOC_KEY,
+        NotificationMessage::PARAMETER_TITLE_LOC_ARGS,
+        NotificationMessage::PARAMETER_BODY_LOC_KEY,
+        NotificationMessage::PARAMETER_BODY_LOC_ARGS,
+        NotificationMessage::PARAMETER_ACTION_LOC_KEY,
+        NotificationMessage::PARAMETER_LAUNCH_IMAGE,
     ];
 
     /**
@@ -60,7 +60,7 @@ class DefaultFactory implements Factory
      *
      * @return FeedbackClient
      */
-    public function buildFeedbackClient($certificate, $passPhrase = '', $sandbox = false)
+    public function buildFeedbackClient($certificate, $passPhrase = null, $sandbox = false)
     {
         return $this->buildClient(new FeedbackClient, $certificate, $passPhrase, $sandbox);
     }
@@ -107,43 +107,49 @@ class DefaultFactory implements Factory
             sprintf(
                 '%s%s%s%s',
                 $receiver->getToken(),
-                $message->getParameter('title'),
-                $message->getParameter('body'),
+                $message->getParameter(NotificationMessage::PARAMETER_TITLE),
+                $message->getParameter(NotificationMessage::PARAMETER_BODY),
                 time()
             )
         );
-        $badge = $notification->getParameter('badge') === null ? null : (int) $notification->getParameter('badge');
+        $badge = $notification->getParameter(Notification::PARAMETER_BADGE) === null
+            ? null
+            : (int) $notification->getParameter(Notification::PARAMETER_BADGE);
 
         $pushMessage = (new ServiceMessage)
             ->setId($messageId)
             ->setToken($receiver->getToken())
             ->setBadge($badge)
-            ->setSound($notification->getParameter('sound'))
-            ->setCategory($notification->getParameter('category'))
+            ->setSound($notification->getParameter(Notification::PARAMETER_SOUND))
+            ->setCategory($notification->getParameter(Notification::PARAMETER_CATEGORY))
             ->setCustom($message->getPayloadData());
 
-        if ($notification->getParameter('content-available') !== null) {
-            $pushMessage->setContentAvailable((int) $notification->getParameter('content-available'));
+        if ($notification->getParameter(Notification::PARAMETER_CONTENT_AVAILABLE) !== null) {
+            $pushMessage->setContentAvailable(
+                (int) $notification->getParameter(Notification::PARAMETER_CONTENT_AVAILABLE)
+            );
         }
 
-        if (is_array($notification->getParameter('url-args'))) {
-            $pushMessage->setUrlArgs($notification->getParameter('url-args'));
+        if (is_array($notification->getParameter(Notification::PARAMETER_URL_ARGS))) {
+            $pushMessage->setUrlArgs($notification->getParameter(Notification::PARAMETER_URL_ARGS));
         }
 
-        if ($notification->getParameter('expire') !== null) {
-            $pushMessage->setExpire($notification->getParameter('expire'));
+        if ($notification->getParameter(Notification::PARAMETER_TTL) !== null) {
+            $expire = time() + (int) $notification->getParameter(Notification::PARAMETER_TTL);
+
+            $pushMessage->setExpire($expire);
         }
 
         if ($this->shouldHaveAlert($message)) {
             $pushMessage->setAlert(new ServiceMessageAlert(
-                $message->getParameter('body'),
-                $message->getParameter('action-loc-key'),
-                $message->getParameter('loc-key'),
-                $message->getParameter('loc-args'),
-                $message->getParameter('launch-image'),
-                $message->getParameter('title'),
-                $message->getParameter('title-loc-key'),
-                $message->getParameter('title-loc-args')
+                $message->getParameter(NotificationMessage::PARAMETER_BODY),
+                $message->getParameter(NotificationMessage::PARAMETER_ACTION_LOC_KEY),
+                $message->getParameter(NotificationMessage::PARAMETER_BODY_LOC_KEY),
+                $message->getParameter(NotificationMessage::PARAMETER_BODY_LOC_ARGS),
+                $message->getParameter(NotificationMessage::PARAMETER_LAUNCH_IMAGE),
+                $message->getParameter(NotificationMessage::PARAMETER_TITLE),
+                $message->getParameter(NotificationMessage::PARAMETER_TITLE_LOC_KEY),
+                $message->getParameter(NotificationMessage::PARAMETER_TITLE_LOC_ARGS)
             ));
         }
 
@@ -153,11 +159,11 @@ class DefaultFactory implements Factory
     /**
      * Message should have alert dictionary.
      *
-     * @param Message $message
+     * @param NotificationMessage $message
      *
      * @return bool
      */
-    private function shouldHaveAlert(Message $message)
+    private function shouldHaveAlert(NotificationMessage $message)
     {
         $shouldHaveAlert = false;
 

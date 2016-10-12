@@ -22,7 +22,7 @@ class ApnsReceiver extends AbstractReceiver
      */
     public function setToken($token)
     {
-        if (!ctype_xdigit($token) || strlen(trim($token)) !== 64) {
+        if (!ctype_xdigit($token) || strlen($token) !== 64) {
             throw new \InvalidArgumentException('APNS token must be a 64 hex string');
         }
 
