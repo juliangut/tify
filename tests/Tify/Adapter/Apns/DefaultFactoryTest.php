@@ -38,7 +38,7 @@ class DefaultFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Jgut\Tify\Exception\AdapterException
-     * @expectedExceptionMessageRegExp /(Unable to connect)|(Unable to set local cert chain file)/
+     * @expectedExceptionMessageRegExp /^Unable to connect/
      */
     public function testPushClient()
     {
@@ -49,7 +49,7 @@ class DefaultFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Jgut\Tify\Exception\AdapterException
-     * @expectedExceptionMessageRegExp /(Unable to connect)|(Unable to set local cert chain file)/
+     * @expectedExceptionMessageRegExp /^Unable to connect/
      */
     public function testFeedbackClient()
     {
