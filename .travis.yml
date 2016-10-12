@@ -9,7 +9,6 @@ env:
   - COMPOSER_FLAGS="--prefer-stable"
 
 php:
-  - 5.5
   - 7.0
   - 7.1
   - nightly
@@ -18,7 +17,7 @@ php:
 matrix:
   fast_finish: true
   include:
-    - php: 5.4
+    - php: 5.5
       env:
         - COMPOSER_FLAGS="--prefer-lowest"
     - php: 5.6
