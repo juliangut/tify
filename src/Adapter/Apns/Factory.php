@@ -25,7 +25,7 @@ interface Factory
      * @param string $passPhrase
      * @param bool   $sandbox
      *
-     * @return AbstractClient
+     * @return \ZendService\Apple\Apns\Client\Message
      */
     public function buildPushClient($certificate, $passPhrase = '', $sandbox = false);
 
