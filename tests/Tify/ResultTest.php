@@ -46,7 +46,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testAccessorsMutators()
+    public function testGetterSetters()
     {
         $this->result->setToken('b8e3802766d2ced54910e68332e8c1e204b05abe96421c21eecc9f0cbc1c7043');
         self::assertEquals(

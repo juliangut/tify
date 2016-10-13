@@ -94,6 +94,23 @@ trait ParameterTrait
     }
 
     /**
+     * Easy access to parameters.
+     *
+     * @param string $name
+     * @param array  $arguments
+     *
+     * @return mixed
+     */
+    public function __call($name, array $arguments = null)
+    {
+        if (preg_match('/^get([A-Z].+)$/', $name, $matches)) {
+            return $this->getParameter(lcfirst($matches[1]));
+        }
+
+        return;
+    }
+
+    /**
      * Get parameter.
      *
      * @param string $parameter

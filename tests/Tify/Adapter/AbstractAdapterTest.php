@@ -54,7 +54,7 @@ class AbstractAdapterTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($this->adapter->isSandbox());
     }
 
-    public function testAccessorsMutators()
+    public function testGetterSetters()
     {
         $this->adapter->setSandbox(true);
         self::assertTrue($this->adapter->isSandbox());

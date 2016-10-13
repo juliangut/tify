@@ -30,7 +30,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->message = new Message;
     }
 
-    public function testMutatorsAccessors()
+    public function testGetterSetters()
     {
         self::assertCount(0, $this->message->getNotificationPayload());
 

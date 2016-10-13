@@ -37,7 +37,7 @@ class ParameterTraitTest extends \PHPUnit_Framework_TestCase
         self::assertEmpty($this->parameterBag->getParameters());
     }
 
-    public function testAccessorsMutators()
+    public function testGetterSetters()
     {
         $this->parameterBag->setParameter('first', true);
         self::assertTrue($this->parameterBag->hasParameter('first'));
@@ -45,10 +45,12 @@ class ParameterTraitTest extends \PHPUnit_Framework_TestCase
         self::assertCount(1, $this->parameterBag->getParameters());
 
         $this->parameterBag->setParameters([
-            'second' => 'second',
-            'third' => 'third',
+            'second' => 'second_value',
+            'third' => 'third_value',
         ]);
         self::assertTrue($this->parameterBag->hasParameter('second'));
+        self::assertEquals('third_value', $this->parameterBag->getThird());
         self::assertCount(2, $this->parameterBag->getParameters());
+        self::assertNull($this->parameterBag->none());
     }
 }
