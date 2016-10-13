@@ -10,8 +10,6 @@
 
 namespace Jgut\Tify;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * Parameter handling.
  */
@@ -27,19 +25,9 @@ trait ParameterTrait
     /**
      * List of parameters.
      *
-     * @var ArrayCollection
+     * @var array
      */
-    protected $parameters;
-
-    /**
-     * Initialize parameters collection.
-     */
-    protected function initializeParameters()
-    {
-        if ($this->parameters === null) {
-            $this->parameters = new ArrayCollection;
-        }
-    }
+    protected $parameters = [];
 
     /**
      * Get parameters.
@@ -48,11 +36,7 @@ trait ParameterTrait
      */
     public function getParameters()
     {
-        if (!$this->parameters instanceof ArrayCollection) {
-            return [];
-        }
-
-        return $this->parameters->toArray();
+        return $this->parameters;
     }
 
     /**
@@ -64,11 +48,7 @@ trait ParameterTrait
      */
     public function setParameters($parameters)
     {
-        if ($this->parameters instanceof ArrayCollection) {
-            $this->parameters->clear();
-        } else {
-            $this->initializeParameters();
-        }
+        $this->parameters = [];
 
         foreach ($parameters as $parameter => $value) {
             $this->setParameter($parameter, $value);
@@ -86,11 +66,7 @@ trait ParameterTrait
      */
     public function hasParameter($parameter)
     {
-        if (!$this->parameters instanceof ArrayCollection) {
-            return false;
-        }
-
-        return $this->parameters->containsKey($this->getMappedParameter($parameter));
+        return array_key_exists($this->getMappedParameter($parameter), $this->parameters);
     }
 
     /**
@@ -120,13 +96,9 @@ trait ParameterTrait
      */
     public function getParameter($parameter, $default = null)
     {
-        if (!$this->parameters instanceof ArrayCollection) {
-            return $default;
-        }
-
         $parameter = $this->getMappedParameter($parameter);
 
-        return $this->parameters->containsKey($parameter) ? $this->parameters->get($parameter) : $default;
+        return array_key_exists($parameter, $this->parameters) ? $this->parameters[$parameter] : $default;
     }
 
     /**
@@ -139,9 +111,7 @@ trait ParameterTrait
      */
     public function setParameter($parameter, $value)
     {
-        $this->initializeParameters();
-
-        $this->parameters->set($this->getMappedParameter($parameter), $value);
+        $this->parameters[$this->getMappedParameter($parameter)] = $value;
 
         return $this;
     }

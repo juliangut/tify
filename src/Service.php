@@ -10,7 +10,6 @@
 
 namespace Jgut\Tify;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Adapter\Adapter;
 use Jgut\Tify\Adapter\FeedbackAdapter;
 use Jgut\Tify\Adapter\PushAdapter;
@@ -25,14 +24,14 @@ class Service
      *
      * @var Adapter[]
      */
-    protected $adapters;
+    protected $adapters = [];
 
     /**
      * Registered notifications.
      *
      * @var Notification[]
      */
-    protected $notifications;
+    protected $notifications = [];
 
     /**
      * Manager constructor.
@@ -42,7 +41,6 @@ class Service
      */
     public function __construct($adapters = null, $notifications = null)
     {
-        $this->adapters = new ArrayCollection;
         if ($adapters !== null) {
             if (!is_array($adapters)) {
                 $adapters = [$adapters];
@@ -51,7 +49,6 @@ class Service
             $this->setAdapters((array) $adapters);
         }
 
-        $this->notifications = new ArrayCollection;
         if ($notifications !== null) {
             if (!is_array($notifications)) {
                 $notifications = [$notifications];
@@ -68,7 +65,7 @@ class Service
      */
     public function getAdapters()
     {
-        return $this->adapters->toArray();
+        return $this->adapters;
     }
 
     /**
@@ -80,7 +77,7 @@ class Service
      */
     public function setAdapters(array $adapters)
     {
-        $this->adapters->clear();
+        $this->adapters = [];
 
         foreach ($adapters as $adapter) {
             $this->addAdapter($adapter);
@@ -98,7 +95,7 @@ class Service
      */
     public function addAdapter(Adapter $adapter)
     {
-        $this->adapters->add($adapter);
+        $this->adapters[] = $adapter;
 
         return $this;
     }
@@ -108,7 +105,7 @@ class Service
      */
     public function clearAdapters()
     {
-        $this->adapters->clear();
+        $this->adapters = [];
 
         return $this;
     }
@@ -120,7 +117,7 @@ class Service
      */
     public function getNotifications()
     {
-        return $this->notifications->toArray();
+        return $this->notifications;
     }
 
     /**
@@ -132,7 +129,7 @@ class Service
      */
     public function setNotifications(array $notifications)
     {
-        $this->notifications->clear();
+        $this->notifications = [];
 
         foreach ($notifications as $notification) {
             $this->addNotification($notification);
@@ -150,7 +147,7 @@ class Service
      */
     public function addNotification(Notification $notification)
     {
-        $this->notifications->add($notification);
+        $this->notifications[] = $notification;
 
         return $this;
     }
@@ -160,7 +157,7 @@ class Service
      */
     public function clearNotifications()
     {
-        $this->notifications->clear();
+        $this->notifications = [];
 
         return $this;
     }
@@ -176,7 +173,7 @@ class Service
 
         /* @var PushAdapter[] $pushAdapters */
         $pushAdapters = array_filter(
-            $this->adapters->toArray(),
+            $this->adapters,
             function (Adapter $adapter) {
                 return $adapter instanceof PushAdapter;
             }
@@ -204,7 +201,7 @@ class Service
 
         /* @var FeedbackAdapter[] $feedbackAdapters */
         $feedbackAdapters = array_filter(
-            $this->adapters->toArray(),
+            $this->adapters,
             function (Adapter $adapter) {
                 return $adapter instanceof FeedbackAdapter;
             }

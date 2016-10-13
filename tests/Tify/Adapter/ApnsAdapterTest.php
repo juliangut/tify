@@ -89,7 +89,7 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
             ->will(self::returnValue($message));
 
         $this->adapter = new ApnsAdapter(
-            ['certificate' => __DIR__ . '/../../files/apns_certificate.pem'],
+            [ApnsAdapter::PARAMETER_CERTIFICATE => __DIR__ . '/../../files/apns_certificate.pem'],
             true,
             $factory
         );

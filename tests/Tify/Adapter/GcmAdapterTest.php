@@ -64,7 +64,7 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
             ->method('buildPushMessage')
             ->will(self::returnValue($message));
 
-        $this->adapter = new GcmAdapter(['api_key' => 'aaa'], true, $factory);
+        $this->adapter = new GcmAdapter([GcmAdapter::PARAMETER_API_KEY => 'aaa'], true, $factory);
     }
 
     /**

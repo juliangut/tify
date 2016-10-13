@@ -10,8 +10,6 @@
 
 namespace Jgut\Tify;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * Push message.
  */
@@ -72,9 +70,9 @@ class Message
     /**
      * Message payload.
      *
-     * @var ArrayCollection
+     * @var array
      */
-    protected $payload;
+    protected $payload = [];
 
     /**
      * Constructor.
@@ -93,8 +91,6 @@ class Message
         ];
 
         $this->setParameters($parameters);
-
-        $this->payload = new ArrayCollection;
     }
 
     /**
@@ -177,7 +173,7 @@ class Message
      */
     public function getPayloadData()
     {
-        return $this->payload->toArray();
+        return $this->payload;
     }
 
     /**
@@ -191,7 +187,7 @@ class Message
      */
     public function setPayloadData(array $data)
     {
-        $this->payload->clear();
+        $this->payload = [];
 
         foreach ($data as $key => $value) {
             $this->setPayload($key, $value);
@@ -211,7 +207,7 @@ class Message
      */
     public function hasPayload($key)
     {
-        return $this->payload->containsKey($this->composePayloadKey($key));
+        return array_key_exists($this->composePayloadKey($key), $this->payload);
     }
 
     /**
@@ -228,7 +224,7 @@ class Message
     {
         $key = $this->composePayloadKey($key);
 
-        return $this->payload->containsKey($key) ? $this->payload->get($key) : $default;
+        return array_key_exists($key, $this->payload) ? $this->payload[$key] : $default;
     }
 
     /**
@@ -255,7 +251,7 @@ class Message
             }
         }
 
-        $this->payload->set($key, $value);
+        $this->payload[$key] = $value;
 
         return $this;
     }

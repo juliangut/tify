@@ -10,7 +10,6 @@
 
 namespace Jgut\Tify;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Receiver\Receiver;
 
 /**
@@ -81,7 +80,7 @@ class Notification
      *
      * @var Receiver[]
      */
-    protected $receivers;
+    protected $receivers = [];
 
     /**
      * Notification constructor.
@@ -103,7 +102,6 @@ class Notification
 
         $this->message = $message;
 
-        $this->receivers = new ArrayCollection;
         if ($receivers !== null) {
             if (!is_array($receivers)) {
                 $receivers = [$receivers];
@@ -162,7 +160,7 @@ class Notification
      */
     public function getReceivers()
     {
-        return $this->receivers->toArray();
+        return $this->receivers;
     }
 
     /**
@@ -174,7 +172,7 @@ class Notification
      */
     public function setReceivers(array $receivers)
     {
-        $this->receivers->clear();
+        $this->receivers = [];
 
         foreach ($receivers as $receiver) {
             $this->addReceiver($receiver);
@@ -192,7 +190,7 @@ class Notification
      */
     public function addReceiver(Receiver $receiver)
     {
-        $this->receivers->add($receiver);
+        $this->receivers[] = $receiver;
 
         return $this;
     }
@@ -204,7 +202,7 @@ class Notification
      */
     public function clearReceivers()
     {
-        $this->receivers->clear();
+        $this->receivers = [];
 
         return $this;
     }

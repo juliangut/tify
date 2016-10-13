@@ -10,7 +10,6 @@
 
 namespace Jgut\Tify\Adapter;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Jgut\Tify\Exception\AdapterException;
 use Jgut\Tify\ParameterTrait;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
@@ -47,7 +46,7 @@ abstract class AbstractAdapter implements Adapter
         $parametersResolver->setRequired($this->getRequiredParameters());
 
         try {
-            $this->parameters = new ArrayCollection($parametersResolver->resolve($parameters));
+            $this->parameters = $parametersResolver->resolve($parameters);
         } catch (MissingOptionsException $exception) {
             throw new AdapterException(sprintf('Missing parameters on "%s"', static::class));
         } catch (\Exception $exception) {
