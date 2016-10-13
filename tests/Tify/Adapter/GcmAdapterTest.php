@@ -83,12 +83,7 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         /* @var Message $message */
 
-        $receiver = $this->getMockBuilder(GcmReceiver::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $receiver->expects(self::any())
-            ->method('getToken')
-            ->will(self::returnValue('aaa'));
+        $receiver = new GcmReceiver('abcdefghijklmnopqrstuvwxyz1234567890');
 
         $notification = new Notification($message, [$receiver]);
         /* @var Result[] $results */

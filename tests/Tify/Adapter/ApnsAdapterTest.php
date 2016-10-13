@@ -110,9 +110,7 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $receiver = $this->getMockBuilder(ApnsReceiver::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $receiver = new ApnsReceiver('abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789');
 
         $notification = new Notification($message, [$receiver]);
         $results = $this->adapter->push($notification);

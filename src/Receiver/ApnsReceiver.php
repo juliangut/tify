@@ -13,7 +13,7 @@ namespace Jgut\Tify\Receiver;
 /**
  * APNS device receiver.
  */
-class ApnsReceiver extends AbstractReceiver
+final class ApnsReceiver extends AbstractReceiver
 {
     /**
      * {@inheritdoc}

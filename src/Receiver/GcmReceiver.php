@@ -13,7 +13,7 @@ namespace Jgut\Tify\Receiver;
 /**
  * GCM device receiver.
  */
-class GcmReceiver extends AbstractReceiver
+final class GcmReceiver extends AbstractReceiver
 {
     /**
      * {@inheritdoc}
