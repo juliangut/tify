@@ -27,8 +27,12 @@ class Message
     const PARAMETER_TITLE_LOC_ARGS = 'title_loc_args';
     const PARAMETER_BODY_LOC_KEY = 'body_loc_key';
     const PARAMETER_BODY_LOC_ARGS = 'body_loc_args';
+
+    // APNS specific
     const PARAMETER_ACTION_LOC_KEY = 'action-loc-key';
     const PARAMETER_LAUNCH_IMAGE = 'launch-image';
+
+    // GCM specific
     const PARAMETER_ICON = 'icon';
     const PARAMETER_SOUND = 'sound';
     const PARAMETER_TAG = 'tag';
@@ -37,6 +41,8 @@ class Message
 
     /**
      * Reserved payload keys.
+     *
+     * For an iOS silent notification leave message with no parameters at all, not even title nor body.
      *
      * @var array
      */

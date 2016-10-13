@@ -47,7 +47,7 @@ Messages compose the final information arriving to receivers. GCM and APNS messa
 
 *There are defined constants to identify each possible parameter*
 
-In order for the message payload to be created one of the following message parameters must be present:
+In order for the message payload to be created one of the following message parameters must be set:
 
 * For APNS: `Message::PARAMETER_TITLE`, `Message::PARAMETER_TITLE_LOC_KEY`, `Message::PARAMETER_TITLE_LOC_ARGS`, `Message::PARAMETER_BODY`, `Message::PARAMETER_BODY_LOC_KEY`, `Message::PARAMETER_BODY_LOC_ARGS`, `Message::PARAMETER_ACTION_LOC_KEY`, `Message::PARAMETER_LAUNCH_IMAGE`
 * For GCM: `Message::PARAMETER_TITLE`, `Message::PARAMETER_TITLE_LOC_KEY`, `Message::PARAMETER_TITLE_LOC_ARGS`, `Message::PARAMETER_BODY`, `Message::PARAMETER_BODY_LOC_KEY`, `Message::PARAMETER_BODY_LOC_ARGS`, `Message::PARAMETER_ICON`, `Message::PARAMETER_SOUND`, `Message::PARAMETER_TAG`, `Message::PARAMETER_COLOR`
@@ -68,7 +68,9 @@ Notifications hold some extra parameters used by the notification services to co
 
 *There are defined constants to identify each possible parameter*
 
-`Notification::TTL` parameter is used instead of GCM `time_to_live` and APNS `expire` to unify this parameters, it must be an integer. This parameter is normalized in both services to "2 weeks" (1209600 seconds) instead of the default 4 weeks for GCM and none at all for APNS.
+By default Notification TTL is normalized in both services to "2 weeks" (1209600 seconds) instead of the default 4 weeks for GCM and immediate for APNS.
+
+`Notification::TTL` parameter is used instead of GCM `time_to_live` and APNS `expire` to unify both services under the same interface, it must be an integer representing notification TTL in seconds.
 
 *There are some convenience constants in Notification class for common TTL values*
 

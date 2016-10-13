@@ -23,18 +23,22 @@ class Notification
     }
 
     const PARAMETER_TTL = 'ttl';
+
+    // APNS specific
     const PARAMETER_BADGE = 'badge';
     const PARAMETER_SOUND = 'sound';
     const PARAMETER_CONTENT_AVAILABLE = 'content-available';
     const PARAMETER_CATEGORY = 'category';
     const PARAMETER_URL_ARGS = 'url-args';
+
+    // GCM specific
     const PARAMETER_COLLAPSE_KEY = 'collapse_key';
     const PARAMETER_DELAY_WHILE_IDLE = 'delay_while_idle';
     const PARAMETER_RESTRICTED_PACKAGE_NAME = 'restricted_package_name';
     const PARAMETER_DRY_RUN = 'dry_run';
 
-    const TTL_NONE = 0;
-    const TTL_IMMEDIATE = 3600; // 1 hour
+    const TTL_IMMEDIATE = 300; // 5 minutes
+    const TTL_FLASH = 3600; // 1 hour
     const TTL_SHORT = 86400; // 1 day
     const TTL_NORMAL = 604800; // 1 week
     const TTL_EXTENDED = 1209600; // 2 week
@@ -56,7 +60,7 @@ class Notification
         self::PARAMETER_TTL => self::TTL_EXTENDED,
         self::PARAMETER_BADGE => null,
         self::PARAMETER_SOUND => null,
-        self::PARAMETER_CONTENT_AVAILABLE => null, // 1 for silence notifications on iOS
+        self::PARAMETER_CONTENT_AVAILABLE => null,
         self::PARAMETER_CATEGORY => null,
         self::PARAMETER_URL_ARGS => null,
         self::PARAMETER_COLLAPSE_KEY => null,
