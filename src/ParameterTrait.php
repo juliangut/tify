@@ -72,8 +72,8 @@ trait ParameterTrait
     /**
      * Easy access to parameters.
      *
-     * @param string $name
-     * @param array  $arguments
+     * @param string     $name
+     * @param array|null $arguments
      *
      * @return mixed
      */
