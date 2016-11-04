@@ -21,6 +21,8 @@ use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 
 /**
  * APNS service adapter.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapter
 {

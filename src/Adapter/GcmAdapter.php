@@ -19,6 +19,8 @@ use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 
 /**
  * GCM service adapter.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GcmAdapter extends AbstractAdapter implements PushAdapter
 {

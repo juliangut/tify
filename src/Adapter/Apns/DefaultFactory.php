@@ -22,6 +22,8 @@ use ZendService\Apple\Apns\Message as ServiceMessage;
 
 /**
  * APNS default service factory.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DefaultFactory implements Factory
 {
