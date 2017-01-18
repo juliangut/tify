@@ -10,7 +10,6 @@
 
 namespace Jgut\Tify\Tests;
 
-use Jgut\Tify\Adapter\AbstractAdapter;
 use Jgut\Tify\Adapter\ApnsAdapter;
 use Jgut\Tify\Adapter\GcmAdapter;
 use Jgut\Tify\Notification;
@@ -32,15 +31,25 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        /* @var AbstractAdapter $adapter */
-        $adapter = $this->getMockForAbstractClass(AbstractAdapter::class, [], '', false);
+        $this->service = new Service();
+    }
+
+    public function testConstruction()
+    {
+        /* @var GcmAdapter $adapter */
+        $adapter = $this->getMockBuilder(GcmAdapter::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         /* @var Notification $notification */
         $notification = $this->getMockBuilder(Notification::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->service = new Service($adapter, $notification);
+        $service = new Service($adapter, $notification);
+
+        self::assertEquals([$adapter], $service->getAdapters());
+        self::assertEquals([$notification], $service->getNotifications());
     }
 
     public function testAccesorsMutators()
@@ -53,7 +62,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $notification = $this->getMockBuilder(Notification::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $service->addNotification($notification);
+        $service->setNotifications([$notification]);
         self::assertCount(1, $service->getNotifications());
 
         $service->clearNotifications();
@@ -65,7 +74,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $adapter = $this->getMockBuilder(GcmAdapter::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $service->addAdapter($adapter);
+        $service->setAdapters([$adapter]);
         self::assertCount(1, $service->getAdapters());
 
         $service->clearAdapters();

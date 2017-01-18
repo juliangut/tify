@@ -8,36 +8,28 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Adapter;
+namespace Jgut\Tify\Adapter\Traits;
 
 use Jgut\Tify\Exception\AdapterException;
-use Jgut\Tify\ParameterTrait;
+use Jgut\Tify\ParameterTrait as ParamsTrait;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Abstract service class.
+ * Parameter aware trait.
  */
-abstract class AbstractAdapter implements Adapter
+trait ParameterTrait
 {
-    use ParameterTrait;
+    use ParamsTrait;
 
     /**
-     * Sandbox environment.
-     *
-     * @var bool
-     */
-    protected $sandbox;
-
-    /**
-     * Constructor.
+     * Assign adapter parameters.
      *
      * @param array $parameters
-     * @param bool  $sandbox
      *
      * @throws AdapterException
      */
-    public function __construct(array $parameters = [], $sandbox = false)
+    protected function assignParameters(array $parameters = [])
     {
         $parametersResolver = new OptionsResolver;
 
@@ -52,28 +44,6 @@ abstract class AbstractAdapter implements Adapter
         } catch (\Exception $exception) {
             throw new AdapterException('Invalid parameter provided');
         }
-
-        $this->sandbox = (bool) $sandbox;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isSandbox()
-    {
-        return $this->sandbox;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return $this
-     */
-    public function setSandbox($sandbox = true)
-    {
-        $this->sandbox = (bool) $sandbox;
-
-        return $this;
     }
 
     /**
@@ -81,10 +51,7 @@ abstract class AbstractAdapter implements Adapter
      *
      * @return array
      */
-    protected function getDefinedParameters()
-    {
-        return [];
-    }
+    abstract protected function getDefinedParameters();
 
     /**
      * Get the list of default parameters.
@@ -101,8 +68,5 @@ abstract class AbstractAdapter implements Adapter
      *
      * @return array
      */
-    protected function getRequiredParameters()
-    {
-        return [];
-    }
+    abstract protected function getRequiredParameters();
 }

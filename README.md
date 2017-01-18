@@ -12,7 +12,7 @@
 
 # Tify
 
-Unified push notification services abstraction layer to connect with Google GCM and Apple APNS services.
+Unified push notification services abstraction to connect with Google GCM and Apple APNS services.
 
 ## Installation
 
@@ -28,7 +28,7 @@ Then require_once the autoload file:
 require_once './vendor/autoload.php';
 ```
 
-## Concepts
+## Elements
 
 ### Receiver
 
@@ -43,7 +43,7 @@ new \Jgut\Tify\Receiver\GcmReceiver('device_token');
 
 ### Message
 
-Messages compose the final information arriving to receivers. GCM and APNS messages hold different information according to each service specification.
+Compose the final information arriving to receivers. GCM and APNS messages hold different information according to each service specification.
 
 *There are defined constants to identify each possible parameter*
 
@@ -52,7 +52,7 @@ In order for the message payload to be created one of the following message para
 * For APNS: `Message::PARAMETER_TITLE`, `Message::PARAMETER_TITLE_LOC_KEY`, `Message::PARAMETER_TITLE_LOC_ARGS`, `Message::PARAMETER_BODY`, `Message::PARAMETER_BODY_LOC_KEY`, `Message::PARAMETER_BODY_LOC_ARGS`, `Message::PARAMETER_ACTION_LOC_KEY`, `Message::PARAMETER_LAUNCH_IMAGE`
 * For GCM: `Message::PARAMETER_TITLE`, `Message::PARAMETER_TITLE_LOC_KEY`, `Message::PARAMETER_TITLE_LOC_ARGS`, `Message::PARAMETER_BODY`, `Message::PARAMETER_BODY_LOC_KEY`, `Message::PARAMETER_BODY_LOC_ARGS`, `Message::PARAMETER_ICON`, `Message::PARAMETER_SOUND`, `Message::PARAMETER_TAG`, `Message::PARAMETER_COLOR`
 
-Messages can hold any number of custom payload data that will compose additional data sent to the destination receivers. This key/value payload data must comply with some limitations to be fully compatible with different services at once, for this a prefix (`data_` by default) is automatically added to the key. This prefix can be changed or removed if needed, but be aware that payload data should not be a reserved word (`apns`, `from` or any word starting with `google` or `gcm`) or any GCM notification parameter name.
+Messages can hold any number of custom payload data that will compose additional data sent to the destination receivers. This key/value payload data must comply with some limitations to be fully compatible with different services at once, for this a prefix (`data_` by default) is automatically added to the key. This prefix can be changed or removed if needed, but be aware that payload data should not be a reserved word such as `apns`, `from` or any word starting with `google` or `gcm` or GCM notification parameter name.
 
 *Find APNS message parameters [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html) in table 3-2.*
 
@@ -62,7 +62,7 @@ Messages can hold any number of custom payload data that will compose additional
 
 It's a container to keep a message and its associated destination receivers.
 
-Notifications are the central unit of work, several notifications can be set into a Tify Service sharing the same adapters but sending different messages to different receivers.
+Notifications are the central unit of work, several notifications can be set into a Service sharing the same adapters but sending different messages to different receivers.
 
 Notifications hold some extra parameters used by the notification services to control behaviour and/or be used in notification creation.
 
@@ -184,8 +184,8 @@ $service->addNotification(new Notification(
         new ApnsReceiver('xxxxxxxxxxx'),
     ],
     [
-        Notification::PARAMETER_CONTENT_AVAILABLE => 1,
-        Notification::PARAMETER_DELAY_WHILE_IDLE => true,
+        Notification::PARAMETER_CONTENT_AVAILABLE => 1,  // Only for APNS
+        Notification::PARAMETER_DRY_RUN => true, // Only for GCM
     ]
 ));
 
@@ -223,11 +223,13 @@ $results = $service->feedback();
 
 You should pay attention to results with `STATUS_INVALID_DEVICE` status in order to invalidate those tokens.
 
-Feedback service for GCM can be mimicked by sending a test Notification (parameter `dry_run` to true), this will NOT send the message to receivers but will return responses according to what would have happened if the messages were sent, so you can scan results for `STATUS_INVALID_DEVICE` status codes.
+Feedback service for GCM can be mimicked by sending a test Notification (by setting parameter `dry_run` to true), this will NOT send the message to receivers but will return responses according to what would have happened if the messages were sent, so you can scan results for `STATUS_INVALID_DEVICE` status codes.
 
 ## Update 1.x to 2.x
 
-Interfaces for Adapters and Receivers have been introduced, you should implement this interfaces instead of extend abstract classes, although it can still be done.
+GCM adapter now points to Firebase Cloud Messaging (FCM) as Google is moving forward to using this platform instead.
+
+Adapters and Receivers abstract classes have been removed, interfaces have been introduced instead.
 
 Notification's TTL is now controlled by `Notificaton::PARAMETER_TTL` instead of separated GCM and APNS parameters. You can still use `time_to_live` and `expire` as they are aliases of `Notificaton::PARAMETER_TTL`.
 

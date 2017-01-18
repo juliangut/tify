@@ -25,14 +25,13 @@
   "prefer-stable": true,
   "require": {
     "php": ">=5.5",
-    "symfony/polyfill-php56": "^1.0",
-    "symfony/polyfill-php70": "^1.0",
     "symfony/options-resolver": "^2.7|^3.0",
     "zendframework/zendservice-apple-apns": "^1.2",
-    "zendframework/zendservice-google-gcm": "^1.0"
+    "zendframework/zendservice-google-gcm": "^2.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^1.0",
+    "humbug/humbug": "~1.0@dev",
     "phpmd/phpmd": "^2.0",
     "phpunit/phpunit": "^4.5|^5.0",
     "sebastian/phpcpd": "^2.0",
@@ -64,9 +63,20 @@
     "phpunit": "phpunit",
     "phpunit-coverage": "phpunit --coverage-html build/coverage",
     "phpunit-clover": "phpunit --coverage-clover build/logs/clover.xml",
-    "qa": "composer phplint & composer phpcs & composer phpcs-lint & composer phpcpd & composer phpmd",
+    "humbug": "humbug",
+    "qa": [
+      "@php-lint",
+      "@phpcs",
+      "@phpcs-lint",
+      "@phpcpd",
+      "@phpmd"
+    ],
     "fix": "php-cs-fixer fix --verbose",
     "security": "composer outdated",
-    "test": "composer qa & composer phpunit"
+    "test": [
+      "@qa",
+      "@phpunit",
+      "@humbug"
+    ]
   }
 }

@@ -10,11 +10,27 @@
 
 namespace Jgut\Tify\Receiver;
 
+use Jgut\Tify\Receiver\Traits\TokenTrait;
+
 /**
  * APNS device receiver.
  */
-final class ApnsReceiver extends AbstractReceiver
+final class ApnsReceiver implements Receiver
 {
+    use TokenTrait;
+
+    /**
+     * Constructor.
+     *
+     * @param string $token
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function __construct($token)
+    {
+        $this->setToken($token);
+    }
+
     /**
      * {@inheritdoc}
      *

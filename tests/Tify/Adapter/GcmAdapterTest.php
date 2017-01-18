@@ -11,7 +11,6 @@
 namespace Jgut\Tify\Tests\Adapter\Gcm;
 
 use Jgut\Tify\Adapter\Gcm\DefaultFactory;
-use Jgut\Tify\Adapter\Gcm\Message as GcmMessage;
 use Jgut\Tify\Adapter\GcmAdapter;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
@@ -19,6 +18,7 @@ use Jgut\Tify\Receiver\GcmReceiver;
 use Jgut\Tify\Result;
 use ZendService\Google\Exception\RuntimeException;
 use ZendService\Google\Gcm\Client;
+use ZendService\Google\Gcm\Message as ServiceMessage;
 use ZendService\Google\Gcm\Response;
 
 /**
@@ -47,7 +47,7 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
             ->method('send')
             ->will(self::returnValue($response));
 
-        $message = $this->getMockBuilder(GcmMessage::class)
+        $message = $this->getMockBuilder(ServiceMessage::class)
             ->disableOriginalConstructor()
             ->getMock();
         $message->expects(self::any())
@@ -71,9 +71,18 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Jgut\Tify\Exception\AdapterException
      * @expectedExceptionMessageRegExp /^Missing parameters on/
      */
-    public function testInvalidApiKey()
+    public function testMissingApiKey()
     {
         new GcmAdapter;
+    }
+
+    /**
+     * @expectedException \Jgut\Tify\Exception\AdapterException
+     * @expectedExceptionMessage Invalid parameter provided
+     */
+    public function testInvalidParameter()
+    {
+        new GcmAdapter(['invalid' => 'value']);
     }
 
     public function testSend()

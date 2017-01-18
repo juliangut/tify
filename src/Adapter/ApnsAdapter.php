@@ -12,6 +12,8 @@ namespace Jgut\Tify\Adapter;
 
 use Jgut\Tify\Adapter\Apns\DefaultFactory;
 use Jgut\Tify\Adapter\Apns\Factory;
+use Jgut\Tify\Adapter\Traits\ParameterTrait;
+use Jgut\Tify\Adapter\Traits\SandboxTrait;
 use Jgut\Tify\Exception\AdapterException;
 use Jgut\Tify\Exception\NotificationException;
 use Jgut\Tify\Notification;
@@ -24,8 +26,11 @@ use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapter
+class ApnsAdapter implements PushAdapter, FeedbackAdapter
 {
+    use ParameterTrait;
+    use SandboxTrait;
+
     const PARAMETER_CERTIFICATE = 'certificate';
     const PARAMETER_PASS_PHRASE = 'pass_phrase';
 
@@ -119,7 +124,8 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
      */
     public function __construct(array $parameters = [], $sandbox = false, Factory $factory = null)
     {
-        parent::__construct($parameters, $sandbox);
+        $this->assignParameters($parameters);
+        $this->setSandbox($sandbox);
 
         $certificatePath = $this->getParameter(static::PARAMETER_CERTIFICATE);
         if (!file_exists($certificatePath) || !is_readable($certificatePath)) {
@@ -152,6 +158,7 @@ class ApnsAdapter extends AbstractAdapter implements PushAdapter, FeedbackAdapte
 
         $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
+        /* @var \ZendService\Apple\Apns\Message $pushMessage */
         foreach ($this->getPushMessage($notification) as $pushMessage) {
             try {
                 $statusCode = $client->send($pushMessage)->getCode();

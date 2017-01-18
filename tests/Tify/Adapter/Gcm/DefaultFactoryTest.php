@@ -11,10 +11,10 @@
 namespace Jgut\Tify\Tests\Adapter\Gcm;
 
 use Jgut\Tify\Adapter\Gcm\DefaultFactory;
-use Jgut\Tify\Adapter\Gcm\Message as GcmMessage;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use ZendService\Google\Gcm\Client;
+use ZendService\Google\Gcm\Message as ServiceMessage;
 
 /**
  * Default GCM service factory tests.
@@ -49,7 +49,7 @@ class DefaultFactoryTest extends \PHPUnit_Framework_TestCase
 
         $pushMessage = $this->factory->buildPushMessage(['my_token'], $notification);
 
-        self::assertInstanceOf(GcmMessage::class, $pushMessage);
+        self::assertInstanceOf(ServiceMessage::class, $pushMessage);
         self::assertEquals('my_key', $pushMessage->getCollapseKey());
     }
 
@@ -61,7 +61,7 @@ class DefaultFactoryTest extends \PHPUnit_Framework_TestCase
 
         $pushMessage = $this->factory->buildPushMessage(['my_token'], $notification);
 
-        self::assertInstanceOf(GcmMessage::class, $pushMessage);
-        self::assertEquals('MESSAGE_TITLE', $pushMessage->getNotificationPayload()['title_loc_key']);
+        self::assertInstanceOf(ServiceMessage::class, $pushMessage);
+        self::assertEquals('MESSAGE_TITLE', $pushMessage->getNotification()['title_loc_key']);
     }
 }

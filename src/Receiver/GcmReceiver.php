@@ -10,11 +10,27 @@
 
 namespace Jgut\Tify\Receiver;
 
+use Jgut\Tify\Receiver\Traits\TokenTrait;
+
 /**
  * GCM device receiver.
  */
-final class GcmReceiver extends AbstractReceiver
+final class GcmReceiver implements Receiver
 {
+    use TokenTrait;
+
+    /**
+     * Constructor.
+     *
+     * @param string $token
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function __construct($token)
+    {
+        $this->setToken($token);
+    }
+
     /**
      * {@inheritdoc}
      *

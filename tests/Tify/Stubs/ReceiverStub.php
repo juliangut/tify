@@ -10,26 +10,23 @@
 
 namespace Jgut\Tify\Tests\Stubs;
 
-use Jgut\Tify\Adapter\AbstractAdapter;
+use Jgut\Tify\Receiver\Receiver;
+use Jgut\Tify\Receiver\Traits\TokenTrait;
 
 /**
- * Service adapter stub.
+ * Receiver device stub.
  */
-class AdapterStub extends AbstractAdapter
+class ReceiverStub implements Receiver
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefinedParameters()
-    {
-        return ['param1'];
-    }
+    use TokenTrait;
 
     /**
      * {@inheritdoc}
      */
-    protected function getRequiredParameters()
+    public function setToken($token)
     {
-        return ['param1'];
+        $this->token = trim($token);
+
+        return $this;
     }
 }

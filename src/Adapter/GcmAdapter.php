@@ -12,6 +12,8 @@ namespace Jgut\Tify\Adapter;
 
 use Jgut\Tify\Adapter\Gcm\DefaultFactory;
 use Jgut\Tify\Adapter\Gcm\Factory;
+use Jgut\Tify\Adapter\Traits\ParameterTrait;
+use Jgut\Tify\Adapter\Traits\SandboxTrait;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\GcmReceiver;
 use Jgut\Tify\Result;
@@ -22,8 +24,11 @@ use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class GcmAdapter extends AbstractAdapter implements PushAdapter
+class GcmAdapter implements PushAdapter
 {
+    use ParameterTrait;
+    use SandboxTrait;
+
     const PARAMETER_API_KEY = 'api_key';
 
     const RESPONSE_OK = 'OK';
@@ -136,7 +141,8 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
      */
     public function __construct(array $parameters = [], $sandbox = false, Factory $factory = null)
     {
-        parent::__construct($parameters, $sandbox);
+        $this->assignParameters($parameters);
+        $this->setSandbox($sandbox);
 
         // @codeCoverageIgnoreStart
         if ($factory === null) {
@@ -160,6 +166,7 @@ class GcmAdapter extends AbstractAdapter implements PushAdapter
 
         $pushResults = [];
 
+        /* @var \ZendService\Google\Gcm\Message $pushMessage */
         foreach ($this->getPushMessage($notification) as $pushMessage) {
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
 

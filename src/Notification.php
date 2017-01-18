@@ -31,6 +31,7 @@ class Notification
     const PARAMETER_URL_ARGS = 'url-args';
 
     // GCM specific
+    const PARAMETER_PRIORITY = 'priority';
     const PARAMETER_COLLAPSE_KEY = 'collapse_key';
     const PARAMETER_DELAY_WHILE_IDLE = 'delay_while_idle';
     const PARAMETER_RESTRICTED_PACKAGE_NAME = 'restricted_package_name';
@@ -62,6 +63,7 @@ class Notification
         self::PARAMETER_CONTENT_AVAILABLE => null,
         self::PARAMETER_CATEGORY => null,
         self::PARAMETER_URL_ARGS => null,
+        self::PARAMETER_PRIORITY => 'normal',
         self::PARAMETER_COLLAPSE_KEY => null,
         self::PARAMETER_DELAY_WHILE_IDLE => false,
         self::PARAMETER_RESTRICTED_PACKAGE_NAME => null,

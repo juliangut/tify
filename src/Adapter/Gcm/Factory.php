@@ -32,7 +32,7 @@ interface Factory
      * @param array        $tokens
      * @param Notification $notification
      *
-     * @return Message
+     * @return \ZendService\Google\Gcm\Message
      */
     public function buildPushMessage(array $tokens, Notification $notification);
 }

@@ -8,12 +8,12 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Receiver;
+namespace Jgut\Tify\Receiver\Traits;
 
 /**
- * Abstract receiver class.
+ * Token aware trait.
  */
-abstract class AbstractReceiver implements Receiver
+trait TokenTrait
 {
     /**
      * Receiver token.
@@ -23,17 +23,9 @@ abstract class AbstractReceiver implements Receiver
     protected $token;
 
     /**
-     * Constructor.
+     * Get token.
      *
-     * @param string $token
-     */
-    public function __construct($token)
-    {
-        $this->setToken($token);
-    }
-
-    /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getToken()
     {
@@ -41,7 +33,9 @@ abstract class AbstractReceiver implements Receiver
     }
 
     /**
-     * {@inheritdoc}
+     * Set token.
+     *
+     * @param string $token
      */
     abstract public function setToken($token);
 }

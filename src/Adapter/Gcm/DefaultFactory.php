@@ -10,11 +10,12 @@
 
 namespace Jgut\Tify\Adapter\Gcm;
 
-use Jgut\Tify\Message as NotificationMessage;
+use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Zend\Http\Client\Adapter\Socket;
 use Zend\Http\Client as HttpClient;
 use ZendService\Google\Gcm\Client as PushClient;
+use ZendService\Google\Gcm\Message as ServiceMessage;
 
 /**
  * GCM default service factory.
@@ -27,17 +28,17 @@ class DefaultFactory implements Factory
      * @var array
      */
     protected static $notificationParams = [
-        NotificationMessage::PARAMETER_TITLE,
-        NotificationMessage::PARAMETER_BODY,
-        NotificationMessage::PARAMETER_ICON,
-        NotificationMessage::PARAMETER_SOUND,
-        NotificationMessage::PARAMETER_TAG,
-        NotificationMessage::PARAMETER_COLOR,
-        NotificationMessage::PARAMETER_CLICK_ACTION,
-        NotificationMessage::PARAMETER_TITLE_LOC_KEY,
-        NotificationMessage::PARAMETER_TITLE_LOC_ARGS,
-        NotificationMessage::PARAMETER_BODY_LOC_KEY,
-        NotificationMessage::PARAMETER_BODY_LOC_ARGS,
+        Message::PARAMETER_TITLE,
+        Message::PARAMETER_BODY,
+        Message::PARAMETER_ICON,
+        Message::PARAMETER_SOUND,
+        Message::PARAMETER_TAG,
+        Message::PARAMETER_COLOR,
+        Message::PARAMETER_CLICK_ACTION,
+        Message::PARAMETER_TITLE_LOC_KEY,
+        Message::PARAMETER_TITLE_LOC_ARGS,
+        Message::PARAMETER_BODY_LOC_KEY,
+        Message::PARAMETER_BODY_LOC_ARGS,
     ];
 
     /**
@@ -72,9 +73,9 @@ class DefaultFactory implements Factory
     {
         $message = $notification->getMessage();
 
-        $pushMessage = new Message;
-        $pushMessage
+        $pushMessage = (new ServiceMessage)
             ->setRegistrationIds($tokens)
+            ->setPriority($notification->getParameter(Notification::PARAMETER_PRIORITY))
             ->setCollapseKey($notification->getParameter(Notification::PARAMETER_COLLAPSE_KEY))
             ->setDelayWhileIdle($notification->getParameter(Notification::PARAMETER_DELAY_WHILE_IDLE))
             ->setTimeToLive($notification->getParameter(Notification::PARAMETER_TTL))
@@ -82,8 +83,8 @@ class DefaultFactory implements Factory
             ->setDryRun($notification->getParameter(Notification::PARAMETER_DRY_RUN))
             ->setData($message->getPayloadData());
 
-        if ($this->shouldHavePayload($message)) {
-            $pushMessage->setNotificationPayload($message->getParameters());
+        if ($this->shouldAddNotification($message)) {
+            $pushMessage->setNotification($message->getParameters());
         }
 
         return $pushMessage;
@@ -92,11 +93,11 @@ class DefaultFactory implements Factory
     /**
      * Message should have notification data.
      *
-     * @param NotificationMessage $message
+     * @param Message $message
      *
      * @return bool
      */
-    private function shouldHavePayload(NotificationMessage $message)
+    private function shouldAddNotification(Message $message)
     {
         $shouldHavePayload = false;
 

@@ -11,7 +11,7 @@
 namespace Jgut\Tify\Adapter\Apns;
 
 use Jgut\Tify\Exception\AdapterException;
-use Jgut\Tify\Message as NotificationMessage;
+use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\ApnsReceiver;
 use ZendService\Apple\Apns\Client\AbstractClient;
@@ -33,14 +33,14 @@ class DefaultFactory implements Factory
      * @var array
      */
     protected static $alertParams = [
-        NotificationMessage::PARAMETER_TITLE,
-        NotificationMessage::PARAMETER_BODY,
-        NotificationMessage::PARAMETER_TITLE_LOC_KEY,
-        NotificationMessage::PARAMETER_TITLE_LOC_ARGS,
-        NotificationMessage::PARAMETER_BODY_LOC_KEY,
-        NotificationMessage::PARAMETER_BODY_LOC_ARGS,
-        NotificationMessage::PARAMETER_ACTION_LOC_KEY,
-        NotificationMessage::PARAMETER_LAUNCH_IMAGE,
+        Message::PARAMETER_TITLE,
+        Message::PARAMETER_BODY,
+        Message::PARAMETER_TITLE_LOC_KEY,
+        Message::PARAMETER_TITLE_LOC_ARGS,
+        Message::PARAMETER_BODY_LOC_KEY,
+        Message::PARAMETER_BODY_LOC_ARGS,
+        Message::PARAMETER_ACTION_LOC_KEY,
+        Message::PARAMETER_LAUNCH_IMAGE,
     ];
 
     /**
@@ -109,8 +109,8 @@ class DefaultFactory implements Factory
             sprintf(
                 '%s%s%s%s',
                 $receiver->getToken(),
-                $message->getParameter(NotificationMessage::PARAMETER_TITLE),
-                $message->getParameter(NotificationMessage::PARAMETER_BODY),
+                $message->getParameter(Message::PARAMETER_TITLE),
+                $message->getParameter(Message::PARAMETER_BODY),
                 time()
             )
         );
@@ -142,16 +142,16 @@ class DefaultFactory implements Factory
             $pushMessage->setExpire($expire);
         }
 
-        if ($this->shouldHaveAlert($message)) {
+        if ($this->shouldAddNotification($message)) {
             $pushMessage->setAlert(new ServiceMessageAlert(
-                $message->getParameter(NotificationMessage::PARAMETER_BODY),
-                $message->getParameter(NotificationMessage::PARAMETER_ACTION_LOC_KEY),
-                $message->getParameter(NotificationMessage::PARAMETER_BODY_LOC_KEY),
-                $message->getParameter(NotificationMessage::PARAMETER_BODY_LOC_ARGS),
-                $message->getParameter(NotificationMessage::PARAMETER_LAUNCH_IMAGE),
-                $message->getParameter(NotificationMessage::PARAMETER_TITLE),
-                $message->getParameter(NotificationMessage::PARAMETER_TITLE_LOC_KEY),
-                $message->getParameter(NotificationMessage::PARAMETER_TITLE_LOC_ARGS)
+                $message->getParameter(Message::PARAMETER_BODY),
+                $message->getParameter(Message::PARAMETER_ACTION_LOC_KEY),
+                $message->getParameter(Message::PARAMETER_BODY_LOC_KEY),
+                $message->getParameter(Message::PARAMETER_BODY_LOC_ARGS),
+                $message->getParameter(Message::PARAMETER_LAUNCH_IMAGE),
+                $message->getParameter(Message::PARAMETER_TITLE),
+                $message->getParameter(Message::PARAMETER_TITLE_LOC_KEY),
+                $message->getParameter(Message::PARAMETER_TITLE_LOC_ARGS)
             ));
         }
 
@@ -161,11 +161,11 @@ class DefaultFactory implements Factory
     /**
      * Message should have alert dictionary.
      *
-     * @param NotificationMessage $message
+     * @param Message $message
      *
      * @return bool
      */
-    private function shouldHaveAlert(NotificationMessage $message)
+    private function shouldAddNotification(Message $message)
     {
         $shouldHaveAlert = false;
 

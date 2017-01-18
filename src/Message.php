@@ -51,8 +51,9 @@ class Message
         // GCM
         '/^(google|gcm)/',
         '/^from$/',
+        '/^priority$/',
         '/^collapse_key$/',
-        '/^delay_while_idle$/',
+        '/^priority$/',
         '/^time_to_live$/',
         '/^restricted_package_name$/',
         '/^dry_run$/',

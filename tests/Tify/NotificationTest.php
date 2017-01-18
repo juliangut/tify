@@ -12,7 +12,7 @@ namespace Jgut\Tify\Tests\Notification;
 
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Receiver\AbstractReceiver;
+use Jgut\Tify\Tests\Stubs\ReceiverStub;
 
 /**
  * Notification tests.
@@ -37,7 +37,9 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         $this->message = $this->getMockBuilder(Message::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $receiver = $this->getMockForAbstractClass(AbstractReceiver::class, [], '', false);
+        $receiver = $this->getMockBuilder(ReceiverStub::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->notification = $this->getMockForAbstractClass(
             Notification::class,
@@ -71,7 +73,10 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
 
     public function testReceivers()
     {
-        $receiver = $this->getMockForAbstractClass(AbstractReceiver::class, [], '', false);
+        /* @var \Jgut\Tify\Receiver\Receiver $receiver */
+        $receiver = $this->getMockBuilder(ReceiverStub::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->notification->addReceiver($receiver);
         self::assertCount(2, $this->notification->getReceivers());
 
