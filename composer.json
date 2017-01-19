@@ -75,6 +75,10 @@
       "@phpmd",
       "@phpmetrics"
     ],
+    "reports": [
+      "@phpmetrics-report",
+      "@phpunit-coverage"
+    ],
     "fix": "php-cs-fixer fix --verbose",
     "security": "composer outdated",
     "test": [
