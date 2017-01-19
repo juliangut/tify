@@ -8,7 +8,7 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Tests\Adapter\Apns;
+namespace Jgut\Tify\Tests\Adapter;
 
 use Jgut\Tify\Adapter\Apns\DefaultFactory;
 use Jgut\Tify\Adapter\ApnsAdapter;

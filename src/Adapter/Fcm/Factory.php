@@ -8,12 +8,12 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Adapter\Gcm;
+namespace Jgut\Tify\Adapter\Fcm;
 
 use Jgut\Tify\Notification;
 
 /**
- * GCM service factory.
+ * FCM service factory.
  */
 interface Factory
 {

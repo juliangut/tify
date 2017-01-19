@@ -8,7 +8,7 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Tests\Notification;
+namespace Jgut\Tify\Tests;
 
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
@@ -51,6 +51,15 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
     {
         self::assertEquals($this->message, $this->notification->getMessage());
         self::assertCount(1, $this->notification->getReceivers());
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage delay_while_idle parameter is deprecated
+     */
+    public function testDeprecatedParameter()
+    {
+        $this->notification->setParameter(Notification::PARAMETER_DELAY_WHILE_IDLE, true);
     }
 
     /**

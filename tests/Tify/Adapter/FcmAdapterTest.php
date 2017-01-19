@@ -8,13 +8,13 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Tests\Adapter\Gcm;
+namespace Jgut\Tify\Tests\Adapter;
 
-use Jgut\Tify\Adapter\Gcm\DefaultFactory;
-use Jgut\Tify\Adapter\GcmAdapter;
+use Jgut\Tify\Adapter\Fcm\DefaultFactory;
+use Jgut\Tify\Adapter\FcmAdapter;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Receiver\GcmReceiver;
+use Jgut\Tify\Receiver\FcmReceiver;
 use Jgut\Tify\Result;
 use ZendService\Google\Exception\RuntimeException;
 use ZendService\Google\Gcm\Client;
@@ -22,12 +22,12 @@ use ZendService\Google\Gcm\Message as ServiceMessage;
 use ZendService\Google\Gcm\Response;
 
 /**
- * GCM service adapter tests.
+ * FCM service adapter tests.
  */
-class GcmAdapterTest extends \PHPUnit_Framework_TestCase
+class FcmAdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var GcmAdapter
+     * @var FcmAdapter
      */
     protected $adapter;
 
@@ -64,7 +64,7 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
             ->method('buildPushMessage')
             ->will(self::returnValue($message));
 
-        $this->adapter = new GcmAdapter([GcmAdapter::PARAMETER_API_KEY => 'aaa'], true, $factory);
+        $this->adapter = new FcmAdapter([FcmAdapter::PARAMETER_API_KEY => 'aaa'], true, $factory);
     }
 
     /**
@@ -73,7 +73,7 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingApiKey()
     {
-        new GcmAdapter;
+        new FcmAdapter;
     }
 
     /**
@@ -82,7 +82,7 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidParameter()
     {
-        new GcmAdapter(['invalid' => 'value']);
+        new FcmAdapter(['invalid' => 'value']);
     }
 
     public function testSend()
@@ -92,7 +92,7 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         /* @var Message $message */
 
-        $receiver = new GcmReceiver('abcdefghijklmnopqrstuvwxyz1234567890');
+        $receiver = new FcmReceiver('abcdefghijklmnopqrstuvwxyz1234567890');
 
         $notification = new Notification($message, [$receiver]);
         /* @var Result[] $results */
@@ -117,21 +117,21 @@ class GcmAdapterTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $exception = new RuntimeException('500 Internal Server Error');
-        self::assertEquals(GcmAdapter::RESPONSE_INTERNAL_SERVER_ERROR, $method->invoke($this->adapter, $exception));
+        self::assertEquals(FcmAdapter::RESPONSE_INTERNAL_SERVER_ERROR, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('503 Server Unavailable; Retry-After 200');
-        self::assertEquals(GcmAdapter::RESPONSE_SERVER_UNAVAILABLE, $method->invoke($this->adapter, $exception));
+        self::assertEquals(FcmAdapter::RESPONSE_SERVER_UNAVAILABLE, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('401 Forbidden; Authentication Error');
-        self::assertEquals(GcmAdapter::RESPONSE_AUTHENTICATION_ERROR, $method->invoke($this->adapter, $exception));
+        self::assertEquals(FcmAdapter::RESPONSE_AUTHENTICATION_ERROR, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('400 Bad Request; invalid message');
-        self::assertEquals(GcmAdapter::RESPONSE_INVALID_MESSAGE, $method->invoke($this->adapter, $exception));
+        self::assertEquals(FcmAdapter::RESPONSE_INVALID_MESSAGE, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('Response body did not contain a valid JSON response');
-        self::assertEquals(GcmAdapter::RESPONSE_BADLY_FORMATTED_RESPONSE, $method->invoke($this->adapter, $exception));
+        self::assertEquals(FcmAdapter::RESPONSE_BADLY_FORMATTED_RESPONSE, $method->invoke($this->adapter, $exception));
 
         $exception = new RuntimeException('Unknown');
-        self::assertEquals(GcmAdapter::RESPONSE_UNKNOWN_ERROR, $method->invoke($this->adapter, $exception));
+        self::assertEquals(FcmAdapter::RESPONSE_UNKNOWN_ERROR, $method->invoke($this->adapter, $exception));
     }
 }

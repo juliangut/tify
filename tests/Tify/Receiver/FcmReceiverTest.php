@@ -10,15 +10,15 @@
 
 namespace Jgut\Tify\Tests\Receiver;
 
-use Jgut\Tify\Receiver\GcmReceiver;
+use Jgut\Tify\Receiver\FcmReceiver;
 
 /**
- * GCM device receiver tests.
+ * FCM device receiver tests.
  */
-class GcmReceiverTest extends \PHPUnit_Framework_TestCase
+class FcmReceiverTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var GcmReceiver
+     * @var FcmReceiver
      */
     protected $receiver;
 
@@ -27,7 +27,7 @@ class GcmReceiverTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->receiver = new GcmReceiver('f59c88b12035278b86f26d448835939a');
+        $this->receiver = new FcmReceiver('f59c88b12035278b86f26d448835939a');
     }
 
     /**

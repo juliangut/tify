@@ -10,21 +10,21 @@
 
 namespace Jgut\Tify\Adapter;
 
-use Jgut\Tify\Adapter\Gcm\DefaultFactory;
-use Jgut\Tify\Adapter\Gcm\Factory;
+use Jgut\Tify\Adapter\Fcm\DefaultFactory;
+use Jgut\Tify\Adapter\Fcm\Factory;
 use Jgut\Tify\Adapter\Traits\ParameterTrait;
 use Jgut\Tify\Adapter\Traits\SandboxTrait;
 use Jgut\Tify\Notification;
-use Jgut\Tify\Receiver\GcmReceiver;
+use Jgut\Tify\Receiver\FcmReceiver;
 use Jgut\Tify\Result;
 use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 
 /**
- * GCM service adapter.
+ * FCM service adapter.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class GcmAdapter implements PushAdapter
+class FcmAdapter implements PushAdapter
 {
     use ParameterTrait;
     use SandboxTrait;
@@ -117,7 +117,7 @@ class GcmAdapter implements PushAdapter
     ];
 
     /**
-     * GCM service factory.
+     * FCM service factory.
      *
      * @var Factory
      */
@@ -131,7 +131,7 @@ class GcmAdapter implements PushAdapter
     protected $pushClient;
 
     /**
-     * GCM service adapter constructor.
+     * FCM service adapter constructor.
      *
      * @param array   $parameters
      * @param bool    $sandbox
@@ -237,7 +237,7 @@ class GcmAdapter implements PushAdapter
         foreach (array_chunk($notification->getReceivers(), 100) as $receivers) {
             $tokens = array_map(
                 function ($receiver) {
-                    return $receiver instanceof GcmReceiver ? $receiver->getToken() : null;
+                    return $receiver instanceof FcmReceiver ? $receiver->getToken() : null;
                 },
                 $receivers
             );

@@ -8,7 +8,7 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Adapter\Gcm;
+namespace Jgut\Tify\Adapter\Fcm;
 
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
@@ -18,7 +18,7 @@ use ZendService\Google\Gcm\Client as PushClient;
 use ZendService\Google\Gcm\Message as ServiceMessage;
 
 /**
- * GCM default service factory.
+ * FCM default service factory.
  */
 class DefaultFactory implements Factory
 {
@@ -77,7 +77,6 @@ class DefaultFactory implements Factory
             ->setRegistrationIds($tokens)
             ->setPriority($notification->getParameter(Notification::PARAMETER_PRIORITY))
             ->setCollapseKey($notification->getParameter(Notification::PARAMETER_COLLAPSE_KEY))
-            ->setDelayWhileIdle($notification->getParameter(Notification::PARAMETER_DELAY_WHILE_IDLE))
             ->setTimeToLive($notification->getParameter(Notification::PARAMETER_TTL))
             ->setRestrictedPackageName($notification->getParameter(Notification::PARAMETER_RESTRICTED_PACKAGE_NAME))
             ->setDryRun($notification->getParameter(Notification::PARAMETER_DRY_RUN))

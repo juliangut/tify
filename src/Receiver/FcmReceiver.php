@@ -13,14 +13,14 @@ namespace Jgut\Tify\Receiver;
 use Jgut\Tify\Receiver\Traits\TokenTrait;
 
 /**
- * GCM device receiver.
+ * FCM device receiver receiver.
  */
-final class GcmReceiver implements Receiver
+final class FcmReceiver implements Receiver
 {
     use TokenTrait;
 
     /**
-     * Constructor.
+     * FCM device receiver constructor.
      *
      * @param string $token
      *

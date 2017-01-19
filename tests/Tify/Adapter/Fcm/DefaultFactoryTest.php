@@ -8,16 +8,16 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Tests\Adapter\Gcm;
+namespace Jgut\Tify\Tests\Adapter\Fcm;
 
-use Jgut\Tify\Adapter\Gcm\DefaultFactory;
+use Jgut\Tify\Adapter\Fcm\DefaultFactory;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use ZendService\Google\Gcm\Client;
 use ZendService\Google\Gcm\Message as ServiceMessage;
 
 /**
- * Default GCM service factory tests.
+ * Default FCM service factory tests.
  */
 class DefaultFactoryTest extends \PHPUnit_Framework_TestCase
 {

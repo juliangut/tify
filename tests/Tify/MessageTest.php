@@ -8,7 +8,7 @@
  * @author Julián Gutiérrez <juliangut@gmail.com>
  */
 
-namespace Jgut\Tify\Tests\Message;
+namespace Jgut\Tify\Tests;
 
 use Jgut\Tify\Message;
 

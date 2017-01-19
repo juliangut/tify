@@ -30,12 +30,19 @@ class Notification
     const PARAMETER_CATEGORY = 'category';
     const PARAMETER_URL_ARGS = 'url-args';
 
-    // GCM specific
+    // FCM specific
     const PARAMETER_PRIORITY = 'priority';
     const PARAMETER_COLLAPSE_KEY = 'collapse_key';
-    const PARAMETER_DELAY_WHILE_IDLE = 'delay_while_idle';
     const PARAMETER_RESTRICTED_PACKAGE_NAME = 'restricted_package_name';
     const PARAMETER_DRY_RUN = 'dry_run';
+
+    /**
+     * Deprecation effective Nov 15th 2016.
+     * Only kept because of BC. It's ignored by FCM
+     *
+     * @deprecated
+     */
+    const PARAMETER_DELAY_WHILE_IDLE = 'delay_while_idle';
 
     const TTL_IMMEDIATE = 300; // 5 minutes
     const TTL_FLASH = 3600; // 1 hour
@@ -44,6 +51,25 @@ class Notification
     const TTL_EXTENDED = 1209600; // 2 week
     const TTL_LONG = 1814400; // 3 week
     const TTL_EXTRA_LONG = 2419200; // 4 weeks
+
+    /**
+     * Supported parameters.
+     *
+     * @var array
+     */
+    protected $supportedParameters = [
+        self::PARAMETER_TTL,
+        self::PARAMETER_BADGE,
+        self::PARAMETER_SOUND,
+        self::PARAMETER_CONTENT_AVAILABLE,
+        self::PARAMETER_CATEGORY,
+        self::PARAMETER_URL_ARGS,
+        self::PARAMETER_PRIORITY,
+        self::PARAMETER_COLLAPSE_KEY,
+        self::PARAMETER_DELAY_WHILE_IDLE,
+        self::PARAMETER_RESTRICTED_PACKAGE_NAME,
+        self::PARAMETER_DRY_RUN,
+    ];
 
     /**
      * Default notification parameters.
@@ -65,7 +91,6 @@ class Notification
         self::PARAMETER_URL_ARGS => null,
         self::PARAMETER_PRIORITY => 'normal',
         self::PARAMETER_COLLAPSE_KEY => null,
-        self::PARAMETER_DELAY_WHILE_IDLE => false,
         self::PARAMETER_RESTRICTED_PACKAGE_NAME => null,
         self::PARAMETER_DRY_RUN => false, // It's better to use "sandbox" at adapter level
     ];
@@ -122,8 +147,12 @@ class Notification
     {
         $parameter = $this->getMappedParameter($parameter);
 
-        if (!array_key_exists($parameter, $this->defaultParameters)) {
+        if (!in_array($parameter, $this->supportedParameters)) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a valid notification parameter', $parameter));
+        }
+
+        if ($parameter === static::PARAMETER_DELAY_WHILE_IDLE) {
+            trigger_error('delay_while_idle parameter is deprecated', E_USER_NOTICE);
         }
 
         return $this->innerSetParameter($parameter, $value);

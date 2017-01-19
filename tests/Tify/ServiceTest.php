@@ -11,7 +11,7 @@
 namespace Jgut\Tify\Tests;
 
 use Jgut\Tify\Adapter\ApnsAdapter;
-use Jgut\Tify\Adapter\GcmAdapter;
+use Jgut\Tify\Adapter\FcmAdapter;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Result;
 use Jgut\Tify\Service;
@@ -36,8 +36,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testConstruction()
     {
-        /* @var GcmAdapter $adapter */
-        $adapter = $this->getMockBuilder(GcmAdapter::class)
+        /* @var FcmAdapter $adapter */
+        $adapter = $this->getMockBuilder(FcmAdapter::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -70,8 +70,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         self::assertEmpty($service->getAdapters());
 
-        /* @var GcmAdapter $adapter */
-        $adapter = $this->getMockBuilder(GcmAdapter::class)
+        /* @var FcmAdapter $adapter */
+        $adapter = $this->getMockBuilder(FcmAdapter::class)
             ->disableOriginalConstructor()
             ->getMock();
         $service->setAdapters([$adapter]);
@@ -85,13 +85,13 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $result = new Result('aaa', new \DateTime('now', new \DateTimeZone('UTC')));
 
-        $adapter = $this->getMockBuilder(GcmAdapter::class)
+        $adapter = $this->getMockBuilder(FcmAdapter::class)
             ->disableOriginalConstructor()
             ->getMock();
         $adapter->expects(self::once())
             ->method('push')
             ->will(self::returnValue([$result]));
-        /* @var GcmAdapter $adapter */
+        /* @var FcmAdapter $adapter */
         $this->service->addAdapter($adapter);
 
         /* @var Notification $notification */
@@ -116,7 +116,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $adapter->expects(self::once())
             ->method('feedback')
             ->will(self::returnValue([$result]));
-        /* @var GcmAdapter $adapter */
+        /* @var FcmAdapter $adapter */
         $this->service->addAdapter($adapter);
 
         $results = $this->service->feedback();

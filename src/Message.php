@@ -30,7 +30,7 @@ class Message
     const PARAMETER_ACTION_LOC_KEY = 'action-loc-key';
     const PARAMETER_LAUNCH_IMAGE = 'launch-image';
 
-    // GCM specific
+    // FCM specific
     const PARAMETER_ICON = 'icon';
     const PARAMETER_SOUND = 'sound';
     const PARAMETER_TAG = 'tag';
@@ -48,7 +48,7 @@ class Message
         // APNS
         '/^apc$/',
 
-        // GCM
+        // FCM
         '/^(google|gcm)/',
         '/^from$/',
         '/^priority$/',
@@ -76,7 +76,7 @@ class Message
     protected $payload = [];
 
     /**
-     * Constructor.
+     * Message constructor.
      *
      * @param array $parameters
      *

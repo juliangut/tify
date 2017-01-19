@@ -52,6 +52,8 @@ class Result implements \JsonSerializable
     protected $statusMessage;
 
     /**
+     * Result constructor.
+     *
      * @param string    $token
      * @param \DateTime $date
      * @param string    $status

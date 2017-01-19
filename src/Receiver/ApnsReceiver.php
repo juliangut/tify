@@ -13,14 +13,14 @@ namespace Jgut\Tify\Receiver;
 use Jgut\Tify\Receiver\Traits\TokenTrait;
 
 /**
- * APNS device receiver.
+ * APNS device receiver receiver.
  */
 final class ApnsReceiver implements Receiver
 {
     use TokenTrait;
 
     /**
-     * Constructor.
+     * APNS device receiver constructor.
      *
      * @param string $token
      *

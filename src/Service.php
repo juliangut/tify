@@ -34,7 +34,7 @@ class Service
     protected $notifications = [];
 
     /**
-     * Manager constructor.
+     * Service constructor.
      *
      * @param Adapter|Adapter[]           $adapters
      * @param Notification|Notification[] $notifications
