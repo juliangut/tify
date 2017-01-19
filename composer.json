@@ -32,6 +32,7 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^1.0",
     "humbug/humbug": "~1.0@dev",
+    "phpmetrics/phpmetrics": "^1.10",
     "phpmd/phpmd": "^2.0",
     "phpunit/phpunit": "^4.5|^5.0",
     "sebastian/phpcpd": "^2.0",
@@ -60,6 +61,8 @@
     "phpcs-lint": "php-cs-fixer fix --dry-run --verbose",
     "phpcpd": "phpcpd src",
     "phpmd": "phpmd src text unusedcode,naming,design,controversial,codesize",
+    "phpmetrics": "phpmetrics src",
+    "phpmetrics-report": "phpmetrics --report-html=build/metrics/index.html src",
     "phpunit": "phpunit",
     "phpunit-coverage": "phpunit --coverage-html build/coverage",
     "phpunit-clover": "phpunit --coverage-clover build/logs/clover.xml",
@@ -69,12 +72,13 @@
       "@phpcs",
       "@phpcs-lint",
       "@phpcpd",
-      "@phpmd"
+      "@phpmd",
+      "@phpmetrics"
     ],
     "fix": "php-cs-fixer fix --verbose",
     "security": "composer outdated",
     "test": [
-      "@qa",
+      "@php-lint",
       "@phpunit",
       "@humbug"
     ]
