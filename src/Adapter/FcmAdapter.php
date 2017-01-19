@@ -166,7 +166,6 @@ class FcmAdapter implements PushAdapter
 
         $pushResults = [];
 
-        /* @var \ZendService\Google\Gcm\Message $pushMessage */
         foreach ($this->getPushMessage($notification) as $pushMessage) {
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
@@ -230,7 +229,7 @@ class FcmAdapter implements PushAdapter
      * @throws \ZendService\Google\Exception\InvalidArgumentException
      * @throws \ZendService\Google\Exception\RuntimeException
      *
-     * @return \Generator<\ZendService\Google\Gcm\Message>
+     * @return \Generator|\ZendService\Google\Gcm\Message[]
      */
     protected function getPushMessage(Notification $notification)
     {
