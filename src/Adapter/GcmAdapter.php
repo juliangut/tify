@@ -263,7 +263,7 @@ class GcmAdapter implements PushAdapter
     {
         $message = $exception->getMessage();
 
-        if (preg_match('/^500 Internal Server Error/', $message)) {
+        if ($message === '500 Internal Server Error') {
             return static::RESPONSE_INTERNAL_SERVER_ERROR;
         }
 
@@ -271,15 +271,15 @@ class GcmAdapter implements PushAdapter
             return static::RESPONSE_SERVER_UNAVAILABLE;
         }
 
-        if (preg_match('/^400 Bad Request/', $message)) {
+        if ($message === '400 Bad Request; invalid message') {
             return static::RESPONSE_INVALID_MESSAGE;
         }
 
-        if (preg_match('/^401 Forbidden/', $message)) {
+        if ($message === '401 Forbidden; Authentication Error') {
             return static::RESPONSE_AUTHENTICATION_ERROR;
         }
 
-        if (preg_match('/^Response body did not contain a valid JSON response$/', $message)) {
+        if ($message === 'Response body did not contain a valid JSON response') {
             return static::RESPONSE_BADLY_FORMATTED_RESPONSE;
         }
 
