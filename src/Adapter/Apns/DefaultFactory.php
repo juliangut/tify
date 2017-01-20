@@ -111,7 +111,7 @@ class DefaultFactory implements Factory
                 $receiver->getToken(),
                 $message->getParameter(Message::PARAMETER_TITLE),
                 $message->getParameter(Message::PARAMETER_BODY),
-                time()
+                microtime()
             )
         );
         $badge = $notification->getParameter(Notification::PARAMETER_BADGE) === null
