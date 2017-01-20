@@ -229,7 +229,7 @@ class FcmAdapter implements PushAdapter
      * @throws \ZendService\Google\Exception\InvalidArgumentException
      * @throws \ZendService\Google\Exception\RuntimeException
      *
-     * @return \Generator|\ZendService\Google\Gcm\Message[]
+     * @return \ZendService\Google\Gcm\Message[]
      */
     protected function getPushMessage(Notification $notification)
     {

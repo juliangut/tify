@@ -263,7 +263,7 @@ class ApnsAdapter implements PushAdapter, FeedbackAdapter
      *
      * @throws \ZendService\Apple\Exception\RuntimeException
      *
-     * @return \Generator|\ZendService\Apple\Apns\Message[]
+     * @return \ZendService\Apple\Apns\Message[]
      */
     protected function getPushMessage(Notification $notification)
     {
