@@ -17,6 +17,8 @@ use Jgut\Tify\Adapter\Traits\SandboxTrait;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\FcmReceiver;
 use Jgut\Tify\Result;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
 
 /**
@@ -24,10 +26,11 @@ use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class FcmAdapter implements PushAdapter
+class FcmAdapter implements LoggerAwareInterface, PushAdapter
 {
     use ParameterTrait;
     use SandboxTrait;
+    use LoggerAwareTrait;
 
     const PARAMETER_API_KEY = 'api_key';
 
@@ -167,6 +170,7 @@ class FcmAdapter implements PushAdapter
         $pushResults = [];
 
         foreach ($this->getPushMessage($notification) as $pushMessage) {
+            $pushData = json_decode($pushMessage->toJson(), true);
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
             try {
@@ -179,6 +183,17 @@ class FcmAdapter implements PushAdapter
                         $statusCode = self::RESPONSE_UNKNOWN_ERROR;
                     } elseif (array_key_exists('error', $pushResponses[$token])) {
                         $statusCode = $pushResponses[$token]['error'];
+                    }
+
+                    if ($statusCode !== static::RESPONSE_OK && $this->logger) {
+                        $this->logger->warning(
+                            sprintf(
+                                'Error "%s" sending push notification to device token "%s"',
+                                self::$statusMessageMap[$statusCode],
+                                $token
+                            ),
+                            array_merge($pushData, ['service' => 'FCM', 'date' => $date->format('c')])
+                        );
                     }
 
                     $pushResults[] = new Result(

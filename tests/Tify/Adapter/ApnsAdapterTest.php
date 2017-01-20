@@ -15,6 +15,7 @@ use Jgut\Tify\Adapter\ApnsAdapter;
 use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\ApnsReceiver;
+use Psr\Log\LoggerInterface;
 use ZendService\Apple\Apns\Client\Feedback as FeedbackClient;
 use ZendService\Apple\Apns\Client\Message as MessageClient;
 use ZendService\Apple\Apns\Message as ServiceMessage;
@@ -42,7 +43,7 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $pushResponse->expects(self::any())
             ->method('getCode')
-            ->will(self::returnValue(8));
+            ->will(self::returnValue(ApnsAdapter::RESPONSE_INVALID_TOKEN));
 
         $pushClient = $this->getMockBuilder(MessageClient::class)
             ->disableOriginalConstructor()
@@ -73,7 +74,10 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $message->expects(self::any())
             ->method('getToken')
-            ->will(self::returnValue(['aaa']));
+            ->will(self::returnValue('aaa'));
+        $message->expects(self::any())
+            ->method('getPayload')
+            ->will(self::returnValue(['badge' => 0, 'aps' => []]));
 
         $factory = $this->getMockBuilder(DefaultFactory::class)
             ->disableOriginalConstructor()
@@ -101,6 +105,29 @@ class ApnsAdapterTest extends \PHPUnit_Framework_TestCase
     public function testInvalidCertificate()
     {
         new ApnsAdapter(['certificate' => 'fake_path']);
+    }
+
+    public function testErrorLogging()
+    {
+        $logger = $this->getMockBuilder(LoggerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logger->expects(self::once())
+            ->method('warning')
+            ->with($this->matchesRegularExpression('/^Error ".+" sending push notification/'));
+        /* @var LoggerInterface $logger */
+
+        $this->adapter->setLogger($logger);
+
+        /* @var Message $message */
+        $message = $this->getMockBuilder(Message::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $receiver = new ApnsReceiver('abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789');
+
+        $notification = new Notification($message, [$receiver]);
+        $this->adapter->push($notification);
     }
 
     public function testSend()

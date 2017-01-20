@@ -16,6 +16,7 @@ use Jgut\Tify\Message;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\FcmReceiver;
 use Jgut\Tify\Result;
+use Psr\Log\LoggerInterface;
 use ZendService\Google\Exception\RuntimeException;
 use ZendService\Google\Gcm\Client;
 use ZendService\Google\Gcm\Message as ServiceMessage;
@@ -38,7 +39,7 @@ class FcmAdapterTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $response->expects(self::any())
             ->method('getResults')
-            ->will(self::returnValue(['aaa' => [], 'bbb' => ['error' => 'NotRegistered']]));
+            ->will(self::returnValue(['aaa' => [], 'bbb' => ['error' => FcmAdapter::RESPONSE_NOT_REGISTERED]]));
 
         $client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
@@ -53,6 +54,11 @@ class FcmAdapterTest extends \PHPUnit_Framework_TestCase
         $message->expects(self::any())
             ->method('getRegistrationIds')
             ->will(self::returnValue(['aaa', 'bbb', 'ccc']));
+        $message->expects(self::any())
+            ->method('toJson')
+            ->will(self::returnValue(
+                json_encode(['registration_ids' => ['aaa', 'bbb', 'ccc'], 'priority' => 'normal'])
+            ));
 
         $factory = $this->getMockBuilder(DefaultFactory::class)
             ->disableOriginalConstructor()
@@ -83,6 +89,30 @@ class FcmAdapterTest extends \PHPUnit_Framework_TestCase
     public function testInvalidParameter()
     {
         new FcmAdapter(['invalid' => 'value']);
+    }
+
+    public function testErrorLogging()
+    {
+        $logger = $this->getMockBuilder(LoggerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logger->expects(self::exactly(2))
+            ->method('warning')
+            ->with($this->matchesRegularExpression('/^Error ".+" sending push notification/'));
+        /* @var LoggerInterface $logger */
+
+        $this->adapter->setLogger($logger);
+
+        $message = $this->getMockBuilder(Message::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        /* @var Message $message */
+
+        $receiver = new FcmReceiver('abcdefghijklmnopqrstuvwxyz1234567890');
+
+        $notification = new Notification($message, [$receiver]);
+        /* @var Result[] $results */
+        $this->adapter->push($notification);
     }
 
     public function testSend()

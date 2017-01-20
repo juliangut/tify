@@ -19,6 +19,8 @@ use Jgut\Tify\Exception\NotificationException;
 use Jgut\Tify\Notification;
 use Jgut\Tify\Receiver\ApnsReceiver;
 use Jgut\Tify\Result;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
 
 /**
@@ -26,10 +28,11 @@ use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ApnsAdapter implements PushAdapter, FeedbackAdapter
+class ApnsAdapter implements LoggerAwareInterface, PushAdapter, FeedbackAdapter
 {
     use ParameterTrait;
     use SandboxTrait;
+    use LoggerAwareTrait;
 
     const PARAMETER_CERTIFICATE = 'certificate';
     const PARAMETER_PASS_PHRASE = 'pass_phrase';
@@ -159,6 +162,8 @@ class ApnsAdapter implements PushAdapter, FeedbackAdapter
         $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
         foreach ($this->getPushMessage($notification) as $pushMessage) {
+            $token = $pushMessage->getToken();
+
             try {
                 $statusCode = $client->send($pushMessage)->getCode();
             // @codeCoverageIgnoreStart
@@ -167,8 +172,19 @@ class ApnsAdapter implements PushAdapter, FeedbackAdapter
             }
             // @codeCoverageIgnoreEnd
 
+            if ($statusCode !== static::RESPONSE_OK && $this->logger) {
+                $this->logger->warning(
+                    sprintf(
+                        'Error "%s" sending push notification to device token "%s"',
+                        self::$statusMessageMap[$statusCode],
+                        $token
+                    ),
+                    array_merge($pushMessage->getPayload(), ['service' => 'APNS', 'date' => $date->format('c')])
+                );
+            }
+
             $pushResults[] = new Result(
-                $pushMessage->getToken(),
+                $token,
                 $date,
                 self::$statusCodeMap[$statusCode],
                 self::$statusMessageMap[$statusCode]
